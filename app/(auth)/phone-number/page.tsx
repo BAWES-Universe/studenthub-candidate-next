@@ -6,19 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
  
-import { Button } from "@/components/ui/button"
 import {
   Form,
-  FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import FloatingLabelInput from "@/components/ui/floating-label-input";
-import { FormInput } from "@/components/ui/form-input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
@@ -57,7 +50,7 @@ export default function Email() {
             <FormField
                 control={form.control}
                 name="phone"
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <FormItem className="relative">
                     <PhoneInput placeholder=" " {...field} />
                     <FormMessage />

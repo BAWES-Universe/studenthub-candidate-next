@@ -1,26 +1,7 @@
 "use client"
 
 import { OnboardProgress } from "@/components/on-board/progress";
-
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
  
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import FloatingLabelInput from "@/components/ui/floating-label-input";
-import { FormInput } from "@/components/ui/form-input";
-import OnboardNav from "@/components/on-board/navigation";
-import NeedHelp from "@/components/on-board/need-help";
 import SubmitButton from "@/components/ui/submit-button";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import React, { useState } from "react";

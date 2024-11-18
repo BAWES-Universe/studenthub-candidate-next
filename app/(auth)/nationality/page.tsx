@@ -6,18 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
  
-import { Button } from "@/components/ui/button"
 import {
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import FloatingLabelInput from "@/components/ui/floating-label-input";
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
@@ -56,7 +47,7 @@ export default function Nationality() {
             <FormInput
               name="nationality"
               label="Nationality"
-              form={form}
+              form={form as any}
               type="text"
               
             />

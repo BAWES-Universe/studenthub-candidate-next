@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
  
 //import Rocket from '../../public/'; // Adjust the path as necessary
@@ -9,7 +8,7 @@ export function Hero() {
     <div className="flex  min-h-screen flex-col items-center  text-center px-4 p-[16px]">
 
       <div className="w-[240px] h-[240px] bg-[#f9f9f9] rounded-[118px] flex justify-center items-center mb-[40px] xs:mt-[87px] sm:mt-[40px]">
-        <img src="/assets/icons/rocket.svg" className="w-[128px] h-[128px]" />
+        <img alt="" src="/assets/icons/rocket.svg" className="w-[128px] h-[128px]" />
       </div>
       
       <h1 className="font-bold tracking-tighter xs:text-[20px] sm:text-[40px]">

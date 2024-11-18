@@ -6,18 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
  
-import { Button } from "@/components/ui/button"
 import {
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import FloatingLabelInput from "@/components/ui/floating-label-input";
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
@@ -60,21 +51,21 @@ export default function Name() {
                 <FormInput 
                   name="day"
                   label="Day"
-                  form={form}
+                  form={form as any}
                 />
               </div>
               <div className="flex-col ms-[16px] me-[16px]">
                 <FormInput 
                   name="month"
                   label="Month"
-                  form={form}
+                  form={form as any}
                 />
               </div>
               <div className="flex-col ms-[16px] me-[16px]">
                 <FormInput 
                   name="year"
                   label="Year"
-                  form={form}
+                  form={form as any}
                 />
               </div>
             </div>

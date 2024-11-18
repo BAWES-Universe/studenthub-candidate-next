@@ -14,11 +14,11 @@ import { UseFormReturn } from 'react-hook-form'
  
 
 interface FormInputProps {
-  name: string
-  label: string
-  form: UseFormReturn<any>
-  type?: string
-  helper?: string
+  name: string,
+  label: string,
+  form: UseFormReturn,
+  type?: string,
+  helper?: string,
   inputDir?: string
 }
 

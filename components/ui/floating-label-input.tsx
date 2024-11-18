@@ -1,14 +1,15 @@
 'use client'
 
-import { useState, useCallback } from 'react'
 import { Input } from "@/components/ui/input"
 import { FormControl, FormItem, FormLabel, FormMessage } from './form'
+import { ControllerRenderProps, FieldValues } from "react-hook-form"
 
 
 interface FloatingLabelInputProps {
-  label: string
-  field?: any
+  label: string,
+  field?: ControllerRenderProps<FieldValues, string>
 }
+
 /**
  * 
  * @param param0 peer-[&:not(:placeholder-shown)]:-translate-y-3 
