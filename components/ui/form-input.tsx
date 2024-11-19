@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
+import { Textarea } from './textarea'
  
 
 interface FormInputProps {
@@ -40,23 +41,22 @@ export function FormInput({
         <FormItem className="relative">
           <FormControl>
              
-              <Input
-                dir={inputDir}
-                {...field}
-                id={id}
-                type={type}
-                placeholder=" "  // Empty space needed for peer styling
+            <Input
+              dir={inputDir}
+              {...field}
+              id={id}
+              type={type}
+              placeholder=" "  // Empty space needed for peer styling
 
-                className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
-                  border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
-                  placeholder-transparent focus:ring-1
-                  focus:pt-[32px]
-                  [&:not(:placeholder-shown)]:pt-[32px]
-                  ${fieldState.error 
-                    ? 'border-destructive focus:border-destructive focus:ring-destructive' 
-                    : 'focus:border-primary focus:ring-primary'}`}
-              />
-             
+              className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
+                border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
+                placeholder-transparent focus:ring-1
+                focus:pt-[32px]
+                [&:not(:placeholder-shown)]:pt-[32px]
+                ${fieldState.error 
+                  ? 'border-destructive focus:border-destructive focus:ring-destructive' 
+                  : 'focus:border-primary focus:ring-primary'}`}
+            />
           </FormControl>
           <FormLabel 
             htmlFor={id}

@@ -5,24 +5,41 @@ import { OnboardProgress } from "@/components/on-board/progress";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
- 
+
 import {
   Form,
 } from "@/components/ui/form"
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
+import NationalityInput from "@/components/on-board/nationality-input";
+import React from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const formSchema = z.object({
-  nationality: z.string().email('Please enter valid nationality')
+  // nationality: z.string().email('Please enter valid nationality'),
+  country_id: z.number({
+    required_error: 'Please enter valid nationality'
+  }),
 })
 
+
 export default function Nationality() {
+
+  let [country, setCountry] = React.useState({
+    country_id: 2,
+    country_nationality_name_en: "Kuwaiti"
+  });
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        nationality: "",
+      country_id: 84,
+      // nationality: any
     },
   })
 
@@ -31,33 +48,65 @@ export default function Nationality() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
-  } 
+  }
+
+  function onCountryChange(country: any) {
+    form.setValue("country_id", country.country_id);
+    setCountry(country);
+    //form.setValue("nationality", country);
+  }
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+      <OnboardProgress></OnboardProgress>
 
-        <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            Tell us more about your nationality
-        </h5>
+      <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
+        Tell us more about your nationality
+      </h5>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
-  
-            <FormInput
-              name="nationality"
-              label="Nationality"
-              form={form as any}
-              type="text"
-              
-            />
- 
-            <SubmitButton></SubmitButton>  
-            
-          </form>
-        </Form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-[560px] m-auto mb-[100px]">
+       
+          <NationalityInput selectedCountry={country} 
+            onSelect={(country) => onCountryChange(country)}></NationalityInput>
+          
+          <p className="text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 mb-[0]">
+            Is your mother Kuwaiti?
 
-        <OnboardFooter></OnboardFooter>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button className="inline relative top-1" variant={'ghost'}>
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.49991 0.876892C3.84222 0.876892 0.877075 3.84204 0.877075 7.49972C0.877075 11.1574 3.84222 14.1226 7.49991 14.1226C11.1576 14.1226 14.1227 11.1574 14.1227 7.49972C14.1227 3.84204 11.1576 0.876892 7.49991 0.876892ZM1.82707 7.49972C1.82707 4.36671 4.36689 1.82689 7.49991 1.82689C10.6329 1.82689 13.1727 4.36671 13.1727 7.49972C13.1727 10.6327 10.6329 13.1726 7.49991 13.1726C4.36689 13.1726 1.82707 10.6327 1.82707 7.49972ZM8.24992 4.49999C8.24992 4.9142 7.91413 5.24999 7.49992 5.24999C7.08571 5.24999 6.74992 4.9142 6.74992 4.49999C6.74992 4.08577 7.08571 3.74999 7.49992 3.74999C7.91413 3.74999 8.24992 4.08577 8.24992 4.49999ZM6.00003 5.99999H6.50003H7.50003C7.77618 5.99999 8.00003 6.22384 8.00003 6.49999V9.99999H8.50003H9.00003V11H8.50003H7.50003H6.50003H6.00003V9.99999H6.50003H7.00003V6.99999H6.50003H6.00003V5.99999Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[100%] p-[24px] max-w-[429px] text-[color:var(--Neutral-95,#23233D)] text-center text-base font-normal leading-6">
+                <p className="mb-[24px]">This is required for us to know whether we can match you for jobs in the food and beverage sector.</p>
+
+                <p className="mb-[24px]">Current Kuwaiti regulations only allow us to issue health cards for Kuwaiti nationals.</p>
+
+                <p className="mb-[24px]">This is hopefully temporary as we’re currently working on legalizing health cards for non-Kuwaitis.</p>
+              </PopoverContent>
+
+            </Popover>
+          </p>
+
+          <RadioGroup defaultValue="option-one" className="mt-[0]">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="option-one" id="option-one" />
+              <Label htmlFor="option-one">Yes</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="option-two" id="option-two" />
+              <Label htmlFor="option-two">No</Label>
+            </div>
+          </RadioGroup>
+
+
+          <SubmitButton></SubmitButton>
+        </form>
+      </Form>
+
+      <OnboardFooter></OnboardFooter>
     </>
   );
 }

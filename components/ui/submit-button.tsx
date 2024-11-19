@@ -14,7 +14,7 @@ export default function SubmitButton({ disabled }: SubmitButtonProps) {
                 disabled:bg-[#EEEEF0] disabled:text-[color:#68687A]" disabled={ disabled }>
                 Next
             </Button>
-            <p className="mt-[8px] xs:hidden sm:block text-center">Enter ↵</p> 
+            <p className={ `mt-[8px] xs:hidden ${disabled?'hideen':'sm:block'}  text-center` }>Enter ↵</p> 
         </div>
         
         <div className="clearfix"></div>

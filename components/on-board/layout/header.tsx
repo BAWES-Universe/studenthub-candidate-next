@@ -2,7 +2,8 @@ import Link from "next/link";
 
 export default function OnboardHeader() {
     return (
-        <div className="w-[100%] gap-2.5 [background:var(--Neutral-10,#FAFAFA)] shadow-[0px_1px_0px_0px_#F0F0F0] px-20 py-6">
+        <div className="w-[100%] gap-2.5 [background:var(--Neutral-10,#FAFAFA)] shadow-[0px_1px_0px_0px_#F0F0F0] 
+            xs:px-[24px] xs:py-[24px] sm:px-20 sm:py-6">
             <div className="max-w-5xl mx-auto">
                 <Link href="/">
                     <img alt="" className="float-start" src="/assets/icons/logo.svg" />
