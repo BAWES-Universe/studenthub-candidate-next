@@ -1,0 +1,150 @@
+"use client"
+
+import { OnboardProgress } from "@/components/on-board/progress";
+
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+ 
+import {
+  Form
+} from "@/components/ui/form"
+import OnboardFooter from "@/components/on-board/layout/footer";
+import SubmitButton from "@/components/ui/submit-button";
+import { useState, useEffect } from "react";
+
+const formSchema = z.object({
+  skills: z.array(z.string()).min(1, {
+    message: "Please add at least one skill"
+  })
+})
+
+export default function Skills() {
+
+  const [skills, setSkills] = useState<string[]>([]);
+   
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      skills: [],
+    },
+  })
+
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values)
+  } 
+
+
+  function removeSkill(skillToRemove: string) {
+    const newSkills = skills.filter(skill => skill !== skillToRemove)
+    setSkills(newSkills)
+    form.setValue('skills', newSkills)
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    const input = event.currentTarget
+    const value = input.value.trim()
+
+    if ((event.key === 'Enter' || event.key === ',') && value) {
+      event.preventDefault()
+
+      //const skills = form.getValues().skills;
+
+      addSkills(value)
+      input.value = ''
+    }
+  }
+
+  function addSkills(value: string) {
+    if (!skills.includes(value)) {
+      const newSkills = [...skills, value];
+      setSkills(newSkills)
+      form.setValue('skills', newSkills)
+    }
+  }
+ 
+
+  return (
+    <>
+        <OnboardProgress></OnboardProgress>
+
+        <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
+          What’s your skills?
+        </h5>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className=" max-w-[560px] m-auto">
+            
+          <div className="relative">
+            <div className="flex flex-wrap items-center gap-2 p-4 min-h-[70px] w-full rounded-2xl border border-input bg-white">
+              {skills.map((skill, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full 
+                    bg-[var(--Primary-10,#F5F7FF)] text-[var(--Primary-100,#3538CD)]
+                    text-sm font-medium"
+                >
+                  {skill}
+                  
+                  <button
+                    type="button"
+                    onClick={() => removeSkill(skill)}
+                    className="hover:text-primary-dark focus:outline-none"
+                  >
+                    x
+                  </button>
+                </span>
+              ))}
+              <input
+                type="text"
+                className="flex-1 bg-transparent border-none outline-none p-0 text-base 
+                  placeholder:text-[var(--Neutral-70,#7D7D8D)]"
+                placeholder={skills.length === 0 ? "Type your skills" : ""}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <p className="mt-2 text-sm text-[var(--Neutral-70,#7D7D8D)]">
+              Type " , " or press ↵ Enter after a skill to submit it
+            </p>
+          </div>
+
+            <p className="mt-[16px] mb-[8px] self-stretch text-[color:var(--Neutral-100,#0F0F2C)] text-sm font-medium leading-5">
+              Suggestions:
+            </p>
+             
+            <div className="block">
+            <span 
+              onClick={ () => addSkills('Communication') } 
+              className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
+              text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
+                Communication
+            </span>
+
+            <span 
+              onClick={ () => addSkills('Problem Solving') } 
+              className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
+              text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
+                Problem Solving
+            </span>
+
+            <span 
+              onClick={ () => addSkills('Time Management') } 
+              className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
+              text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
+                Time Management
+            </span>
+            </div> 
+
+            <SubmitButton disabled={ skills.length == 0 }></SubmitButton>  
+            
+          </form>
+        </Form>
+
+        <OnboardFooter></OnboardFooter>
+    </>
+  );
+}
