@@ -38,3 +38,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 # validation 
 
 https://www.npmjs.com/package/zod#basic-usage
+
+# todo 
+
+## services to fix
+
+- auth.service.ts
+- aws.service.ts
+- camera2.service.ts
+- filepicker.service.ts
+
