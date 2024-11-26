@@ -21,6 +21,8 @@ const formSchema = z.object({
 
 export default function Skills() {
 
+  const [loading, setLoading] = useState(false);
+  
   const [skills, setSkills] = useState<string[]>([]);
    
   // 1. Define your form.
@@ -139,7 +141,7 @@ export default function Skills() {
             </span>
             </div> 
 
-            <SubmitButton disabled={ skills.length == 0 }></SubmitButton>  
+            <SubmitButton disabled={ skills.length == 0 } loading={loading}></SubmitButton>
             
           </form>
         </Form>

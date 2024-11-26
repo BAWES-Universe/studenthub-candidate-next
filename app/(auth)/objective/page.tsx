@@ -13,6 +13,7 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 const formSchema = z.object({
     objective: z.string({
@@ -21,6 +22,9 @@ const formSchema = z.object({
 })
 
 export default function Objective() {
+
+  const [loading, setLoading] = useState(false);
+  
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,7 +61,7 @@ export default function Objective() {
               form={form as any}
             />
  
-            <SubmitButton></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>

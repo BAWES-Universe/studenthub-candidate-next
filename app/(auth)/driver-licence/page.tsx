@@ -39,7 +39,7 @@ export default function DriverLicence() {
                 </button>
             </div>
 
-            <SubmitButton disabled={!haveLicence}></SubmitButton>  
+            <SubmitButton disabled={!haveLicence} loading={loading}></SubmitButton>
         </div>
         <OnboardFooter></OnboardFooter>
     </>

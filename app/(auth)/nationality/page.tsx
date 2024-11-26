@@ -13,7 +13,7 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import NationalityInput from "@/components/on-board/nationality-input";
-import React from "react";
+import React, { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,8 @@ const formSchema = z.object({
 
 export default function Nationality() {
 
+  const [loading, setLoading] = useState(false);
+  
   let [country, setCountry] = React.useState({
     country_id: 2,
     country_nationality_name_en: "Kuwaiti"
@@ -102,7 +104,7 @@ export default function Nationality() {
           </RadioGroup>
 
 
-          <SubmitButton></SubmitButton>
+          <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>
         </form>
       </Form>
 

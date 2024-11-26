@@ -12,27 +12,48 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
+import { useState } from "react";
+import { useAppDispatch } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+import { useRouter } from 'next/navigation'; 
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  name_en: z.string().min(2, {
+    message: "Name in English must be at least 2 characters.",
+  }),
+  name_ar: z.string().min(2, {
+    message: "Name in Arabic must be at least 2 characters.",
   }),
 })
 
 export default function Name() {
+
+  const dispatch = useAppDispatch();
+  const router = useRouter()
+
+  const [loading, setLoading] = useState(false);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      name_en: "",
+      name_ar: "",
     },
   })
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    //setLoading(true); 
+
+    dispatch(setUser({
+      user: {
+        candidate_name: values.name_en,
+        candidate_name_ar: values.name_ar,
+      }
+    }));
+
+    router.push("/email");
   } 
 
   return (
@@ -53,14 +74,15 @@ export default function Name() {
             />
  
             <FormInput 
-              name="name_en"
+              name="name_ar"
               label=" الإسم بالعربي"
               form={form as any}
               helper="It should match what’s on your civil ID."
               inputDir="rtl"
             />
  
-            <SubmitButton></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading }>
+            </SubmitButton>  
             
           </form>
         </Form>

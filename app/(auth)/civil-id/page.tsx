@@ -14,6 +14,7 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const formSchema = z.object({
     id_back: z.string({
@@ -30,6 +31,8 @@ const formSchema = z.object({
 })
 
 export default function PreferredTime() {
+  const [loading, setLoading] = useState(false);
+  
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -140,12 +143,12 @@ export default function PreferredTime() {
               type="date"
             />
  
-            <SubmitButton></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>
 
-        <OnboardFooter></OnboardFooter>
+        <OnboardFooter ></OnboardFooter>
     </>
   );
 }

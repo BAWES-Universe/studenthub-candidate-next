@@ -47,7 +47,7 @@ export default function Name() {
                 </button>
             </div>
 
-            <SubmitButton disabled={!gender}></SubmitButton>  
+            <SubmitButton disabled={!gender} loading={loading}></SubmitButton>
         </div>
         <OnboardFooter></OnboardFooter>
     </>

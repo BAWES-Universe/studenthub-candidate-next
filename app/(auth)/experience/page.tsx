@@ -13,6 +13,7 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const formSchema = z.object({
   experiences: z.array(z.object({
@@ -24,6 +25,9 @@ const formSchema = z.object({
 })
 
 export default function Experiences() {
+
+  const [loading, setLoading] = useState(false);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -115,7 +119,7 @@ export default function Experiences() {
             <img src="/assets/icons/plus.svg" /> Add experience
           </Button>
 
-          <SubmitButton />
+          <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>
         </form>
       </Form>
 

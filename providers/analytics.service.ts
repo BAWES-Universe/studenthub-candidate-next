@@ -1,4 +1,4 @@
-import { RootState, useAppSelector } from '@/store/store';
+import { store } from '@/store/store';
 import * as mixpanel from 'mixpanel-browser';
 
 declare global {
@@ -39,8 +39,10 @@ export function identify(id: string, params: any) {
  * @param name 
  */
 export function page(name: string) {
-  const { language } = useAppSelector((state: RootState) => state.app);
 
+  const state = store.getState(); // Get the state directly from the store
+
+  const { language } = state.app;  
 
   if (window.analytics)
     window.analytics.page(name);
@@ -70,7 +72,10 @@ export function page(name: string) {
  * @param params 
  */
 export function track(eventName: string, params: any) {
-  const { language } = useAppSelector((state: RootState) => state.app);
+
+  const state = store.getState(); // Get the state directly from the store
+
+  const { language } = state.app;  
 
   params.language = language;
   params.channel = "Candidate Web App";

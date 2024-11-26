@@ -46,7 +46,7 @@ export default function Email() {
     setLoading(true);
 
     basicAuth(values.email, values.password).then(res => {
-
+ 
       // After successful login
       dispatch(setCredentials({
         token: res.token
@@ -92,7 +92,7 @@ export default function Email() {
               type="password"
             />
  
-            <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>

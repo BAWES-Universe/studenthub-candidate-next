@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
  
 //import Rocket from '../../public/'; // Adjust the path as necessary
 
 export function Hero() {
+
+
+  
   return (
 
     <div className="flex  min-h-screen flex-col items-center  text-center px-4 p-[16px]">
@@ -17,24 +21,26 @@ export function Hero() {
       </h1>
       
       <div className="xs:flex sm:block xs:bottom-[76px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
+        <Link href="/name">
         <Button size="lg" className=" sm:w-[300px] h-[56px]">
           Let&apos;s do it!
         </Button>
+        </Link>
         <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
       </div>
 
       <div className="xs:fixed xs:bottom-[16px] sm:mt-12 sm:relative  space-y-2 text-sm text-muted-foreground">
         <p>
           Have an account?{" "}
-          <a href="/login" className="no-underline text-primary">
+          <Link href="/login" className="no-underline text-primary">
             Login
-          </a>
+          </Link>
         </p>
         <p>
           Need help?{" "}
-          <a href="/contact" className="no-underline text-primary">
+          <Link href="/contact" className="no-underline text-primary">
             Contact Us
-          </a>
+          </Link>
         </p>
       </div>
     </div>

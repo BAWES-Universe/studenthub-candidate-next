@@ -12,6 +12,7 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -20,6 +21,8 @@ const formSchema = z.object({
 })
 
 export default function Name() {
+  const [loading, setLoading] = useState(false);
+  
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,7 +73,7 @@ export default function Name() {
               </div>
             </div>
               
-            <SubmitButton></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>

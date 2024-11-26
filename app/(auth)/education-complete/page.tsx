@@ -13,7 +13,6 @@ export default function EducationComplete() {
                 Looks good! One more step to go
             </h5>
 
-
             <div className="xs:flex sm:block xs:bottom-[60px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
                 <Button size="lg" className=" sm:w-[300px] h-[56px]">
                     Continue

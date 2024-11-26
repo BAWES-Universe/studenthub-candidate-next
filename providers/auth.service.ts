@@ -1,7 +1,6 @@
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import axios from "./AxiosService";
-import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
-import { setLanguage } from '@/store/slices/appSlice';
+import { store } from '@/store/store';
 
 declare let AppleID: any;
 
@@ -27,8 +26,10 @@ export async function loginByKey(auth_key: string) {
  */
 export async function useTokenForAuth(accessToken: string) {
 
-  const { utm_uuid } = useAppSelector((state: RootState) => state.app);
+  const state = store.getState(); // Get the state directly from the store
 
+  const { utm_uuid } = state.app;  
+ 
   const response = await axios.post('/auth/login-auth0', {
     accessToken,
     utm_uuid: utm_uuid
@@ -38,14 +39,14 @@ export async function useTokenForAuth(accessToken: string) {
 
 /**
  * Set language pref for current user
- */
+ *
 export async function setLanguagePref(language_pref: string) {
   const dispatch = useAppDispatch();
 
   dispatch(setLanguage({
     language: language_pref
   }));
-}
+}*/
 
 /**
  * Update password by token got in email
@@ -98,8 +99,8 @@ export async function getNameByCivilId(civilId: string) {
  * @param email
  * @param code
  */
-export async function verifyEmail(email: string, code: string) {
-  const response = await axios.post("/auth/verify-email", { email: email, 'code': code });
+export async function verifyEmail(email: string, code: string): Promise<any> {
+  const response = await axios.post("/auth/verify-email", { email: email, code: code });
   return response.data;
 }
 
@@ -141,13 +142,15 @@ export async function updateEmail(params: any): Promise<any> {
 export async function basicAuth(email: string, password: string): Promise<any> {
   // Add Basic Auth Header with Base64 encoded email and password
 //encodeURIComponent(
-  return await axios
+  const response = await axios
     .create({
       headers: {
         Authorization: 'Basic ' + btoa(`${email}:${password}`)
       }
     })
     .get("/auth/login");
+
+  return response.data;
 }
 
 /**
@@ -164,7 +167,10 @@ export async function mobileCheck(form: any): Promise<any> {
  * @param form
  */
 export async function createAccount(form: any): Promise<any> {
-  const { utm_uuid } = useAppSelector((state: RootState) => state.app);
+  
+  const state = store.getState(); // Get the state directly from the store
+
+  const { utm_uuid } = state.app;  
 
   const respone = await axios.post("/auth/register", {
     ...form,
@@ -260,7 +266,9 @@ function loginByGoogle() {
  */
 export async function useGoogleIdTokenForAuth(idToken: string) {
 
-  const { utm_uuid } = useAppSelector((state: RootState) => state.app);
+  const state = store.getState(); // Get the state directly from the store
+
+  const { utm_uuid } = state.app;  
 
   const respone = await axios.post("/auth/login-by-google", {
     idToken: idToken,
@@ -294,8 +302,10 @@ export async function handleAppleLoginResponse(data: any) {
  */
 export async function useAppleIdTokenForAuth(params: any) {
 
-  const { utm_uuid } = useAppSelector((state: RootState) => state.app);
+  const state = store.getState(); // Get the state directly from the store
 
+  const { utm_uuid } = state.app;  
+ 
   params.utm_uuid = utm_uuid;
 
   const respone = await axios.post('/auth/login-by-apple', params);

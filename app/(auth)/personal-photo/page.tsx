@@ -71,7 +71,7 @@ export default function PersonalPhoto() {
                     Upload picture    
                 </a> }
  
-            <SubmitButton disabled={ !form.getValues().personal_photo } float={ false }></SubmitButton>  
+            <SubmitButton disabled={ !form.getValues().personal_photo } float={ false } loading={loading}></SubmitButton>
             
           </form>
         </Form>

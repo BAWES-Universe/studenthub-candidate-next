@@ -1,5 +1,5 @@
 import { logout } from '@/store/slices/authSlice';
-import { RootState, useAppDispatch, useAppSelector } from '@/store/store'; 
+import { store } from '@/store/store'; 
 import axios from 'axios';
 import Router from 'next/router';
 //import { map } from 'zod';
@@ -21,15 +21,18 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 // Add a request interceptor
 axios.interceptors.request.use((config) => {  
+    
+    // const { isAuthenticated, token } = useAppSelector((state: RootState) => state.auth);
+   
+    const state = store.getState(); // Get the state directly from the store
 
-    const { isAuthenticated, token } = useAppSelector((state: RootState) => state.auth);
-    const { language, mixpanel_distinct_id } = useAppSelector((state: RootState) => state.app);
+    const { isAuthenticated, token } = state.auth; // Access auth state
+    const { language, mixpanel_distinct_id } = state.app; // Access app state
 
     if(isAuthenticated)
         config.headers['Authorization'] = 'Bearer ' + token;
 
     config.headers['Language'] = language;
-
     config.headers['Mixpanel-Distinct-ID'] = mixpanel_distinct_id;
 
     return config;
@@ -40,6 +43,9 @@ axios.interceptors.response.use(async (response) => {
 }, err => handleAxiosError(err));
 
 export async function handleAxiosError(err: any) {
+    
+    console.log("axios error:", err);
+
     const response = err.response;
     const errMsg = response.status ? `${response.status} - ${response.statusText}` : 'Server error';
 
@@ -59,8 +65,8 @@ export async function handleAxiosError(err: any) {
 
     // Handle Expired Session Error
     if (response.status === 401) { 
-        const dispatch = useAppDispatch();
-        dispatch(logout());
+        //const dispatch = useAppDispatch();
+        //dispatch(logout());
         Router.push('/'); 
     }
 

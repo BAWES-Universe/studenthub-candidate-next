@@ -12,12 +12,28 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
+import { useState } from "react";
+import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
+import { useRouter } from "next/navigation";
+import { createAccount } from "@/providers/auth.service";
+import { errorMessage } from "@/utils/common";
+import { setUnVerifiedToken } from "@/store/slices/authSlice";
 
 const formSchema = z.object({
   email: z.string().email('Please enter valid email address')
 })
 
+declare let grecaptcha: any;
+
 export default function Email() {
+
+  const [loading, setLoading] = useState(false);
+  
+  const dispatch = useAppDispatch();
+  const router = useRouter()
+  
+  const { user } = useAppSelector((state: RootState) => state.user);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -28,9 +44,60 @@ export default function Email() {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    
+    setLoading(true);
+
+    grecaptcha.ready(() => {
+      grecaptcha.execute('6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V', {action: 'submit'}).then((token: string) => {
+
+         const params = {
+            ...values, 
+            name: user?.candidate_name,
+            name_ar: user?.candidate_name_ar,
+            token: token
+         };
+
+         onValidCaptcha(params);
+      });
+    });  
+  }
+
+  function onValidCaptcha(values: any) {
+    createAccount(values).then(res => {
+
+      if (res.operation == 'success') {
+
+        dispatch(setUnVerifiedToken({
+          token: res.unVerifiedToken
+        }));
+      
+        router.push('/verify-email/' + values.email);
+
+      } else if (res.operation === 'error') {
+
+        //validation error 
+
+        if(res.code == 2 && res.message.candidate_email) {
+          router.push('/login');
+        }
+
+        alert(errorMessage(res.message));
+
+        /*
+        todo: have alert
+        this.alertCtrl.create({
+          message: this.authService.errorMessage(res.message),
+          buttons: [this.translateService.transform('Okay')]
+        }).then(alert => {
+          alert.present();
+        });*/
+      }
+      
+    }).catch(err => {
+     // alert("err:" + err);
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
@@ -51,7 +118,7 @@ export default function Email() {
               type="email"
             />
  
-            <SubmitButton></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>

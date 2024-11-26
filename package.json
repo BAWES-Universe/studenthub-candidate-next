@@ -5,16 +5,12 @@
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
     "build": "next build",
-    
     "dev:local": "NODE_ENV=local NODE_OPTIONS='--inspect' next dev --turbopack",
-
     "dev:staging": "NODE_ENV=staging NODE_OPTIONS='--inspect' next dev --turbopack",
     "dev:prod": "NODE_ENV=production NODE_OPTIONS='--inspect' next dev --turbopack",
-    
     "build:local": "next build",
-    "build:staging": "NODE_ENV=staging next build", 
+    "build:staging": "NODE_ENV=staging next build",
     "build:prod": "NODE_ENV=production next build",
-
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
@@ -23,6 +19,7 @@
   "dependencies": {
     "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4",
     "@hookform/resolvers": "^3.9.1",
+    "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.2",
