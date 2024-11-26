@@ -7,7 +7,7 @@ const publicRoutes = ['/login', '/signup', '/']
  
 export default async function middleware(req: NextRequest) {
 
-    const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
  
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)

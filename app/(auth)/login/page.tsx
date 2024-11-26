@@ -14,6 +14,11 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
+import { basicAuth } from "@/providers/auth.service";
+import { useState } from "react";
+import { setIsProfileCompleted } from "@/store/slices/userSlice";
+import { useRouter } from 'next/navigation'; 
+ 
 
 const formSchema = z.object({
   email: z.string().email('Please enter valid email address'),
@@ -21,10 +26,13 @@ const formSchema = z.object({
 })
 
 export default function Email() {
-    const dispatch = useAppDispatch();
-    //const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
-  
-  // 1. Define your form.
+
+  const router = useRouter()
+
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,17 +41,30 @@ export default function Email() {
     },
   })
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
 
-    // After successful login
-    dispatch(setCredentials({ 
-        user: values, 
-        token: 'your-token' 
-    }));
+    setLoading(true);
+
+    basicAuth(values.email, values.password).then(res => {
+
+      // After successful login
+      dispatch(setCredentials({
+        token: res.token
+      }));
+
+      dispatch(setIsProfileCompleted({ 
+        isProfileCompleted: res.isProfileCompleted
+      }));
+ 
+      //todo: set language based on saved preference?
+      //language_pref
+
+      router.push('/');
+    }).catch(err => {
+     // alert("err:" + err);
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
@@ -71,7 +92,7 @@ export default function Email() {
               type="password"
             />
  
-            <SubmitButton></SubmitButton>  
+            <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>  
             
           </form>
         </Form>

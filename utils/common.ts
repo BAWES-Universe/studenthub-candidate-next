@@ -6,9 +6,9 @@ import { RootState, useAppSelector } from "@/store/store";
  * @param date
  */
 export function toDate(date: string) {
-    if (date) {
-        return new Date(date.replace(/-/g, '/'));
-    }
+  if (date) {
+    return new Date(date.replace(/-/g, '/'));
+  }
 }
 
 /**
@@ -18,17 +18,17 @@ export function toDate(date: string) {
  */
 export function langContent(enContent: string, arContent: string) {
 
-    const { language } = useAppSelector((state: RootState) => state.app);
+  const { language } = useAppSelector((state: RootState) => state.app);
 
-    if (language == 'ar' && arContent) {
-        return arContent;
-    }
+  if (language == 'ar' && arContent) {
+    return arContent;
+  }
 
-    return enContent? enContent: arContent;
+  return enContent ? enContent : arContent;
 }
 
 export function isString(x: any) {
-    return Object.prototype.toString.call(x) === "[object String]"
+  return Object.prototype.toString.call(x) === "[object String]"
 }
 
 /**
@@ -37,36 +37,34 @@ export function isString(x: any) {
  */
 export function errorMessage(message: string | any): string {
 
-    if (isString(message))
-    {
-        return message + '';
-    }
-
-    const a: string[] = [];
-
-    for (const i in message) {
-
-        if (!Array.isArray(message[i])) {
-            a.push(message[i]);
-            continue;
-        }
-
-        for (const j of message[i]) {
-            a.push(j);
-        }
-    }
-
-    return a.join('<br />');
-}
-
-
-export async function convertBlobToBase64(blob: Blob) { // blob data
-    return await blobToBase64(blob);
+  if (isString(message)) {
+    return message + '';
   }
 
-export function blobToBase64(blob:Blob) {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
+  const a: string[] = [];
+
+  for (const i in message) {
+
+    if (!Array.isArray(message[i])) {
+      a.push(message[i]);
+      continue;
+    }
+
+    for (const j of message[i]) {
+      a.push(j);
+    }
+  }
+
+  return a.join('<br />');
+}
+
+export async function convertBlobToBase64(blob: Blob) { // blob data
+  return await blobToBase64(blob);
+}
+
+export function blobToBase64(blob: Blob) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
 
     if (blob instanceof Blob) {
       const realFileReader = (reader as any)._realReader;
@@ -80,16 +78,17 @@ export function blobToBase64(blob:Blob) {
       resolve(reader.result);
     }
     reader.onerror = error => {
-      console.log('error',error);
+      console.log('error', error);
       reject(error);
     }
   });
+}
 
   /**
    * @param name
    * @private
    */
-export function getMimeType(name: string) {
+  export function getMimeType(name: string) {
     if (name.indexOf('pdf') >= 0) {
       return 'application/pdf';
     } else if (name.indexOf('png') >= 0) {
@@ -98,6 +97,27 @@ export function getMimeType(name: string) {
       return 'video/mp4';
     }
   }
+
+
+  export function detectBrowserName() {
+    const agent = window.navigator.userAgent.toLowerCase();
+    switch (true) {
+      case agent.indexOf('edge') > -1:
+        return 'edge';
+      case agent.indexOf('opr') > -1:
+        return 'opera';
+      case agent.indexOf('chrome') > -1:
+        return 'chrome';
+      case agent.indexOf('trident') > -1:
+        return 'ie';
+      case agent.indexOf('firefox') > -1:
+        return 'firefox';
+      case agent.indexOf('safari') > -1:
+        return 'safari';
+      default:
+        return 'other';
+    }
+  } 
 /*
 export async function fileWrite(blob: Blob, filename: string) {
     try {
@@ -116,5 +136,4 @@ export async function fileWrite(blob: Blob, filename: string) {
     } catch(e) {
       console.error('Unable to write file', e);
     }
-}
-*/
+}*/

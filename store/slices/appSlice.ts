@@ -4,11 +4,19 @@ import mixpanel from "mixpanel-browser";
 interface AppState {
   language: string;
   mixpanel_distinct_id: string | null;
+  temp_bucket: string;
+  utm_uuid: string;
+  currentLocation: any;
+  showOneSignalPrompt: boolean
 }
 
 const initialState: AppState = {
   language: "ar",
-  mixpanel_distinct_id: mixpanel.get_distinct_id(),
+  mixpanel_distinct_id: null,//mixpanel.get_distinct_id()
+  temp_bucket: "",
+  utm_uuid: "",
+  currentLocation: null,
+  showOneSignalPrompt: true
 };
 
 const appSlice = createSlice({
@@ -18,8 +26,21 @@ const appSlice = createSlice({
     setLanguage: (state, action: PayloadAction<{ language: string }>) => {
       state.language = action.payload.language;
     },
+    setTempBucket: (state, action: PayloadAction<{ temp_bucket: string }>) => {
+      state.temp_bucket = action.payload.temp_bucket;
+    },
+    setCampaignId: (state, action: PayloadAction<{ utm_uuid: string }>) => {
+      state.utm_uuid = action.payload.utm_uuid;
+    },
+    setCurrentLocation: (state, action: PayloadAction<{ currentLocation: any }>) => {
+      state.currentLocation = action.payload.currentLocation;
+    },
+    setShowOneSignalPrompt: (state, action: PayloadAction<{ showOneSignalPrompt: boolean }>) => {
+      state.showOneSignalPrompt = action.payload.showOneSignalPrompt;
+    },
+
   },
 });
 
-export const { setLanguage } = appSlice.actions;
+export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, setShowOneSignalPrompt } = appSlice.actions;
 export default appSlice.reducer;

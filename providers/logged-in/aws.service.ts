@@ -1,172 +1,43 @@
-import { File as NativeFile, Entry, FileEntry } from '@awesome-cordova-plugins/file/ngx';
-//import { Observable, Observer } from 'rxjs';
 import * as AWS from 'aws-sdk';
-import { Filesystem, Encoding } from '@capacitor/filesystem';
-
-    public permanentBucketUrl = process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL;
-    public cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
-
-    private _region = 'eu-west-2'; // London
-    private _access_key_uuid = '';
-    private _secret_access_key = '';
-    private _bucket_name = '';
-
-    public maxUploadSize = 18874368; // 18 MB
-    public maxImageUploadSize = 5000000; // 5 MB //https://sentry.io/organizations/pogi/issues/1885937107/?project=168200&query=is%3Aunresolved&statsPeriod=14d
-
-    public txtMaxUploadSize = '18MB';
-
-    /*constructor(
-        private http: HttpClient,
-        public platform: Platform,
-        public alertController: AlertController,
-        private _file: NativeFile,
-        public translateService: TranslateLabelService,
-    ) {
-     //   this.initAwsService();
-    }*/
+import axios from "../AxiosService";
+import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
+import { setTempBucket } from '@/store/slices/appSlice';
+//import { ManagedUpload } from 'aws-sdk/clients/s3';
 
     /**
      * get temp aws access/ todo: can also get authorised link  
      * @returns 
      */
-    getConfig(): Observable<any> {
-        let url = environment.apiEndpoint + `/aws/config`;
-        return this.http.get(url);
+    async function getConfig(): Promise<any> {
+        const url = `/aws/config`;
+        const response = await axios.get(url);
+        return response.data;
     }
 
     /**
      * @param config 
      */
-    setConfig() {
-        return new Promise((resolve, reject) => {
-            this.getConfig().subscribe(config => {
-                this._region = config.region;
-                this._access_key_uuid = config.key;
-                this._secret_access_key = config.secret;
-                this._bucket_name = config.bucket;
+    function setConfig() {
+        const dispatch = useAppDispatch();
 
-                AWS.config.region = this._region;
-                AWS.config.accessKeyId = this._access_key_uuid;
-                AWS.config.secretAccessKey = this._secret_access_key;
+        getConfig().then(config => {
+             
+            dispatch(setTempBucket({
+                temp_bucket: config.bucket
+            }));
 
-                resolve(true);
-            }, err => {
-                reject(err);
+            // Create credentials object
+            const credentials = new AWS.Credentials({
+                accessKeyId: config.key,
+                secretAccessKey: config.secret
+            });
+
+            // Set AWS config with credentials object
+            AWS.config.update({
+                region: config.region,
+                credentials: credentials
             });
         });
-    }
-
-    /**
-     * Initialize the AWS Service
-     */
-    initAwsService(){ 
-        AWS.config.region = this._region;
-        AWS.config.accessKeyId = this._access_key_uuid;
-        AWS.config.secretAccessKey = this._secret_access_key;
-    }
-
-    /**
-     * Files available in native filesystem need additional processing
-     * before they are ready to be uploaded to S3. This function will create
-     * a JS File blob that is ready to be accepted via AWS S3 SDK.
-     * @param  { any } nativeFilePath
-     * @returns Promise
-     */
-    uploadNativePath(nativeFilePath, type = null): Promise<Observable<any>>{
-        return new Promise((resolve, reject) => {
-
-            if (type && type == 'video') {
-                // need to ios video
-                if (this.platform.is("mobile") && this.platform.is("ios")) {
-                    nativeFilePath = 'file://' + nativeFilePath
-                }
-            }
-
-            // Resolve File Path on System
-            this._file.resolveLocalFilesystemUrl(nativeFilePath).then((entry: Entry) => {
-
-                // Convert entry into File Entry which can output a JS File object
-                let fileEntry =  entry as FileEntry;
-
-                // Return a File object that represents the current state of the file that this FileEntry represents
-                fileEntry.file(async (file: any) => {
-
-                    // Store File Details for later use
-                    let fileName = file.name;
-                    let fileType = file.type;
-                    let fileSize = file.size;
-
-                    let fileLastModified = file.lastModifiedDate;
-
-                    let fileReadResult;
-
-                    try
-                    {
-                        fileReadResult = await Filesystem.readFile({
-                            path: nativeFilePath,
-                            // encoding: Encoding.UTF8
-                        });
-                    }
-                    catch(err)
-                    {
-                        let message = err && err.message? err.message: this.translateService.transform("Error reading file");
-
-                        const alert = await this.alertController.create({
-                            header: this.translateService.transform('Error'),
-                            message: message,
-                            buttons: [this.translateService.transform('Okay')]
-                        });
-
-                        await alert.present();
-
-                        return reject("Error reading file: " + JSON.stringify(err));
-                    }
-
-                    //var blob = new Blob([fileReadResult.data], { type: fileType });
-                    var file: any = this.b64toBlob(fileReadResult.data, fileType);// blob;//, fileType);//blob;
-                    file.name = fileName;
-                    file.lastModifiedDate = fileLastModified;
-
-                    // Resolve an Observable for File Uploading
-
-                    resolve(this.uploadFile(file));
-
-                }, (error) => {
-                    reject("Unable to retrieve file properties: " + JSON.stringify(error));
-                });
-            }).catch(err => {
-                reject("Error resolving file: " + JSON.stringify(err));
-            });
-        });
-    }
-
-    /**
-     * convert base64 data to Blob object
-     * @param b64Data
-     * @param contentType
-     * @param sliceSize
-     */
-    b64toBlob(b64Data, contentType = '', sliceSize = 512) {
-
-        var byteCharacters = atob(b64Data);
-        var byteArrays = [];
-
-        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-          var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-          var byteNumbers = new Array(slice.length);
-          for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-          }
-
-          var byteArray = new Uint8Array(byteNumbers);
-
-          byteArrays.push(byteArray);
-        }
-
-        var blob = new Blob(byteArrays, {type: contentType});
-        return blob;
     }
 
     /**
@@ -174,14 +45,22 @@ import { Filesystem, Encoding } from '@capacitor/filesystem';
      * @param { File } file
      * @returns { Observable<any> }
      */
-    uploadFile(file: File = null, metadata = {}): Observable<any> {
+    export function uploadFile(file: File, metadata = {}): Promise<any> {
+        
+        /*const maxUploadSize = 18874368; // 18 MB
+        const maxImageUploadSize = 5000000; // 5 MB //https://sentry.io/organizations/pogi/issues/1885937107/?project=168200&query=is%3Aunresolved&statsPeriod=14d
+    
+        const txtMaxUploadSize = '18MB';*/
+
+        const { temp_bucket } = useAppSelector((state: RootState) => state.app);
+
         let s3 = new AWS.S3({
             apiVersion: '2006-03-01'
         });
 
-        let extension = this.getFileExtension(file.name);
+        let extension = getFileExtension(file.name);
 
-        let prefix = this._getFileNameWithoutExtension(file.name);
+        let prefix = _getFileNameWithoutExtension(file.name);
 
         if(!prefix) {
             prefix = 'file';
@@ -192,26 +71,30 @@ import { Filesystem, Encoding } from '@capacitor/filesystem';
         let params = {
             Body: file, // the actual file file
             ACL: "public-read", // to allow public access to the file
-            Bucket: this._bucket_name, //bucket name
+            Bucket: temp_bucket, //bucket name
             Key: key, //file name
             ContentType: file.type, //(String) A standard MIME type describing the format of the object file
             Metadata: metadata
         }
 
-        return Observable.create((observer: Observer<any>) => {
+        //return Observable.create((observer: Observer<any>) => {
 
-            if(file.size > this.maxUploadSize) {
-                return observer.error(this.translateService.transform('txt_max_upload_limit_exceed', { 'maxUploadSize': this.txtMaxUploadSize }));
+            /*
+            if(file.size > maxUploadSize) {
+                return observer.error(this.translateService.transform('txt_max_upload_limit_exceed', { 'maxUploadSize': txtMaxUploadSize }));
             }
-            if (file.type == 'image' && file.size > this.maxImageUploadSize) {
+
+            if (file.type == 'image' && file.size > maxImageUploadSize) {
                 return observer.error(this.translateService.transform('Maximum 5mb Upload is allowed'));
-            }
+            }*/
 
             const currUpload = s3.upload(params);
+        
+            return currUpload.promise();
 
-            observer.next(currUpload);
+            /*observer.next(currUpload);
 
-            currUpload.on('httpUploadProgress', (progress: ProgressEvent) => {
+            currUpload.on('httpUploadProgress', (progress: ManagedUpload.Progress) => {
                 observer.next(progress);
             });
 
@@ -221,39 +104,47 @@ import { Filesystem, Encoding } from '@capacitor/filesystem';
                 } else {
                     observer.next(data);
                 }
-            });
-        });
+            });*/
+        //});
     }
 
     /**
      * Take file name / path and return the file name without extension.
      */
-    private _getFileNameWithoutExtension(path) {
-        let basename = path.split(/[\\/]/).pop(),  // extract file name from full path ... (supports `\\` and `/` separators)
+    function _getFileNameWithoutExtension(path: string) {
 
-        pos = basename.lastIndexOf(".");       // get last position of `.`
+        let basename = path.split(/[\\/]/).pop();  // extract file name from full path ... (supports `\\` and `/` separators)
+
+        if (!basename)
+            return;
+
+        const pos = basename.lastIndexOf(".");       // get last position of `.`
 
         if (basename === "" || pos < 1)            // if file name is empty or ...
             return "";                             //  `.` not found (-1) or comes first (0)
 
-        return this.normalizeFileName(basename.slice(0, pos));            // extract file name ignoring `.` without extension
+        return normalizeFileName(basename.slice(0, pos));            // extract file name ignoring `.` without extension
     }
 
     /**
      * replace space in name with `-`
      * @param fileName
      */
-    normalizeFileName(fileName) {
+    function normalizeFileName(fileName: string) {
         return fileName.replace(/ /g, "-").replace(/%20/g, "-").replace(/([^a-z0-9 ]+)/gi, '-');
     }
 
     /**
      * Take file name / path and return the file extension.
      */
-    getFileExtension(path) {
-        var basename = path.split(/[\\/]/).pop(),  // extract file name from full path ...
-                                                // (supports `\\` and `/` separators)
-            pos = basename.lastIndexOf(".");       // get last position of `.`
+    function getFileExtension(path: string) {
+        var basename = path.split(/[\\/]/).pop();  // extract file name from full path ...
+                    
+        if (!basename) {
+            return;
+        }
+        // (supports `\\` and `/` separators)
+        const pos = basename.lastIndexOf(".");       // get last position of `.`
 
         if (basename === "" || pos < 1)            // if file name is empty or ...
             return "";                             //  `.` not found (-1) or comes first (0)
