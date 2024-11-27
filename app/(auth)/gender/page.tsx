@@ -4,13 +4,48 @@ import { OnboardProgress } from "@/components/on-board/progress";
  
 import SubmitButton from "@/components/ui/submit-button";
 import OnboardFooter from "@/components/on-board/layout/footer";
-import React, { useState } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
+import { profile, updateGender, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
  
  
 export default function Name() {
   
-  const [gender, setGender] = useState<number | undefined>();
+    const { user } = useAppSelector(state => state.user);
+    
+const [gender, setGender] = useState<number | undefined>(user?.candidate_gender || undefined);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+   //  form.setValue('phone', user?.candidate_phone || "");
+    //} else {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        setGender(res.candidate_gender || 0);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
+  function onSubmit() {
+    if (gender) {
+      updateGender(gender).then(res => {
+        router.push('/nationality');
+      });
+    }
+  }
+  
   return (
     <>
         <OnboardProgress></OnboardProgress>
@@ -47,7 +82,7 @@ export default function Name() {
                 </button>
             </div>
 
-            <SubmitButton disabled={!gender} loading={loading}></SubmitButton>
+            <SubmitButton onClick={onSubmit} disabled={!gender} loading={loading}></SubmitButton>
         </div>
         <OnboardFooter></OnboardFooter>
     </>

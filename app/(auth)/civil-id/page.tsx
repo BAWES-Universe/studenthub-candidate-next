@@ -14,41 +14,90 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { profile, updateCivilIdAndExpiryDate, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+
 
 const formSchema = z.object({
-    id_back: z.string({
+  candidate_civil_photo_back: z.string({
         required_error: 'Please upload back side of your national id.'
     }),
-    id_front: z.string({
+  candidate_civil_photo_front: z.string({
         required_error: 'Please upload front side of your national id.'
     }),
-    expiry_date: z.date({
+  candidate_civil_expiry_date: z.date({
     }),
-    id_number: z.string({
+    candidate_civil_id: z.string({
         //required_error: 'Please add id number.'
     })
 })
 
 export default function PreferredTime() {
   const [loading, setLoading] = useState(false);
-  
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+   //  form.setValue('phone', user?.candidate_phone || "");
+    //} else {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('candidate_civil_id', res.candidate_civil_id || "");
+        form.setValue('candidate_civil_expiry_date', res.candidate_civil_expiry_date || "");
+        form.setValue('candidate_civil_photo_back', res.candidate_civil_photo_back || "");
+        form.setValue('candidate_civil_photo_front', res.candidate_civil_photo_front || "");
+      
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        id_number: "",
-        expiry_date: undefined,
-        id_back: undefined,
-        id_front: "1",
+        candidate_civil_id: user?.candidate_civil_id || "",
+        candidate_civil_expiry_date: new Date(user?.candidate_civil_expiry_date || ""),
+        candidate_civil_photo_back: user?.candidate_civil_photo_back,
+        candidate_civil_photo_front: user?.candidate_civil_photo_front,
     },
   })
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    
+    setLoading(true);
+
+    //todo: new api to upload both  
+    updateCivilIdPhotos(values).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          user.candidate_civil_id = values.candidate_civil_id;
+          user.candidate_civil_expiry_date = values.candidate_civil_expiry_date.toISOString();
+          user.candidate_civil_photo_back = values.candidate_civil_photo_back;
+          user.candidate_civil_photo_front = values.candidate_civil_photo_front;  
+          dispatch(setUser({ user: user }));
+        }
+
+        router.push('/preferred-time');
+      } else {
+        alert(errorMessage(res.message));
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
@@ -62,7 +111,7 @@ export default function PreferredTime() {
   { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
 
        <div className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
-            { !form.getValues().id_front && <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
+            { !form.getValues().candidate_civil_photo_front && <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-2xl border-[1.333px] border-dashed mb-[24px] sm:mb-0 sm:me-[24px]">
 
                 <img src="/assets/icons/id-front.svg" className="m-auto"></img>   
@@ -80,7 +129,7 @@ export default function PreferredTime() {
                 </a>
             </div> }
 
-            { form.getValues().id_front && <div className="xs:max-w-full w-full sm:max-w-[313px]  flex-none 
+            { form.getValues().candidate_civil_photo_front && <div className="xs:max-w-full w-full sm:max-w-[313px]  flex-none 
                   rounded-2xl mb-[24px] sm:mb-0 sm:me-[24px]">
 
                 <img src="/assets/icons/logo.svg" className="w-full"></img>   
@@ -90,7 +139,7 @@ export default function PreferredTime() {
                 </Button>
             </div> }
             
-            { !form.getValues().id_back && <div className="xs:max-w-full sm:max-w-[313px] flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
+            { !form.getValues().candidate_civil_photo_back && <div className="xs:max-w-full sm:max-w-[313px] flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-2xl border-[1.333px] border-dashed">
 
                 <img src="/assets/icons/id-back.svg" className="m-auto"></img>   
@@ -109,7 +158,7 @@ export default function PreferredTime() {
             </div> }
 
 
-            { form.getValues().id_back && <div className="xs:max-w-full sm:max-w-[313px] w-full flex-none 
+            { form.getValues().candidate_civil_photo_back && <div className="xs:max-w-full sm:max-w-[313px] w-full flex-none 
                   rounded-2xl mb-[24px] sm:mb-0">
 
                 <img src="/assets/icons/logo.svg" className="w-full"></img>   
@@ -129,7 +178,7 @@ export default function PreferredTime() {
           </p>
 
           <FormInput
-              name="id_number"
+              name="candidate_civil_id"
               label="ID Number"
               form={form as any}
               type="text"
@@ -137,7 +186,7 @@ export default function PreferredTime() {
 { /* todo: have date field*/ }
 
            <FormInput
-              name="expiry_date"
+              name="candidate_civil_expiry_date"
               label="Expiry Date"
               form={form as any}
               type="date"

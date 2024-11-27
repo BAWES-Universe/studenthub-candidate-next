@@ -13,7 +13,14 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { profile, updatePhoneDetail, updatePreferredTime } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+
 
 const formSchema = z.object({
   preferred_time: z.string({
@@ -24,20 +31,52 @@ const formSchema = z.object({
 export default function PreferredTime() {
 
   const [loading, setLoading] = useState(false);
-  
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      preferred_time: "",
+      preferred_time: user?.candidate_preferred_time || "",
     },
   })
 
+  useEffect(() => {
+    if (!user) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('preferred_time', res.candidate_preferred_time || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    
+    setLoading(true);
+
+    updatePreferredTime(values).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          user.candidate_preferred_time = values.preferred_time;
+          dispatch(setUser({ user: user }));
+        }
+
+        router.push('/complete');
+      } else {
+        alert(errorMessage(res.message));
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (

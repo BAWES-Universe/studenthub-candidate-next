@@ -12,27 +12,66 @@ import {
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { profile, updatePhoneDetail, updateProfilePhoto } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
 
 const formSchema = z.object({
-    personal_photo: z.string({
+    candidate_personal_photo: z.string({
         required_error: "Please upload photo."
     }),
 })
 
 export default function PersonalPhoto() {
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        personal_photo: "1",
+        candidate_personal_photo: user?.candidate_personal_photo || "",
     },
   })
 
+  useEffect(() => {
+    if (!user) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('candidate_personal_photo', res.candidate_personal_photo || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+  
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    setLoading(true);
+
+    updateProfilePhoto(values.candidate_personal_photo).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          user.candidate_personal_photo = res.candidate_personal_photo;
+          dispatch(setUser({ user: user }));
+        }
+
+        router.push('/about-yourself');
+      } else {
+        alert(errorMessage(res.message));
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
@@ -49,13 +88,13 @@ export default function PersonalPhoto() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[560px] m-auto">
   
-          { form.getValues().personal_photo && 
+          { form.getValues().candidate_personal_photo && 
             <div className="w-40 h-40 m-auto border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-[80px] border-[1.333px] border-dashed">
                 <img src="/assets/icons/logo.svg" alt="" className="w-40 h-40" />
             </div> }
 
-          { !form.getValues().personal_photo && 
+          { !form.getValues().candidate_personal_photo && 
             <div className="w-40 h-40 m-auto border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-[80px] border-[1.333px] border-dashed">
                 <img src="/assets/icons/camera.svg" className="w-10 h-10 m-auto mt-[48px]" />
@@ -65,13 +104,13 @@ export default function PersonalPhoto() {
                 </a>
             </div> }
             
-            { form.getValues().personal_photo && 
+            { form.getValues().candidate_personal_photo && 
                 <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center m-auto block
                  text-xs font-medium leading-4 mt-[8px]">
                     Upload picture    
                 </a> }
  
-            <SubmitButton disabled={ !form.getValues().personal_photo } float={ false } loading={loading}></SubmitButton>
+            <SubmitButton disabled={ !form.getValues().candidate_personal_photo } float={ false } loading={loading}></SubmitButton>
             
           </form>
         </Form>

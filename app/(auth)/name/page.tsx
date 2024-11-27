@@ -12,10 +12,11 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useState } from "react";
-import { useAppDispatch } from "@/store/store";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { useRouter } from 'next/navigation'; 
+import { profile } from "@/providers/logged-in/account.service";
 
 const formSchema = z.object({
   name_en: z.string().min(2, {
@@ -28,6 +29,9 @@ const formSchema = z.object({
 
 export default function Name() {
 
+  const { user } = useAppSelector(state => state.user);
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+
   const dispatch = useAppDispatch();
   const router = useRouter()
 
@@ -37,11 +41,26 @@ export default function Name() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name_en: "",
-      name_ar: "",
+      name_en: user?.candidate_name || "",
+      name_ar: user?.candidate_name_ar || "",
     },
   })
 
+  useEffect(() => {
+    if (!user && isAuthenticated) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('name_en', res.candidate_name || "");
+        form.setValue('name_ar', res.candidate_name_ar || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user, isAuthenticated]);
+  
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     //setLoading(true); 

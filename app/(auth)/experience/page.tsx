@@ -13,28 +13,64 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { profile, updateExperiences, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+import { saveExperience } from "@/providers/logged-in/candidate-experience.service";
 
 const formSchema = z.object({
   experiences: z.array(z.object({
-    jobTitle: z.string().min(1, 'Job title is required'),
-    employer: z.string().min(1, 'Employer name is required'),
-    startYear: z.string().min(1, 'Start year is required'),
-    endYear: z.string() //.min(1, 'End year is required'),
+    candidate_experience_id: z.number().nullable(),
+    experience: z.string().max(128).min(1, 'Job title is required'),
+    employer: z.string().max(128).nullable(),
+    start_year: z.number().min(1900).max((new Date()).getFullYear()).nullable(),
+    end_year: z.number().min(1900).max((new Date()).getFullYear()).nullable()
   }))
 })
 
 export default function Experiences() {
 
   const [loading, setLoading] = useState(false);
-  
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      experiences: [{ jobTitle: '', employer: '', startYear: '', endYear: '' }]
+     // experiences: [{ experience: '', employer: '', start_year: '', end_year: '' }]
     },
   })
 
+  useEffect(() => {
+    if (user) {
+
+      const formattedExperiences = user.candidateExperiences.map(exp => ({
+        candidate_experience_id: exp.candidate_experience_id || null,
+        experience: exp.experience,
+        employer: exp.employer || null, // Ensure employer is null if undefined
+        start_year: exp.start_year || null,
+        end_year: exp.end_year || null,
+      }));
+
+     form.setValue('experiences', formattedExperiences);
+    } else {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('experiences', res.candidateExperiences || []);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+  
   //const { fields, append, remove } = form.control._formValues.experiences
 
   const { fields, append, remove } = useFieldArray({
@@ -43,7 +79,23 @@ export default function Experiences() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    setLoading(true);
+
+    saveExperience(values.experiences).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          user.candidateExperiences = res.country.experiences;
+          dispatch(setUser({ user: user }));
+        }
+
+        router.push('/education-complete');
+      } else {
+        alert(errorMessage(res.message));
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
@@ -59,7 +111,7 @@ export default function Experiences() {
           {fields?.map((field: { id: string }, index: number) => (
             <div key={field.id} className="space-y-4">
               <FormInput
-                name={`experiences.${index}.jobTitle`}
+                name={`experiences.${index}.experience`}
                 label="Job Title"
                 form={form as any}
               />
@@ -74,7 +126,7 @@ export default function Experiences() {
                 </div>  
                 <div className="flex-col me-[16px]">
                 <FormInput
-                    name={`experiences.${index}.startYear`}
+                    name={`experiences.${index}.start_year`}
                     label="Start Year"
                     form={form as any}
                     type="number"
@@ -82,7 +134,7 @@ export default function Experiences() {
                 </div>  
                 <div className="flex-col">
                 <FormInput
-                    name={`experiences.${index}.endYear`}
+                    name={`experiences.${index}.end_year`}
                     label="End Year"
                     form={form as any}
                     type="number"
@@ -112,7 +164,7 @@ export default function Experiences() {
           <Button
             variant={'ghost'}
             type="button"
-            onClick={() => append({ jobTitle: '', employer: '', startYear: '', endYear: '' })}
+            onClick={() => append({ candidate_experience_id: null, experience: '', employer: '', start_year: null, end_year: null })}
             className="text-[color:var(--Primary-Main,#4C70F2)] text-sm font-medium leading-5"
           >
             

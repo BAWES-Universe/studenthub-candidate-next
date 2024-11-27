@@ -15,7 +15,12 @@ import SubmitButton from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { profile, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
 
 const formSchema = z.object({
     video: z.string({
@@ -29,19 +34,40 @@ const formSchema = z.object({
 export default function Video() {
 
   const [loading, setLoading] = useState(false);
-  
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      video: user?.candidate_video || "",
+      resume: user?.candidate_resume || "", 
     },
   })
 
+  useEffect(() => {
+    if (!user) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('video', res.candidate_video || "");
+        form.setValue('resume', res.candidate_resume || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+  
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    router.push('/civil-id');
   } 
 
   return (

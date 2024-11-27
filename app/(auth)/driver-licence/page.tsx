@@ -4,12 +4,58 @@ import { OnboardProgress } from "@/components/on-board/progress";
  
 import SubmitButton from "@/components/ui/submit-button";
 import OnboardFooter from "@/components/on-board/layout/footer";
-import React, { useState } from "react";
- 
+import React from "react";
+import { useEffect, useState } from "react";
+import { profile, updateDrivingLicense, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+
+
  
 export default function DriverLicence() {
   
-  const [haveLicence, setHaveLicence] = useState<number | undefined>();
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector(state => state.user);
+
+  const [haveLicence, setHaveLicence] = useState<number | undefined>(user?.candidate_driving_license || undefined);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+   //  form.setValue('phone', user?.candidate_phone || "");
+    //} else {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        setHaveLicence(res.candidate_driving_license || 0);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
+  function onSubmit() {
+
+    if (!haveLicence) {
+      return;
+    }
+
+    setLoading(true);
+    updateDrivingLicense(haveLicence).then(res => {
+        if (res.operation == 'success') {
+          router.push('/personal-photo');
+        } else {
+          alert(errorMessage(res.message));
+        }
+    }).finally(() => {
+      setLoading(false);
+    });
+  }
 
   return (
     <>
@@ -39,7 +85,7 @@ export default function DriverLicence() {
                 </button>
             </div>
 
-            <SubmitButton disabled={!haveLicence} loading={loading}></SubmitButton>
+            <SubmitButton onClick={onSubmit} disabled={!haveLicence} loading={loading}></SubmitButton>
         </div>
         <OnboardFooter></OnboardFooter>
     </>
