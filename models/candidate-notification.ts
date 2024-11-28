@@ -19,35 +19,35 @@ const CN_TYPE_TRANSFER_PAID = 6;
 const CN_TYPE_TRANSFER_UNPAID = 7;
 
 export class CandidateNotification {
-    cn_uuid:  string;
-    candidate_id: number;
-    type: number;
-    candidate_work_history_id: number;
-    candidate_working_date_uuid: string;
-    candidate_working_hour_uuid: string;
-    invitation_uuid: string;
-    request_uuid: string;
-    number: number;
-    company_id: number;
-    store_id: number; 
-    tc_id: number;
-    is_new: boolean;
-    staff_id: number;
-    message: string;
-    created_at: string;
-    updated_at: string;
+    cn_uuid?:  string;
+    candidate_id?: number;
+    type?: number;
+    candidate_work_history_id?: number;
+    candidate_working_date_uuid?: string;
+    candidate_working_hour_uuid?: string;
+    invitation_uuid?: string;
+    request_uuid?: string;
+    number?: number;
+    company_id?: number;
+    store_id?: number; 
+    tc_id?: number;
+    is_new?: boolean;
+    staff_id?: number;
+    message?: string;
+    created_at?: string;
+    updated_at?: string;
      
-    candidate: Candidate;
-    candidateWorkHistory: CandidateWorkHistory;
-    candidateWorkingDate: CandidateWorkingDate;
-    candidateWorkingHour: CandidateWorkingHour;
-    company: Company;
-    invitation: Invitation;
-    request: Request;
-    store: Store;
-    staff: Staff;
-    transferCandidate: Salary;
-    candidateWorkLogFeedback: CandidateWorkLogFeedback;
+    candidate?: Candidate;
+    candidateWorkHistory?: CandidateWorkHistory;
+    candidateWorkingDate?: CandidateWorkingDate;
+    candidateWorkingHour?: CandidateWorkingHour;
+    company?: Company;
+    invitation?: Invitation;
+    request?: Request;
+    store?: Store;
+    staff?: Staff;
+    transferCandidate?: Salary;
+    candidateWorkLogFeedback?: CandidateWorkLogFeedback;
 }
 
 

@@ -23,14 +23,10 @@ export default function Name() {
   
   const [gender, setGender] = useState<number>(user?.candidate_gender || 0);
   const [loading, setLoading] = useState(false);
-  console.log('init gender', gender);
+ 
    
-  if (!gender) {
-    setGender(user?.candidate_gender || 0);
-  }
-
-    useEffect(() => {
-      console.log('useEffect gender', gender);
+  useEffect(() => {
+      
     if (!user) {
       
       setLoading(true);
@@ -45,6 +41,10 @@ export default function Name() {
     }
   }, [user]);
   
+  useEffect(() => {
+    setGender(user?.candidate_gender || 0);
+  }, []);
+
   function onSubmit() {
     console.log('gender', gender);
     if (gender) {

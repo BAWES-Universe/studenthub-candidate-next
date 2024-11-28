@@ -23,10 +23,10 @@ export default function DriverLicence() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  if (!haveLicence) {
+  useEffect(() => {
     console.log('no haveLicence', haveLicence);
     setHaveLicence(user?.candidate_driving_license || 0);
-  }
+  }, []);
 
   useEffect(() => {
     if (!user) {

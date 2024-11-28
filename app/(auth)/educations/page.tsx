@@ -82,11 +82,11 @@ export default function Educations() {
 
   useEffect(() => {
     
-    formattedEducations = user?.candidateEducations.map(edu => ({
+    formattedEducations = user?.candidateEducations?.map(edu => ({
       education_uuid: edu.education_uuid || null,
-      university_id: edu.university.university_id,
-      degree_uuid: edu.degree.degree_uuid,
-      major_uuid: edu.major.major_uuid,
+      university_id: edu.university?.university_id,
+      degree_uuid: edu.degree?.degree_uuid,
+      major_uuid: edu.major?.major_uuid,
       graduation_year: edu.graduation_year,
       is_currently_studying: edu.is_currently_studying,
 
