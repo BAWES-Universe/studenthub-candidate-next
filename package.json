@@ -3,14 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev:inspect": "NODE_OPTIONS='--inspect' next dev --turbopack",
+    "dev": "cp .env.local .env && next dev",
+
+    "build:dev": "cp .env.development .env && next build",
     "build": "next build",
-    "dev:inspect": "NODE_ENV=local NODE_OPTIONS='--inspect' next dev --turbopack",
-    "dev:staging": "NODE_ENV=staging next dev",
-    "dev:prod": "NODE_ENV=production next dev",
-    "build:local": "next build",
-    "build:staging": "NODE_ENV=staging next build",
-    "build:prod": "NODE_ENV=production next build",
+    
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
