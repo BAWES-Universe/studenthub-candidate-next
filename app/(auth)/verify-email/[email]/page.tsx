@@ -120,7 +120,11 @@ export default function VerifyEmailPage() {
           isProfileCompleted: res.isProfileCompleted
         }));
 
-        router.push('/');
+        if (res.isProfileCompleted) {
+          router.push('/');
+        } else {
+          router.push('/phone-number');
+        }
 
       } else if (res.operation === 'error') {
 

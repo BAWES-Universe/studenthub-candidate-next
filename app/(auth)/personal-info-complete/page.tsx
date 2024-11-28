@@ -1,5 +1,6 @@
 import OnboardFooter from "@/components/on-board/layout/footer";
 import { Button } from "@/components/ui/button";
+import Link from "next/dist/client/link";
 
 export default function PersonalInfoComplete() {
     return (
@@ -16,9 +17,12 @@ export default function PersonalInfoComplete() {
 
 
             <div className="xs:flex sm:block xs:bottom-[60px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
-                <Button size="lg" className=" sm:w-[300px] h-[56px]">
-                    Continue
-                </Button>
+                <Link href="/educations">
+                    <Button size="lg" className=" sm:w-[300px] h-[56px]">
+                        Continue
+                    </Button>
+                </Link>
+
                 <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
             </div>
 

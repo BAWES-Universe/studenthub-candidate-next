@@ -13,11 +13,17 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import NationalityInput from "@/components/on-board/nationality-input";
-import React, { useState } from "react";
+import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useEffect, useState } from "react";
+import { profile, updateNationality, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
 
 const formSchema = z.object({
   // nationality: z.string().email('Please enter valid nationality'),
@@ -30,7 +36,10 @@ const formSchema = z.object({
 export default function Nationality() {
 
   const [loading, setLoading] = useState(false);
-  
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   let [country, setCountry] = React.useState({
     country_id: 2,
     country_nationality_name_en: "Kuwaiti"
@@ -40,16 +49,52 @@ export default function Nationality() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country_id: 84,
+      country_id: user?.country_id || 84,
       // nationality: any
     },
   })
 
+  useEffect(() => {
+    if (!user) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('country_id', res.country_id || 84);
+        setCountry(res.country || {
+          country_id: 84,
+          country_nationality_name_en: "Kuwaiti"
+        });
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    setLoading(true);
+
+    updateNationality(values.country_id).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          
+          dispatch(setUser({ user: {
+            ...user,
+            country_id: res.country.country_id,
+            country: res.country
+          } }));
+        }
+
+        router.push('/personal-info-complete');
+      } else {
+        alert(errorMessage(res.message));
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   }
 
   function onCountryChange(country: any) {
@@ -104,7 +149,7 @@ export default function Nationality() {
           </RadioGroup>
 
 
-          <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>
+          <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
         </form>
       </Form>
 

@@ -41,10 +41,13 @@ https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
 
-## services to fix
+## pages to fix
+ 
+experience 
+education 
+personal photo 
+video/ cv 
+civil id 
+dob need new field 
 
-- auth.service.ts
-- aws.service.ts
-- camera2.service.ts
-- filepicker.service.ts
-
+need adjustment 

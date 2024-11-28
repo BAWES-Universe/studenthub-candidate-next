@@ -1,5 +1,6 @@
 import OnboardFooter from "@/components/on-board/layout/footer";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Complete() {
     return (
@@ -15,9 +16,12 @@ export default function Complete() {
 
 
             <div className="xs:flex sm:block xs:bottom-[60px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
-                <Button size="lg" className=" sm:w-[300px] h-[56px]">
-                Let’s go!
-                </Button>
+                <Link href="/">
+                    <Button size="lg" className=" sm:w-[300px] h-[56px]">
+                        Let’s go!
+                    </Button>
+                </Link>
+
                 <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
             </div>
 

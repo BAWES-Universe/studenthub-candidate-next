@@ -5,21 +5,22 @@ interface SubmitButtonProps {
     disabled?: boolean;
     float?: boolean;
     loading?: boolean;
+    onClick?: () => void;
 }
  
 
-export default function SubmitButton({ disabled, float = true, loading = false }: SubmitButtonProps) {
+export default function SubmitButton({ disabled, float = true, loading = false, onClick }: SubmitButtonProps) {
     return (
         <>
         <div className={ `${float ? 'xs:float-auto sm:float-end':'text-center'} mt-8 
             font-semibold text-base items-center` }>
 {/*
             <Button variant={"ghost"} className="text-[#4B4B61] text-center  text-base font-normal leading-6">
-            Do it later
+                Do it later
             </Button>    */}
 
             <Button size="lg" className="shadow-none xs:w-full sm:w-[156px] h-[56px] text-base font-semibold leading-6
-                disabled:bg-[#EEEEF0] disabled:text-[color:#68687A]" disabled={ disabled }>
+                disabled:bg-[#EEEEF0] disabled:text-[color:#68687A]" disabled={ disabled } onClick={onClick}>
                 {loading ? (
                     <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
                         <span className="sr-only">Loading...</span>

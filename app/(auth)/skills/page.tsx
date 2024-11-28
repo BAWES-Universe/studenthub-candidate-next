@@ -12,6 +12,13 @@ import {
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { useState, useEffect } from "react";
+import { profile, updatePhoneDetail, updateSkills } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+import { CandidateSkill } from "@/models/candidate.skill";
+
 
 const formSchema = z.object({
   skills: z.array(z.string()).min(1, {
@@ -22,7 +29,10 @@ const formSchema = z.object({
 export default function Skills() {
 
   const [loading, setLoading] = useState(false);
-  
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const [skills, setSkills] = useState<string[]>([]);
    
   // 1. Define your form.
@@ -33,13 +43,46 @@ export default function Skills() {
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-  } 
+  useEffect(() => {
+    if (!user) {
 
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        const skills = res.candidate_skills.map(
+          (skill: CandidateSkill) => skill.skill);
+        form.setValue('skills', skills);
+        setSkills(skills)
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    
+    setLoading(true);
+
+    updateSkills(values).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          dispatch(setUser({ user: {
+            ...user,
+            candidateSkills: res.skills
+          } }));
+        }
+
+        router.push('/experience');
+      } else {
+        alert(errorMessage(res.message));
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
+  } 
 
   function removeSkill(skillToRemove: string) {
     const newSkills = skills.filter(skill => skill !== skillToRemove)
@@ -141,7 +184,7 @@ export default function Skills() {
             </span>
             </div> 
 
-            <SubmitButton disabled={ skills.length == 0 } loading={loading}></SubmitButton>
+            <SubmitButton disabled={ skills.length == 0 || loading} loading={loading}></SubmitButton>
             
           </form>
         </Form>

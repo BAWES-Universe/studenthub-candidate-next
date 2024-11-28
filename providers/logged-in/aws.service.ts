@@ -1,3 +1,5 @@
+"use client"
+
 import * as AWS from 'aws-sdk';
 import axios from "../AxiosService";
 import { store } from '@/store/store';
@@ -17,10 +19,10 @@ import { store } from '@/store/store';
     /**
      * @param config 
      */
-    function setConfig() {
+    export async function setAWSConfig() {
         //const dispatch = useAppDispatch();
 
-        getConfig().then(config => {
+        return await getConfig().then(config => {
              
             /*dispatch(setTempBucket({
                 temp_bucket: config.bucket
@@ -45,7 +47,7 @@ import { store } from '@/store/store';
      * @param { File } file
      * @returns { Observable<any> }
      */
-    export function uploadFile(file: File, metadata = {}): Promise<any> {
+    export function uploadFileToTempS3(file: File, metadata = {}): Promise<any> {
         
         /*const maxUploadSize = 18874368; // 18 MB
         const maxImageUploadSize = 5000000; // 5 MB //https://sentry.io/organizations/pogi/issues/1885937107/?project=168200&query=is%3Aunresolved&statsPeriod=14d
@@ -54,8 +56,15 @@ import { store } from '@/store/store';
 
         const state = store.getState(); // Get the state directly from the store
 
-        const { temp_bucket } = state.app;  
-        
+        let { temp_bucket } = state.app;  
+        // Check if temp_bucket is defined and not empty
+    if (!temp_bucket) {
+        //console.error("Error: temp_bucket is not defined or is empty.");
+        //throw new Error("Bucket name is required for S3 upload.");
+
+        temp_bucket = "studenthub-public-anyone-can-upload-24hr-expiry";
+    }
+
         let s3 = new AWS.S3({
             apiVersion: '2006-03-01'
         });
@@ -69,6 +78,8 @@ import { store } from '@/store/store';
         }
 
         let key = prefix + "-" + Date.now() + "." + extension;
+
+        console.log(file, key, temp_bucket);
 
         let params = {
             Body: file, // the actual file file

@@ -12,12 +12,14 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { createAccount } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
 import { setUnVerifiedToken } from "@/store/slices/authSlice";
+import { profile } from "@/providers/logged-in/account.service";
+import { setUser } from "@/store/slices/userSlice";
 
 const formSchema = z.object({
   email: z.string().email('Please enter valid email address')
@@ -38,10 +40,26 @@ export default function Email() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      email: user?.candidate_new_email || user?.candidate_email || "",
     },
   })
 
+  useEffect(() => {
+    if (!user) {
+   //  form.setValue('phone', user?.candidate_phone || "");
+    //} else {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('email', res.candidate_new_email || res.candidate_email || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+  
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     

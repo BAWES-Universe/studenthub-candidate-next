@@ -15,8 +15,9 @@ import {
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckIcon } from "lucide-react";
-import React, { useId } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { filterUniversities } from "@/providers/university.service";
 
 interface NationalityInputProps {
     selectedCountry: any;
@@ -26,15 +27,19 @@ interface NationalityInputProps {
 export default function NationalityInput({ selectedCountry, onSelect }: NationalityInputProps) {
 
     const [open, setOpen] = React.useState(false)
+    const [loading, setLoading] = useState(false);
+    const [countryList, setCountryList] = useState([]);
 
-    const countryList = [{
-        country_id: 1,
-        country_nationality_name_en: "Indian"
-    },
-    {
-        country_id: 2,
-        country_nationality_name_en: "Kuwaiti"
-    }];
+    useEffect(() => {
+        setLoading(true);
+
+        filterUniversities().then((res) => {
+            setCountryList(res.data);
+        }).finally(() => {
+            setLoading(false);
+        });
+
+    }, [countryList]);
 
     const handleSelect = (country: any) => {
         onSelect(country);
@@ -87,7 +92,10 @@ export default function NationalityInput({ selectedCountry, onSelect }: National
                     <CommandInput placeholder="Search country..." />
                     <CommandList>
                         <ScrollArea className="h-72">
-                            <CommandEmpty>No country found.</CommandEmpty>
+                            <CommandEmpty>
+                                {loading ? 'Loading...' : 'No country found.'}
+                            </CommandEmpty>
+
                             <CommandGroup>
                                 {countryList.map((country: any) =>
                                     country ? (

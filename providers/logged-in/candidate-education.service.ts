@@ -18,7 +18,7 @@ export async function listEducations(page: number, urlParams: string = ''): Prom
  * @param urlParams 
  * @returns 
  */
-export async function listMajors(page: number, urlParams: string = ''): Promise<any> {
+export async function listMajors(page: number = -1, urlParams: string = ''): Promise<any> {
   const url = _educationEndpoint + '/majors?page=' + page + urlParams;
   const response = await axios.get(url);
   return response;
@@ -29,7 +29,7 @@ export async function listMajors(page: number, urlParams: string = ''): Promise<
  * @param urlParams 
  * @returns 
  */
-export async function listDegrees(page: number, urlParams: string = ''): Promise<any> {
+export async function listDegrees(page: number = -1, urlParams: string = ''): Promise<any> {
   const url = _educationEndpoint + '/degrees?page=' + page + urlParams;
   const response = await axios.get(url);
   return response;
@@ -40,7 +40,7 @@ export async function listDegrees(page: number, urlParams: string = ''): Promise
  * @param urlParams 
  * @returns 
  */
-export async function listDegreeGroups(page: number, urlParams: string = ''): Promise<any> {
+export async function listDegreeGroups(page: number = -1, urlParams: string = ''): Promise<any> {
   const url = _educationEndpoint + '/degree-groups?page=' + page + urlParams;
   const response = await axios.get(url);
   return response;
@@ -61,7 +61,7 @@ export async function educationDetail(education_uuid: string): Promise<any> {
  * @param candidateEducations 
  * @returns 
  */
-export async function saveEducation(candidateEducations: CandidateEducation[]): Promise<any> {
+export async function saveEducation(candidateEducations: any[]): Promise<any> {
   const url = _educationEndpoint + '/save';
   const response = await axios.post(url, {
     candidateEducations: candidateEducations

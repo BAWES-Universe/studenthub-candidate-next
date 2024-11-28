@@ -13,7 +13,7 @@ interface AppState {
 const initialState: AppState = {
   language: "ar",
   mixpanel_distinct_id: null,//mixpanel.get_distinct_id()
-  temp_bucket: "",
+  temp_bucket: "studenthub-public-anyone-can-upload-24hr-expiry",
   utm_uuid: "",
   currentLocation: null,
   showOneSignalPrompt: true
