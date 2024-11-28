@@ -65,8 +65,10 @@ export default function Objective() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidate_objective = values.objective;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_objective: values.objective
+          } }));
         }
 
         router.push('/video');

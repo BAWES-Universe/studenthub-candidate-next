@@ -16,24 +16,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
-import { profile, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { deleteResume, deleteVideo, profile, updatePhoneDetail, updateResume, updateVideo } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 
 const formSchema = z.object({
     video: z.string({
       //  required_error: 'Please record or upload video.'
-    }),
+    }).nullable(),
     resume: z.string({
       //  required_error: 'Please upload front side of your national id.'
-    }),
+    }).nullable(),
 })
 
 export default function Video() {
 
   const [loading, setLoading] = useState(false);
+  const [removingVideo, setRemovingVideo] = useState(false);
+  const [removingResume, setRemovingResume] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingResume, setUploadingResume] = useState(false);
+
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -42,8 +48,8 @@ export default function Video() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      video: user?.candidate_video || "",
-      resume: user?.candidate_resume || "", 
+      video: user?.candidate_video,
+      resume: user?.candidate_resume, 
     },
   })
 
@@ -70,9 +76,44 @@ export default function Video() {
     router.push('/civil-id');
   } 
 
+  function onVideoError(){
+    form.setValue('video', "");
+  }
+
+  function removeVideo(){
+    setRemovingVideo(true);
+
+    deleteVideo().then(() => {
+      form.setValue('video', "");
+
+      dispatch(setUser({ user: {
+        ...user,
+        candidate_video: null
+      } }));
+    }).finally(() => {
+      setRemovingVideo(false);
+    });
+  }
+
+  function removeResume(){
+    setRemovingResume(true);
+
+    deleteResume().then(() => {
+      form.setValue('resume', "");
+
+      dispatch(setUser({ user: {
+        ...user,
+        candidate_resume: null
+      } }));
+
+    }).finally(() => {
+      setRemovingResume(false);
+    });
+  }
+
   return (
-    <>
-        <OnboardProgress></OnboardProgress>
+    <div>
+        <OnboardProgress />
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">
@@ -80,7 +121,7 @@ export default function Video() {
         </h5>
   { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
 
-       <div className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
+       <div suppressHydrationWarning={true} className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
             { !form.getValues().video && <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-2xl border-[1.333px] border-dashed mb-[24px] sm:mb-0 sm:me-[24px]">
 
@@ -109,15 +150,21 @@ export default function Video() {
                 </p>
 
               <div className="mt-[16px] block">
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 ">
-                Record yourself
-                </a>
+                { /** TODO: ability to record video */ 
+                uploadingVideo? <p className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-normal leading-5 text-center">Uploading...</p> :
+                <>
 
-                <span className="text-xs font-medium">&nbsp;or&nbsp;</span> 
+                  <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 ">
+                    Record yourself
+                  </a>
 
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4">
-                Upload video
-                </a>
+                  <span className="text-xs font-medium">&nbsp;or&nbsp;</span> 
+
+                  <a onClick={() => document.getElementById('videoUpload')?.click()}  className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4">
+                    Upload video
+                  </a>
+                </>
+}
                </div>
 
             </div> }
@@ -125,10 +172,14 @@ export default function Video() {
             { form.getValues().video && <div className="xs:max-w-full w-full sm:max-w-[313px]  flex-none 
                   rounded-2xl mb-[24px] sm:mb-0 sm:me-[24px]">
 
-                <img src="/assets/icons/logo.svg" className="w-full"></img>   
+                <img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'candidate-video/' +  form.getValues().video + '.jpg' } 
+                  onError={() => onVideoError()}
+                  className="w-full"></img>   
 
-                <Button variant={ "ghost"}  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
-                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    Remove 
+                <Button variant={ "ghost"} onClick={() => removeVideo()} 
+                  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
+                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    
+                    { removingVideo ? "Removing..." : "Remove" } 
                 </Button>
             </div> }
             
@@ -146,8 +197,8 @@ export default function Video() {
                   Have a cool file to showcase your skills and experiences?
                 </p>
 
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block">
-                  Upload CV or Portfolio
+                <a onClick={() => document.getElementById('resumeUpload')?.click()} className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block">
+                { uploadingResume ? "Uploading..." : "Upload CV or Portfolio" }   
                 </a>
 
             </div> }
@@ -155,24 +206,103 @@ export default function Video() {
             { form.getValues().resume && <div className="xs:max-w-full sm:max-w-[313px] w-full flex-none 
                   rounded-2xl mb-[24px] sm:mb-0">
 
-                <img src="/assets/icons/logo.svg" className="w-full"></img>   
+                { /** TODO: show resume preview */ }
+                <img src="/assets/icons/cv.svg" className="w-full"></img>   
 
-                <Button variant={ "ghost"}  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
-                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    Remove 
+                <Button variant={ "ghost"} onClick={() => removeResume()} 
+                  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
+                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>   
+                    { removingResume ? "Removing..." : "Remove" } 
                 </Button>
             </div> }
             
         </div> 
     
+        <input
+          type="file"
+          id="resumeUpload"
+          className="hidden"
+          accept="application/pdf"
+          onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                  setUploadingResume(true);
+
+                  uploadFileToTempS3(file).then((res: any) => {
+                    
+                    updateResume(res.Key).then((res: any) => { 
+                     
+                      if (res.operation == 'success') {   
+
+                        form.setValue('resume', res.candidate_resume);
+
+                        dispatch(setUser({ user: {
+                          ...user,
+                          candidate_resume: res.candidate_resume
+                        } }));
+                      } else {
+                          alert(errorMessage(res.message));
+                      }
+                    }).finally(() => {
+                      setUploadingResume(false);
+                    });
+                  }).catch((error) => {
+                    // Handle upload error
+                    console.error('Upload failed:', error);
+                    setUploadingResume(false);
+                  })
+              }
+          }}
+      />
+
+        <input
+          type="file"
+          id="videoUpload"
+          className="hidden"
+          accept="video/*"
+          onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                  setUploadingVideo(true);
+
+                  uploadFileToTempS3(file).then((res: any) => {
+                    
+                    updateVideo(res.Key).then((res: any) => {
+                     
+                      if (res.operation == 'success') {   
+
+                        form.setValue('video', res.candidate_video);
+                        dispatch(setUser({ user: {
+                          ...user,
+                          candidate_video: res.candidate_video
+                        } }));
+
+                      } else {
+                        alert(errorMessage(res.message));
+                      }
+                    }).finally(() => {
+                      setUploadingVideo(false);
+                    });
+                    
+                  }).catch((error) => {
+                    // Handle upload error
+                    console.error('Upload failed:', error);
+                    setUploadingVideo(false);
+                  })
+              }
+          }}
+      />
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[16px] max-w-[650px] m-auto mb-[100px]">
-   
-            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
+          {/**!form.formState.isValid ||  */}
+            <SubmitButton disabled={loading || uploadingVideo || uploadingResume} 
+              loading={loading || uploadingVideo || uploadingResume }></SubmitButton>
             
           </form>
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </div>
   );
 }

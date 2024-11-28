@@ -102,8 +102,10 @@ export default function Educations() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidateEducations = res.candidateEducations;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidateEducations: res.candidateEducations
+          } }));
         }
 
         router.push('/skills');
@@ -134,15 +136,15 @@ export default function Educations() {
                   form.setValue(`candidateEducations.${index}.university_id`, university.university_id);
                 }}></UniversityInput>  
  
+              { /*
               <DegreeGroupInput 
                 degree_group_uuid={form.getValues(`candidateEducations.${index}.degree_group_uuid`)}
                 onSelect={(degreeGroup: any) => {
                   form.setValue(`candidateEducations.${index}.university_id`, university.university_id);
-                }}></DegreeGroupInput>  
+                }}></DegreeGroupInput>  */ }
 
               <DegreeInput 
                 degree_uuid={form.getValues(`candidateEducations.${index}.degree_uuid`)}
-                selectedDegreeGroup={form.getValues(`candidateEducations.${index}.degree_group_uuid`)}
                 onSelect={(degree: any) => {
                   form.setValue(`candidateEducations.${index}.degree_uuid`, degree.degree_uuid);
                 }}></DegreeInput>  

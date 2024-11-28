@@ -69,8 +69,10 @@ export default function Skills() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidateSkills = res.skills;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidateSkills: res.skills
+          } }));
         }
 
         router.push('/experience');
@@ -182,7 +184,7 @@ export default function Skills() {
             </span>
             </div> 
 
-            <SubmitButton disabled={ skills.length == 0 } loading={loading}></SubmitButton>
+            <SubmitButton disabled={ skills.length == 0 || loading} loading={loading}></SubmitButton>
             
           </form>
         </Form>

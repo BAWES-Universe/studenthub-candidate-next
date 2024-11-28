@@ -29,6 +29,7 @@ export class Candidate {
     candidate_video: string;
     candidate_video_processed: any;
     candidate_email: string;
+    candidate_new_email: string;
     candidate_phone: string;
     candidate_address_line1: string;
     candidate_area_uuid: string;

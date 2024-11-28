@@ -38,10 +38,10 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-axios.interceptors.response.use(async (response) => {
+/*axios.interceptors.response.use(async (response) => {
     return response;
 }, err => handleAxiosError(err));
-
+*/
 export async function handleAxiosError(err: any) {
     
     console.log("axios error:", err);
@@ -51,34 +51,34 @@ export async function handleAxiosError(err: any) {
 
     // Handle Bad Requests
     if (response.status === 400) {
-        Router.push('/404');   
+     //   Router.push('/404');   
     }
 
     // Handle No Internet Connection Error
     if (response.status == 0 || response.status == 504) {
-        Router.push('/no-internet');  
+    //    Router.push('/no-internet');  
     }
     
     if(!navigator.onLine) {
-        Router.push('/no-internet');  
+    //    Router.push('/no-internet');  
     }
 
     // Handle Expired Session Error
     if (response.status === 401) { 
         //const dispatch = useAppDispatch();
         //dispatch(logout());
-        Router.push('/'); 
+    //    Router.push('/'); 
     }
 
     // Handle internal server error - 500  
     if (response.status === 500) {
 
-        Router.push('/500');   
+    //    Router.push('/500');   
     }
 
     // Handle page not found - 404 error 
     if (response.status === 404) {
-        Router.push('/404');   
+    //    Router.push('/404');   
     }
 
     /*if (error.status === 418) {

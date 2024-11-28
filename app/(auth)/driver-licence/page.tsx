@@ -23,6 +23,11 @@ export default function DriverLicence() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  if (!haveLicence) {
+    console.log('no haveLicence', haveLicence);
+    setHaveLicence(user?.candidate_driving_license || 0);
+  }
+
   useEffect(() => {
     if (!user) {
    //  form.setValue('phone', user?.candidate_phone || "");
@@ -46,7 +51,7 @@ export default function DriverLicence() {
     }
 
     setLoading(true);
-    updateDrivingLicense(haveLicence).then(res => {
+    updateDrivingLicense(haveLicence).then((res: any) => {
         if (res.operation == 'success') {
           router.push('/personal-photo');
         } else {
@@ -85,7 +90,7 @@ export default function DriverLicence() {
                 </button>
             </div>
 
-            <SubmitButton onClick={onSubmit} disabled={!haveLicence} loading={loading}></SubmitButton>
+            <SubmitButton onClick={onSubmit} disabled={!haveLicence || loading} loading={loading}></SubmitButton>
         </div>
         <OnboardFooter></OnboardFooter>
     </>

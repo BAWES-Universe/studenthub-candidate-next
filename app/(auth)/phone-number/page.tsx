@@ -65,8 +65,10 @@ export default function Email() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidate_phone = values.phone;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_phone: values.phone
+          } }));
         }
 
         router.push('/dob');

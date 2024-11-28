@@ -64,8 +64,10 @@ export default function AboutYourself() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidate_intro = values.candidate_intro;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_intro: values.candidate_intro
+          } }));
         }
 
         router.push('/objective');

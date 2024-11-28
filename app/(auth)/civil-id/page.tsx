@@ -16,30 +16,39 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
-import { profile, updateCivilIdAndExpiryDate, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { profile, removeCivilPhotoBack, removeCivilPhotoFront, updateCivilIdAndExpiryDate, updateCivilPhotoBack, updateCivilPhotoFront, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 
 
 const formSchema = z.object({
+  candidate_civil_photo_back_url: z.string(),
+  candidate_civil_photo_front_url: z.string(),
   candidate_civil_photo_back: z.string({
-        required_error: 'Please upload back side of your national id.'
-    }),
+     //   required_error: 'Please upload back side of your national id.'
+    }).nullable(),
   candidate_civil_photo_front: z.string({
-        required_error: 'Please upload front side of your national id.'
-    }),
-  candidate_civil_expiry_date: z.date({
-    }),
+    //    required_error: 'Please upload front side of your national id.'
+    }).nullable(),
+  candidate_civil_expiry_date: z.string({
+    }).min(1, 'Please add expiry date.'),
     candidate_civil_id: z.string({
         //required_error: 'Please add id number.'
-    })
+    }).min(1, 'Please add id number.')
 })
 
 export default function PreferredTime() {
   const [loading, setLoading] = useState(false);
+  const [removingFrontId, setRemovingFrontId] = useState(false);
+  const [removingBackId, setRemovingBackId] = useState(false);
+  const [uploadingFrontId, setUploadingFrontId] = useState(false);
+  const [uploadingBackId, setUploadingBackId] = useState(false);
+
   const { user } = useAppSelector(state => state.user);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -54,9 +63,15 @@ export default function PreferredTime() {
         dispatch(setUser({ user: res }));
         form.setValue('candidate_civil_id', res.candidate_civil_id || "");
         form.setValue('candidate_civil_expiry_date', res.candidate_civil_expiry_date || "");
-        form.setValue('candidate_civil_photo_back', res.candidate_civil_photo_back || "");
-        form.setValue('candidate_civil_photo_front', res.candidate_civil_photo_front || "");
-      
+        form.setValue('candidate_civil_photo_back', res.candidate_civil_photo_back);
+        form.setValue('candidate_civil_photo_front', res.candidate_civil_photo_front);
+
+        if (res.candidate_civil_photo_back_url)
+          form.setValue('candidate_civil_photo_back_url', process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL  + 'photos/' + res.candidate_civil_photo_back);
+
+        if (res.candidate_civil_photo_front_url)
+          form.setValue('candidate_civil_photo_front_url', process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL  + 'photos/' + res.candidate_civil_photo_front);
+
       }).finally(() => {
         setLoading(false);
       });
@@ -68,9 +83,11 @@ export default function PreferredTime() {
     resolver: zodResolver(formSchema),
     defaultValues: {
         candidate_civil_id: user?.candidate_civil_id || "",
-        candidate_civil_expiry_date: new Date(user?.candidate_civil_expiry_date || ""),
+        candidate_civil_expiry_date: user?.candidate_civil_expiry_date || "",
         candidate_civil_photo_back: user?.candidate_civil_photo_back,
         candidate_civil_photo_front: user?.candidate_civil_photo_front,
+        candidate_civil_photo_back_url: process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL  + 'photos/' + user?.candidate_civil_photo_back,
+        candidate_civil_photo_front_url: process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL  + 'photos/' + user?.candidate_civil_photo_front,
     },
   })
 
@@ -79,16 +96,16 @@ export default function PreferredTime() {
     
     setLoading(true);
 
-    //todo: new api to upload both  
-    updateCivilIdPhotos(values).then(res => {
+    updateCivilIdAndExpiryDate(values.candidate_civil_id, values.candidate_civil_expiry_date).then((res: any) => {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidate_civil_id = values.candidate_civil_id;
-          user.candidate_civil_expiry_date = values.candidate_civil_expiry_date.toISOString();
-          user.candidate_civil_photo_back = values.candidate_civil_photo_back;
-          user.candidate_civil_photo_front = values.candidate_civil_photo_front;  
-          dispatch(setUser({ user: user }));
+          
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_civil_id: values.candidate_civil_id,
+            candidate_civil_expiry_date: values.candidate_civil_expiry_date
+          } }));
         }
 
         router.push('/preferred-time');
@@ -98,10 +115,90 @@ export default function PreferredTime() {
     }).finally(() => {
       setLoading(false);
     });
+
+    router.push('/preferred-time');
   } 
 
+  function resetFrontId() {
+
+    setRemovingFrontId(true);
+
+    removeCivilPhotoFront().then(() => {
+      form.setValue('candidate_civil_photo_front', null);
+      form.trigger('candidate_civil_photo_front');
+      form.setValue('candidate_civil_photo_front_url', '');
+      form.trigger('candidate_civil_photo_front_url');
+
+      dispatch(setUser({ user: {
+        ...user,
+        candidate_civil_photo_front: null
+      } }));
+
+    }).finally(() => {
+      setRemovingFrontId(false);
+    });
+  }
+
+  function resetBackId() {
+    
+    setRemovingBackId(true);
+
+    removeCivilPhotoBack().then(() => {
+      form.setValue('candidate_civil_photo_back', null);
+      form.trigger('candidate_civil_photo_back');
+      form.setValue('candidate_civil_photo_back_url', '');
+      form.trigger('candidate_civil_photo_back_url');
+
+      dispatch(setUser({ user: {
+        ...user,
+        candidate_civil_photo_back: null
+      } }));
+
+    }).finally(() => {
+      setRemovingBackId(false);
+    });
+  }
+
+  function onCivilIdUploaded(res: any) {
+
+    if (res.candidate_civil_id && res.candidate_civil_expiry_date) {
+
+      if (res.candidate_civil_photo_back) {
+        form.setValue('candidate_civil_photo_back', res.candidate_civil_photo_back);
+        form.trigger('candidate_civil_photo_back');
+        form.setValue('candidate_civil_photo_back_url', 
+          process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL  + 'photos/' + res.candidate_civil_photo_back);
+        form.trigger('candidate_civil_photo_back_url');
+      }
+
+      if (res.candidate_civil_photo_front) {  
+        form.setValue('candidate_civil_photo_front', res.candidate_civil_photo_front);
+        form.trigger('candidate_civil_photo_front');
+        form.setValue('candidate_civil_photo_front_url', 
+          process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL  + 'photos/' + res.candidate_civil_photo_front);
+        form.trigger('candidate_civil_photo_front_url');
+      }
+
+      form.setValue('candidate_civil_id', res.candidate_civil_id);
+      form.trigger('candidate_civil_id');
+
+      form.setValue('candidate_civil_expiry_date', res.candidate_civil_expiry_date);
+      form.trigger('candidate_civil_expiry_date');
+
+      user!.candidate_civil_id = res.candidate_civil_id;
+      user!.candidate_civil_expiry_date = res.candidate_civil_expiry_date;
+      user!.candidate_civil_photo_back = res.candidate_civil_photo_back;
+      user!.candidate_civil_photo_front = res.candidate_civil_photo_front;
+
+      dispatch(setUser({ user: user! }));
+
+    //if got both values 
+      router.push('/preferred-time');
+    }
+  }
+
   return (
-    <>
+    <> 
         <OnboardProgress></OnboardProgress>
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
@@ -110,8 +207,9 @@ export default function PreferredTime() {
         </h5>
   { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
 
-       <div className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
-            { !form.getValues().candidate_civil_photo_front && <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
+       <div suppressHydrationWarning={true} className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
+            { !form.getValues().candidate_civil_photo_front && 
+            <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-2xl border-[1.333px] border-dashed mb-[24px] sm:mb-0 sm:me-[24px]">
 
                 <img src="/assets/icons/id-front.svg" className="m-auto"></img>   
@@ -124,18 +222,57 @@ export default function PreferredTime() {
                     Make sure the image is bright and not blurry
                 </p>
 
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 mt-[16px] block">
-                    Upload ID Front
+                <input
+                    type="file"
+                    id="frontIdUpload"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            setUploadingFrontId(true);
+
+                            uploadFileToTempS3(file).then((response: any) => {
+                             
+                                updateCivilPhotoFront(response.key).then((res: any) => {
+                                   
+                                  if (res.operation == 'success') {   
+
+                                    onCivilIdUploaded(res);
+
+                                  } else {
+                                    alert(errorMessage(res.message));
+                                  }
+
+                                }).finally(() => {
+                                  setUploadingFrontId(false);
+                                }); 
+                            }).catch((error) => {
+                                // Handle upload error
+                                console.error('Upload failed:', error);
+
+                                setUploadingFrontId(false);
+                            }).finally(() => {
+                              
+                            });
+                        }
+                    }}
+                />
+
+                <a onClick={() => document.getElementById('frontIdUpload')?.click()} 
+                  className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 mt-[16px] block cursor-pointer">
+                    { uploadingFrontId ? "Uploading..." : "Upload ID Front" }
                 </a>
             </div> }
 
             { form.getValues().candidate_civil_photo_front && <div className="xs:max-w-full w-full sm:max-w-[313px]  flex-none 
                   rounded-2xl mb-[24px] sm:mb-0 sm:me-[24px]">
 
-                <img src="/assets/icons/logo.svg" className="w-full"></img>   
+                <img onError={() => resetFrontId()} src={form.getValues().candidate_civil_photo_front_url} className="w-full"></img>   
 
-                <Button variant={ "ghost"}  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
-                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    Remove 
+                <Button variant={"ghost"} disabled={removingFrontId} onClick={resetFrontId} className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
+                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>  
+                    { removingFrontId ? "Removing..." : "Remove" }
                 </Button>
             </div> }
             
@@ -146,14 +283,51 @@ export default function PreferredTime() {
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6  mt-[8px] mb-[4px] block">
-                    ID Photo (Back)</h6> 
+                    ID Photo (Back)
+                    </h6> 
 
                 <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
                     Make sure the image is bright and not blurry
                 </p>
+                <input
+                    type="file"
+                    id="backIdUpload"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            setUploadingBackId(true);
 
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block">
-                    Upload ID Back
+                            uploadFileToTempS3(file).then((response: any) => {
+                               
+                                // Handle successful upload
+
+                                updateCivilPhotoBack(response.Key).then((res: any) => {
+                                   
+                                  if (res.operation == 'success') {   
+
+                                    onCivilIdUploaded(res);
+
+                                  } else {
+                                    alert(errorMessage(res.message));
+                                  }
+
+                                }).finally(() => {
+                                  setUploadingBackId(false);
+                                }); 
+                            }).catch((error) => {
+                                // Handle upload error
+                                console.error('Upload failed:', error);
+                                setUploadingBackId(false);
+                            }).finally(() => {
+                              
+                            });
+                        }
+                    }}
+                />
+                <a onClick={() => document.getElementById('backIdUpload')?.click()} className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block cursor-pointer">
+                    { uploadingBackId ? "Uploading..." : "Upload ID Back" }
                 </a>
             </div> }
 
@@ -161,16 +335,17 @@ export default function PreferredTime() {
             { form.getValues().candidate_civil_photo_back && <div className="xs:max-w-full sm:max-w-[313px] w-full flex-none 
                   rounded-2xl mb-[24px] sm:mb-0">
 
-                <img src="/assets/icons/logo.svg" className="w-full"></img>   
+                <img onError={() => resetBackId()} src={form.getValues().candidate_civil_photo_back_url} className="w-full"></img>   
 
-                <Button variant={ "ghost"}  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
-                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    Remove 
+                <Button variant={ "ghost"} disabled={removingBackId} onClick={resetBackId} className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
+                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    
+                    { removingBackId ? "Removing..." : "Remove" }
                 </Button>
             </div> }
             
         </div> 
     
-        <Form {...form}>
+        <Form   {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[16px] max-w-[650px] m-auto mb-[100px]">
   
           <p className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7">

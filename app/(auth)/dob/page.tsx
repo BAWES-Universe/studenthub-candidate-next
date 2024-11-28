@@ -67,8 +67,10 @@ export default function Name() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidate_birth_date = values.candidate_birth_date.toISOString();
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_birth_date: values.candidate_birth_date.toISOString()
+          } }));
         }
 
         router.push('/gender');

@@ -80,9 +80,12 @@ export default function Nationality() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.country_id = res.country.country_id;
-          user.country = res.country;
-          dispatch(setUser({ user: user }));
+          
+          dispatch(setUser({ user: {
+            ...user,
+            country_id: res.country.country_id,
+            country: res.country
+          } }));
         }
 
         router.push('/personal-info-complete');
@@ -146,7 +149,7 @@ export default function Nationality() {
           </RadioGroup>
 
 
-          <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>
+          <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
         </form>
       </Form>
 

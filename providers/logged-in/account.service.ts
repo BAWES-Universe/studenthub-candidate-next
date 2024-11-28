@@ -316,6 +316,15 @@ import axios from "@/providers/AxiosService";
   }
   
   /**
+   * delete Resume 
+   */
+  export async function deleteResume(): Promise<any> {
+    const url = `${_accountEndpoint}` + '/remove-resume';
+    const response = await axios.delete(url);
+    return response.data;
+  }
+
+  /**
    * delete Video 
    */
   export async function deleteVideo(): Promise<any> {
@@ -381,6 +390,7 @@ import axios from "@/providers/AxiosService";
     const response = await axios.post(url, {
       civil_expiry_date: civil_expiry_date
     });
+    return response.data;
   }
 
   /**
@@ -392,6 +402,7 @@ import axios from "@/providers/AxiosService";
     const response = await axios.post(url, {
       driving_license: driving_license
     });
+    return response.data;
   }
 
   /**
@@ -403,6 +414,7 @@ import axios from "@/providers/AxiosService";
     const response = await axios.post(url, {
       candidate_mom_kuwaiti: candidate_mom_kuwaiti
     });
+    return response.data;
   }
 
   /**

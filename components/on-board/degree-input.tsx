@@ -21,7 +21,7 @@ import { listDegrees } from "@/providers/logged-in/candidate-education.service";
 
 interface DegreeInputProps {
     degree_uuid?: string;
-    selectedDegreeGroup: any;
+    selectedDegreeGroup?: any;
     onSelect: (degree: any) => void;
 }
 

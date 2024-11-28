@@ -66,8 +66,10 @@ export default function PreferredTime() {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidate_preferred_time = values.preferred_time;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_preferred_time: values.preferred_time
+          } }));
         }
 
         router.push('/complete');
@@ -91,8 +93,8 @@ export default function PreferredTime() {
           We’ll call you for job opportunities whenever you’re available
         </p>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+        <Form {...form} >
+          <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
   
           <FormInput
               name="preferred_time"

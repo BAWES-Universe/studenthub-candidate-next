@@ -26,9 +26,9 @@ const formSchema = z.object({
   experiences: z.array(z.object({
     candidate_experience_id: z.number().nullable(),
     experience: z.string().max(128).min(1, 'Job title is required'),
-    employer: z.string().max(128).nullable(),
-    start_year: z.number().min(1900).max((new Date()).getFullYear()).nullable(),
-    end_year: z.number().min(1900).max((new Date()).getFullYear()).nullable()
+    employer: z.string().max(128).nullable().optional(),
+    start_year: z.number().min(1900).max((new Date()).getFullYear()).nullable().optional(),
+    end_year: z.number().min(1900).max((new Date()).getFullYear()).nullable().optional()
   }))
 })
 
@@ -79,14 +79,20 @@ export default function Experiences() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+
+    console.log('values', values, form);
+
+    return;
     setLoading(true);
 
     saveExperience(values.experiences).then(res => {
       if (res.operation == 'success') {
 
         if (user) {
-          user.candidateExperiences = res.country.experiences;
-          dispatch(setUser({ user: user }));
+          dispatch(setUser({ user: {
+            ...user,
+            candidateExperiences: res.country.experiences
+          } }));
         }
 
         router.push('/education-complete');
@@ -124,6 +130,7 @@ export default function Experiences() {
                     form={form as any}
                 />
                 </div>  
+
                 <div className="flex-col me-[16px]">
                 <FormInput
                     name={`experiences.${index}.start_year`}
@@ -171,7 +178,8 @@ export default function Experiences() {
             <img src="/assets/icons/plus.svg" /> Add experience
           </Button>
 
-          <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>
+          { /**!form.formState.isValid || */}
+          <SubmitButton disabled={ loading }></SubmitButton>
         </form>
       </Form>
 
