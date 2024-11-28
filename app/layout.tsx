@@ -8,7 +8,7 @@ import { store } from "@/store/store";
 import Script from 'next/script'; 
 
 const inter = Inter({ subsets: ['latin'] });
-
+import NextTopLoader from 'nextjs-toploader'
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
   description: 'Join StudentHub to start your educational journey with the best resources and support.',
@@ -21,9 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <Provider store={store}>
+      
     <html lang="en">
       
       <body className={inter.className}>
+        <NextTopLoader showSpinner={false} />
+
         {children} 
 
         <Script
@@ -43,7 +46,7 @@ export default function RootLayout({
         />
 
       <Script strategy="lazyOnload" src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
-
+{/*
       <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-Q2JP5Y7ZNF"></Script>
 
       <Script strategy="afterInteractive"
@@ -85,6 +88,7 @@ export default function RootLayout({
        `,
           }}
         />
+*/}
 
       </body>
     </html>

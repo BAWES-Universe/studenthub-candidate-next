@@ -34,8 +34,9 @@ const formSchema = z.object({
     fieldOfStudy: z.any(),
 
     education_uuid: z.string().nullable(),
-    graduation_year: z.number().min(1900).max((new Date()).getFullYear()).nullable(), //.min(1, 'End year is required'),
-    university_id: z.number().min(1, "University is required"),
+    graduation_year: z.coerce.number().min(1900)
+      .max((new Date()).getFullYear()).nullable().optional(), //.min(1, 'End year is required'),
+    university_id: z.coerce.number().min(1, "University is required"),
     degree_uuid: z.string(),
     major_uuid: z.string(),
     is_currently_studying: z.boolean(),
@@ -49,37 +50,23 @@ export default function Educations() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  let formattedEducations: any[] = [];
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      //candidateEducations: user?.candidateEducations || []
+      candidateEducations: user?.candidateEducations || []
     },
   })
 
   useEffect(() => {
-    if (user) {
-
-      const formattedEducations = user.candidateEducations.map(edu => ({
-        education_uuid: edu.education_uuid || null,
-        university_id: edu.university.university_id,
-        degree_uuid: edu.degree.degree_uuid,
-        major_uuid: edu.major.major_uuid,
-        graduation_year: edu.graduation_year,
-        is_currently_studying: edu.is_currently_studying,
-
-        university: edu.university,
-        degree: edu.degree,
-        fieldOfStudy: edu.major,
-      }));
-
-     form.setValue('candidateEducations', formattedEducations || []);
-    } else {
-
+    if (!user) {
       setLoading(true);
 
       profile().then(res => {
         dispatch(setUser({ user: res }));
         form.setValue('candidateEducations', res.candidateEducations || []);
+        form.trigger();
       }).finally(() => {
         setLoading(false);
       });
@@ -92,6 +79,25 @@ export default function Educations() {
     control: form.control, // Connect the field array to the form
     name: 'candidateEducations', // Name of the field array
   });
+
+  useEffect(() => {
+    
+    formattedEducations = user?.candidateEducations.map(edu => ({
+      education_uuid: edu.education_uuid || null,
+      university_id: edu.university.university_id,
+      degree_uuid: edu.degree.degree_uuid,
+      major_uuid: edu.major.major_uuid,
+      graduation_year: edu.graduation_year,
+      is_currently_studying: edu.is_currently_studying,
+
+      university: edu.university,
+      degree: edu.degree,
+      fieldOfStudy: edu.major,
+    })) || [];
+
+   form.setValue('candidateEducations', formattedEducations || []);
+   form.trigger();
+  }, []);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
@@ -141,7 +147,7 @@ export default function Educations() {
                 degree_group_uuid={form.getValues(`candidateEducations.${index}.degree_group_uuid`)}
                 onSelect={(degreeGroup: any) => {
                   form.setValue(`candidateEducations.${index}.university_id`, university.university_id);
-                }}></DegreeGroupInput>  */ }
+                }}></DegreeGroupInput>  
 
               <DegreeInput 
                 degree_uuid={form.getValues(`candidateEducations.${index}.degree_uuid`)}
@@ -166,7 +172,7 @@ export default function Educations() {
                   />
                 </div>  
               </div>
-
+*/ }
 
 
 
@@ -216,7 +222,15 @@ export default function Educations() {
           <Button
             variant={'ghost'}
             type="button"
-            onClick={() => append({ university: '', degree: '', fieldOfStudy: '', graduation_year: null, education_uuid: null, university_id: 0, degree_uuid: '', major_uuid: '', is_currently_studying: false })}
+            onClick={() => {
+  
+              append({ 
+                university: '', degree: '', fieldOfStudy: '', 
+                graduation_year: undefined, education_uuid: "", 
+                university_id: 0, degree_uuid: '', major_uuid: '', 
+                is_currently_studying: false 
+              });
+            }}
             className="text-[color:var(--Primary-Main,#4C70F2)] text-sm font-medium leading-5"
           >
             

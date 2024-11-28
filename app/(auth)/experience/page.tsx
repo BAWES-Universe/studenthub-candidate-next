@@ -1,6 +1,7 @@
 "use client"
 
 import { OnboardProgress } from "@/components/on-board/progress";
+import { NextPageContext } from 'next'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
@@ -24,14 +25,15 @@ import { saveExperience } from "@/providers/logged-in/candidate-experience.servi
 
 const formSchema = z.object({
   experiences: z.array(z.object({
-    candidate_experience_id: z.number().nullable(),
+    candidate_experience_id: z.any().nullable(),
     experience: z.string().max(128).min(1, 'Job title is required'),
     employer: z.string().max(128).nullable().optional(),
-    start_year: z.number().min(1900).max((new Date()).getFullYear()).nullable().optional(),
-    end_year: z.number().min(1900).max((new Date()).getFullYear()).nullable().optional()
+    start_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional(),
+    end_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional()
   }))
 })
-
+  
+ 
 export default function Experiences() {
 
   const [loading, setLoading] = useState(false);
@@ -39,27 +41,42 @@ export default function Experiences() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  let formattedExperiences: any[] = [];
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-     // experiences: [{ experience: '', employer: '', start_year: '', end_year: '' }]
+      experiences: formattedExperiences || [
+        { candidate_experience_id: "", experience: '', employer: "", 
+          start_year: undefined, end_year: undefined }
+      ]
     },
   })
 
+  //const { fields, append, remove } = form.control._formValues.experiences
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control, // Connect the field array to the form
+    name: 'experiences', // Name of the field array
+  });
+
   useEffect(() => {
-    if (user) {
+     
+    formattedExperiences = user?.candidateExperiences?.map(exp => ({
+      candidate_experience_id: exp.candidate_experience_id || "",
+      experience: exp.experience,
+      employer: exp.employer || "",
+      start_year: exp.start_year || undefined,
+      end_year: exp.end_year || undefined,
+    })) || [];
+  
+    form.setValue('experiences', formattedExperiences);
+    form.trigger();
+  }, []);
 
-      const formattedExperiences = user.candidateExperiences.map(exp => ({
-        candidate_experience_id: exp.candidate_experience_id || null,
-        experience: exp.experience,
-        employer: exp.employer || null, // Ensure employer is null if undefined
-        start_year: exp.start_year || null,
-        end_year: exp.end_year || null,
-      }));
-
-     form.setValue('experiences', formattedExperiences);
-    } else {
-
+  useEffect(() => {
+    
+    if (!user) {
       setLoading(true);
 
       profile().then(res => {
@@ -70,28 +87,19 @@ export default function Experiences() {
       });
     }
   }, [user]);
-  
-  //const { fields, append, remove } = form.control._formValues.experiences
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control, // Connect the field array to the form
-    name: 'experiences', // Name of the field array
-  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
 
-    console.log('values', values, form);
-
-    return;
     setLoading(true);
 
     saveExperience(values.experiences).then(res => {
+      
       if (res.operation == 'success') {
 
         if (user) {
           dispatch(setUser({ user: {
             ...user,
-            candidateExperiences: res.country.experiences
+            candidateExperiences: res.candidateExperiences
           } }));
         }
 
@@ -113,7 +121,7 @@ export default function Experiences() {
       </h5>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[650px] m-auto mb-">
           {fields?.map((field: { id: string }, index: number) => (
             <div key={field.id} className="space-y-4">
               <FormInput
@@ -122,8 +130,8 @@ export default function Experiences() {
                 form={form as any}
               />
 
-              <div className="flex">
-                <div className="flex-col me-[16px]">
+              <div className="sm:flex">
+                <div className="xs:w-full sm:w-[318px] me-[16px]">
                 <FormInput
                     name={`experiences.${index}.employer`}
                     label="Employer"
@@ -131,6 +139,7 @@ export default function Experiences() {
                 />
                 </div>  
 
+            <div className="flex xs:mt-[16px] sm:mt-0">
                 <div className="flex-col me-[16px]">
                 <FormInput
                     name={`experiences.${index}.start_year`}
@@ -139,6 +148,7 @@ export default function Experiences() {
                     type="number"
                 />
                 </div>  
+
                 <div className="flex-col">
                 <FormInput
                     name={`experiences.${index}.end_year`}
@@ -148,7 +158,7 @@ export default function Experiences() {
                 />
                 </div>  
               </div>
-
+              </div>
               {fields.length > 1 && (
                 
                     <Button
@@ -171,7 +181,7 @@ export default function Experiences() {
           <Button
             variant={'ghost'}
             type="button"
-            onClick={() => append({ candidate_experience_id: null, experience: '', employer: '', start_year: null, end_year: null })}
+            onClick={() => append({ candidate_experience_id: "", experience: '', employer: '', start_year: undefined, end_year: undefined })}
             className="text-[color:var(--Primary-Main,#4C70F2)] text-sm font-medium leading-5"
           >
             
