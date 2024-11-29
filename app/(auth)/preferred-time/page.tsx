@@ -94,7 +94,7 @@ export default function PreferredTime() {
         </p>
 
         <Form {...form} >
-          <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+          <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
           <FormInput
               name="preferred_time"

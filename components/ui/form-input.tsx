@@ -11,8 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
-import { Textarea } from './textarea'
- 
+
 
 interface FormInputProps {
   name: string,
@@ -20,7 +19,9 @@ interface FormInputProps {
   form: UseFormReturn,
   type?: string,
   helper?: string,
-  inputDir?: string
+  inputDir?: string,
+  onFocus?: () => void,
+  autoComplete?: string
 }
 
 export function FormInput({
@@ -29,7 +30,9 @@ export function FormInput({
   form,
   type = "text",
   helper,
-  inputDir = "ltr"
+  inputDir = "ltr",
+  onFocus,
+  autoComplete = "on"
 }: FormInputProps) {
   const id = useId()
 
@@ -48,7 +51,8 @@ export function FormInput({
               id={id}
               type={type}
               placeholder=" "  // Empty space needed for peer styling
-
+              onFocus={onFocus}
+              autoComplete={autoComplete}
               className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
                 border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
                 placeholder-transparent focus:ring-1

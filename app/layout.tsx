@@ -9,10 +9,17 @@ import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 import NextTopLoader from 'nextjs-toploader'
+import { setCanGoForward } from "@/store/slices/appSlice";
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
   description: 'Join StudentHub to start your educational journey with the best resources and support.',
 };*/
+
+if (typeof window !== 'undefined') {
+  window.onpopstate = (event) => { 
+    store.dispatch(setCanGoForward({canGoForward: true}));
+  }
+}
 
 export default function RootLayout({
   children,

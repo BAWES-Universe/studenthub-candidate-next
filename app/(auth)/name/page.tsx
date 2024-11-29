@@ -84,7 +84,7 @@ export default function Name() {
         </h5>
 
         <Form {...form} >
-          <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+          <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
             <FormInput
               name="name_en"
@@ -100,7 +100,7 @@ export default function Name() {
               inputDir="rtl"
             />
  
-            <SubmitButton disabled={!form.formState.isValid || loading }>
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}>
             </SubmitButton>  
             
           </form>

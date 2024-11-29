@@ -25,13 +25,16 @@ import UniversityInput from "@/components/on-board/university-input";
 import DegreeGroupInput from "@/components/on-board/degree-group";
 import DegreeInput from "@/components/on-board/degree-input";
 import MajorInput from "@/components/on-board/major-input";
+import PagedUniversityInput from "@/components/on-board/paged-university-input";
+import PagedMajorInput from "@/components/on-board/paged-major";
+import PagedDegreeInput from "@/components/on-board/paged-degree-input";
 
 
 const formSchema = z.object({
   candidateEducations: z.array(z.object({
     university: z.any(),
     degree: z.any(),
-    fieldOfStudy: z.any(),
+    major: z.any(),
 
     education_uuid: z.string().nullable(),
     graduation_year: z.coerce.number().min(1900)
@@ -92,7 +95,7 @@ export default function Educations() {
 
       university: edu.university,
       degree: edu.degree,
-      fieldOfStudy: edu.major,
+      major: edu.major,
     })) || [];
 
    form.setValue('candidateEducations', formattedEducations || []);
@@ -132,62 +135,59 @@ export default function Educations() {
       </h5>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
           {fields?.map((field: { id: string }, index: number) => (
             <div key={field.id} className="space-y-4">
 
-              <UniversityInput 
-                university_id={form.getValues(`candidateEducations.${index}.university_id`)}
+              <PagedUniversityInput
+                selectedUniversity={form.getValues(`candidateEducations.${index}.university`)}
                 onSelect={(university: any) => {
-                  form.setValue(`candidateEducations.${index}.university_id`, university.university_id);
-                }}></UniversityInput>  
- 
-              { /*
-              <DegreeGroupInput 
-                degree_group_uuid={form.getValues(`candidateEducations.${index}.degree_group_uuid`)}
-                onSelect={(degreeGroup: any) => {
-                  form.setValue(`candidateEducations.${index}.university_id`, university.university_id);
-                }}></DegreeGroupInput>  
+                  if (university) {
+                    form.setValue(`candidateEducations.${index}.university`, 
+                      university.university_name_en);
+                    form.setValue(`candidateEducations.${index}.university_id`, university.university_id);
+                  } else {
+                    form.setValue(`candidateEducations.${index}.university`, "");
+                    form.setValue(`candidateEducations.${index}.university_id`, 0);
+                  }
+                  form.trigger();
+                }}
+                name={`candidateEducations.${index}.university`}
+                form={form as any}
+              />
 
-              <DegreeInput 
-                degree_uuid={form.getValues(`candidateEducations.${index}.degree_uuid`)}
+              <PagedDegreeInput 
+                selectedDegree={form.getValues(`candidateEducations.${index}.degree`)}
                 onSelect={(degree: any) => {
-                  form.setValue(`candidateEducations.${index}.degree_uuid`, degree.degree_uuid);
-                }}></DegreeInput>  
+                  if (degree) {
+                    form.setValue(`candidateEducations.${index}.degree`, degree.degree_name_en);
+                    form.setValue(`candidateEducations.${index}.degree_uuid`, degree.degree_uuid);
+                  } else {
+                    form.setValue(`candidateEducations.${index}.degree`, "");
+                    form.setValue(`candidateEducations.${index}.degree_uuid`, "");
+                  }
+                }}
+                name={`candidateEducations.${index}.degree`}
+                form={form as any}
+              />  
  
               <div className="flex">
                 <div className="flex-1 me-[16px]">
-                  <MajorInput 
-                    major_uuid={form.getValues(`candidateEducations.${index}.major_uuid`)}
+                  <PagedMajorInput
+                    selectedMajor={form.getValues(`candidateEducations.${index}.major`)}
                     onSelect={(major: any) => {
-                      form.setValue(`candidateEducations.${index}.major_uuid`, major.major_uuid);
-                    }}></MajorInput>  
-                </div>  
-                <div className="flex-1">
-                  <FormInput
-                      name={`candidateEducations.${index}.graduation_year`}
-                      label="Year of Graduation"
-                      form={form as any}
-                      type="number"
-                  />
-                </div>  
-              </div>
-*/ }
-
-
-
-              <FormInput
-                    name={`candidateEducations.${index}.degree`}
-                    label="Degree"
+                      if (major) {
+                        form.setValue(`candidateEducations.${index}.major`, 
+                          major.major_name_en);
+                        form.setValue(`candidateEducations.${index}.major_uuid`, major.university_id);
+                      } else {
+                        form.setValue(`candidateEducations.${index}.major`, "");
+                        form.setValue(`candidateEducations.${index}.major_uuid`, "");
+                      }
+                      form.trigger();
+                    }}
+                    name={`candidateEducations.${index}.major`}
                     form={form as any}
-                />
-
-              <div className="flex">
-                <div className="flex-1 me-[16px]">
-                  <FormInput
-                      name={`candidateEducations.${index}.fieldOfStudy`}
-                      label="Field of Study"
-                      form={form as any}
                   />
                 </div>  
                 <div className="flex-1">
@@ -225,7 +225,7 @@ export default function Educations() {
             onClick={() => {
   
               append({ 
-                university: '', degree: '', fieldOfStudy: '', 
+                university: '', degree: '', major: '', 
                 graduation_year: undefined, education_uuid: "", 
                 university_id: 0, degree_uuid: '', major_uuid: '', 
                 is_currently_studying: false 
@@ -237,7 +237,7 @@ export default function Educations() {
             <img src="/assets/icons/plus.svg" /> Add education
           </Button>
 
-          <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>
+          <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
         </form>
       </Form>
 

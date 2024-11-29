@@ -92,7 +92,7 @@ export default function AboutYourself() {
         </p>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
             <Textarea
               name="candidate_intro"
@@ -100,7 +100,8 @@ export default function AboutYourself() {
               form={form as any}
             />
  
-            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
+            <SubmitButton disabled={!form.formState.isValid || loading } 
+              loading={loading}></SubmitButton>
             
           </form>
         </Form>

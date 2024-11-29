@@ -115,7 +115,7 @@ export default function PersonalPhoto() {
         </p>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[560px] m-auto mb-[100px]">
   
           { form.getValues().candidate_personal_photo && 
             <div className="w-40 h-40 m-auto border-[color:var(--Neutral-30,#EEEEF0)] 

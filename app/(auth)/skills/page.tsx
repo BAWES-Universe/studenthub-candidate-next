@@ -122,7 +122,7 @@ export default function Skills() {
         </h5>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=" max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className=" max-w-[560px] m-auto mb-[100px]">
             
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2 p-4 min-h-[70px] w-full rounded-2xl border border-input bg-white">

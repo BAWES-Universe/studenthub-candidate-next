@@ -7,7 +7,8 @@ interface AppState {
   temp_bucket: string;
   utm_uuid: string;
   currentLocation: any;
-  showOneSignalPrompt: boolean
+  showOneSignalPrompt: boolean,
+  canGoForward: boolean
 }
 
 const initialState: AppState = {
@@ -16,7 +17,8 @@ const initialState: AppState = {
   temp_bucket: "studenthub-public-anyone-can-upload-24hr-expiry",
   utm_uuid: "",
   currentLocation: null,
-  showOneSignalPrompt: true
+  showOneSignalPrompt: true,
+  canGoForward: false
 };
 
 const appSlice = createSlice({
@@ -38,9 +40,12 @@ const appSlice = createSlice({
     setShowOneSignalPrompt: (state, action: PayloadAction<{ showOneSignalPrompt: boolean }>) => {
       state.showOneSignalPrompt = action.payload.showOneSignalPrompt;
     },
-
+    setCanGoForward: (state, action: PayloadAction<{ canGoForward: boolean }>) => {
+      state.canGoForward = action.payload.canGoForward;
+    },
   },
 });
 
-export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, setShowOneSignalPrompt } = appSlice.actions;
+export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, 
+  setShowOneSignalPrompt, setCanGoForward } = appSlice.actions;
 export default appSlice.reducer;

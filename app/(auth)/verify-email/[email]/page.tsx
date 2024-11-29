@@ -189,7 +189,7 @@ export default function VerifyEmailPage() {
             Please check your email address and type the code here</p>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
             <div className="flex">
             <FormField 

@@ -6,7 +6,7 @@ import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
 import appReducer from './slices/appSlice';
 
-type StoreState = {
+export type StoreState = {
   auth: ReturnType<typeof authReducer>;
   user: ReturnType<typeof userReducer>;
   app: ReturnType<typeof appReducer>;
@@ -34,9 +34,16 @@ export const store = configureStore<StoreState>({
 
 // Save to local storage
 store.subscribe(() => {
-  console.log('State after dispatch: ', store.getState());
+   
+  const state = {
+    ...store.getState(),
+    app: {
+      ...store.getState().app,
+      canGoForward: false
+    }
+  };
   localStorage.setItem('state', 
-    JSON.stringify(store.getState())
+    JSON.stringify(state)
   ) 
 });
 

@@ -121,7 +121,7 @@ export default function Experiences() {
       </h5>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[650px] m-auto mb-">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[650px] m-auto mb-[100px]">
           {fields?.map((field: { id: string }, index: number) => (
             <div key={field.id} className="space-y-4">
               <FormInput
@@ -189,7 +189,7 @@ export default function Experiences() {
           </Button>
 
           { /**!form.formState.isValid || */}
-          <SubmitButton disabled={ loading }></SubmitButton>
+          <SubmitButton disabled={ loading } loading={loading}></SubmitButton>
         </form>
       </Form>
 
