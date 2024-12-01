@@ -1,0 +1,46 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
+
+const WorkSessionRejected = ({ candidateNotification }: { candidateNotification: any }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={`p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative`}>
+      <h5 className="text-gray-900 font-semibold text-lg leading-7 m-0">
+        {t("Work Session Rejected")}
+      </h5>
+      
+      <p className="text-gray-600 text-sm leading-4 my-0">
+        {t("txt_session_rejected", {
+          start_time: new Date(candidateNotification.candidateWorkingHour.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          end_time: new Date(candidateNotification.candidateWorkingHour.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          date: new Date(candidateNotification.candidateWorkingHour.date).toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
+        })}
+      </p>
+
+      <p className="text-gray-500 text-xs text-right my-0">
+        {new Date(candidateNotification.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+      </p>
+
+      {candidateNotification.is_new && (
+        <span className="w-3.5 h-3.5 bg-blue-600 rounded-full absolute top-3 right-4"></span>
+      )}
+    </div>
+  );
+};
+
+// PropTypes for type checking
+WorkSessionRejected.propTypes = {
+  candidateNotification: PropTypes.shape({
+    candidateWorkingHour: PropTypes.shape({
+      start_time: PropTypes.string.isRequired,
+      end_time: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+    }).isRequired,
+    created_at: PropTypes.string.isRequired,
+    is_new: PropTypes.bool.isRequired,
+  }).isRequired,
+};
+
+export default WorkSessionRejected;

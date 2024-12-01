@@ -5,11 +5,18 @@ import { RootState, useAppSelector } from "@/store/store";
  * Make date readable by Safari
  * @param date
  */
-export function toDate(date: string) {
+export function toDate(date: string | null | undefined) {
   if (date) {
     return new Date(date.replace(/-/g, '/'));
   }
 }
+
+// Helper function to convert seconds to time format
+export const secondsToTime = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+};
 
 /**
  * Return content based on language selected

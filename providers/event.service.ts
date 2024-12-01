@@ -1,47 +1,42 @@
-/*import { Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+  
+export const internetOffline$ = new Subject();
+export const error404$ = new Subject();
+export const error500$ = new Subject();
+export const errorStorage$ = new Subject();
+  
+export const userLogout$ = new Subject();
+export const userLogin$ = new Subject();
+export const userUpdated$ = new Subject();
+export const nameUpdated$ = new Subject();
+export const bankUpdated$ = new Subject();
+export const profileUrlUpdated$ = new Subject();
+
+export const setOneSignalSubscription$ = new Subject();
+export const setOneSignal$ = new Subject();
+
+export const setLanguagePref$ = new Subject();
+export const kuwaitiNationl$ = new Subject();
+
+export const candidateVideoProcessed$ = new Subject();
+
+export const tabScrolled$ = new Subject();
+export const requestUpdated$ = new Subject();
+
+export const startWork$ = new Subject();
+export const stopWork$ = new Subject();
+
+export const workStarted$ = new Subject();
+export const workStopped$ = new Subject();
+
+export const loadProfile$ = new Subject();
+
+export const googleLoginFinished$ = new Subject();
+
+export const locationUpdated$ = new Subject();
+
+export const civilUpdated$ = new Subject();
+
+export const alertCount$ = new Subject();
+export const alertUpdate$ = new Subject();
  
-export class EventService {
-
-  public internetOffline$ = new Subject();
-  public error404$ = new Subject();
-  public error500$ = new Subject();
-  public errorStorage$ = new Subject();
-  
-  public userLogout$ = new Subject();
-  public userLogin$ = new Subject();
-  public userUpdated$ = new Subject();
-  public nameUpdated$ = new Subject();
-  public bankUpdated$ = new Subject();
-  public profileUrlUpdated$ = new Subject();
-
-  public setOneSignalSubscription$ = new Subject();
-  public setOneSignal$ = new Subject();
-  
-  public setLanguagePref$ = new Subject();
-  public kuwaitiNationl$ = new Subject();
-
-  public candidateVideoProcessed$ = new Subject();
-
-  public tabScrolled$ = new Subject();
-  public requestUpdated$ = new Subject();
-
-  public startWork$ = new Subject();
-  public stopWork$ = new Subject();
-
-  public workStarted$ = new Subject();
-  public workStopped$ = new Subject();
-
-  public loadProfile$ = new Subject();
-
-  public googleLoginFinished$ = new Subject();
-  
-  public locationUpdated$ = new Subject();
-  
-  public civilUpdated$ = new Subject();
-  
-  public alertCount$ = new Subject();
-  public alertUpdate$ = new Subject();
-
-  constructor() { }
-}
-*/

@@ -34,7 +34,7 @@ export class CandidateNotification {
     is_new?: boolean;
     staff_id?: number;
     message?: string;
-    created_at?: string;
+    created_at!: string;
     updated_at?: string;
      
     candidate?: Candidate;
@@ -45,7 +45,7 @@ export class CandidateNotification {
     invitation?: Invitation;
     request?: Request;
     store?: Store;
-    staff?: Staff;
+    staff!: Staff;
     transferCandidate?: Salary;
     candidateWorkLogFeedback?: CandidateWorkLogFeedback;
 }
