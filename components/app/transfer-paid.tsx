@@ -4,11 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
-const TransferPaid = ({ candidateNotification }: { candidateNotification: any }) => {
+const TransferPaid = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
 
     return (
-        <div className={`card p-4 rounded-lg shadow-md bg-white relative`}>
+        <div onClick={onClick} className={`card p-4 rounded-lg shadow-md bg-white relative`}>
             <h5 className="text-gray-900 font-semibold text-lg">{t("Compensation Transfer Paid")}</h5>
             <p className="text-gray-600 text-sm">
                 {t("Congratulations! Your compensation has been transferred to your bank account.")}

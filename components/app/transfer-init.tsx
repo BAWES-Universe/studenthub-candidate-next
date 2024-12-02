@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
-const CompensationTransferNotification = ({ candidateNotification }: { candidateNotification: any }) => {
+const CompensationTransferNotification = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={`card p-4 flex flex-col gap-2 rounded-lg bg-white shadow-md relative`}>
+    <div onClick={onClick} className={`card p-4 flex flex-col gap-2 rounded-lg bg-white shadow-md relative`}>
       <h5 className="text-gray-900 font-semibold text-lg leading-7 m-0">
         {t("Compensation Transfer Initiated")}
       </h5>

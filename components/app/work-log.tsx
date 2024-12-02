@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'; // Assuming you're using react-i
 import { MoveRight } from 'lucide-react';
 import { secondsToTime } from '@/utils/common';
 
-const WorkLog = ({ hour, onApproveClicked, onRejectClicked }: { hour: any, onApproveClicked: any, onRejectClicked: any }) => {
+const WorkLog = ({ hour }: { hour: any }) => {
     const { t } = useTranslation();
 
     return (

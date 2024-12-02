@@ -4,11 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
-const TransferReverted = ({ candidateNotification }: { candidateNotification: any }) => {
+const TransferReverted = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
 
     return (
-        <div className={`card p-4 rounded-lg shadow-md bg-white relative`}>
+        <div onClick={onClick} className={`card p-4 rounded-lg shadow-md bg-white relative`}>
             <h5 className="text-gray-900 font-semibold text-lg">{t("Compensation Transfer Reverted")}</h5>
             <p className="text-gray-600 text-sm">
                 {t("Your compensation transfer has been reverted due to some issues. A ticket has been created and support will be in touch.")}

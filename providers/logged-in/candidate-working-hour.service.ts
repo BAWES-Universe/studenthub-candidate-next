@@ -50,7 +50,7 @@ export async function workingDateStats(date: string): Promise<any> {
  * Return working hours
  * @returns {Observable<any>}
  */
-export async function listHours(page: number, param = null): Promise<any> {
+export async function listHours(page: number, param: string = ""): Promise<any> {
   const url = _workingHourEndpoint + `/hour?page=${page}&expand=store,store.company${param}`;
   const response = await axios.get(url);
   return response.data;

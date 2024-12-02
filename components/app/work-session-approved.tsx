@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
-const WorkSessionApproved = ({ candidateNotification }: { candidateNotification: any }) => {
+const WorkSessionApproved = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={`p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative 
+    <div onClick={onClick} className={`p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative 
     ${candidateNotification.is_new ? 'border-l-4 border-blue-500' : ''}`}>
       <h5 className="text-gray-900 font-semibold text-lg leading-7 m-0">
         {t("Work Session Approved")}

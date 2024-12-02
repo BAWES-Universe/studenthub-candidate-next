@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next'; // Assuming you're using react-i
 import PropTypes from 'prop-types';
 import { CandidateNotification } from '@/models/candidate-notification';
 
-const Assigned = ({ candidateNotification }: { candidateNotification: CandidateNotification }) => {
+const Assigned = ({ candidateNotification, onClick }: { candidateNotification: CandidateNotification, onClick: any }) => {
     const { t } = useTranslation(); // Translation hook
 
     return (
-        <div className="rounded-lg shadow-md bg-white flex flex-col p-4">
+        <div onClick={onClick} className="rounded-lg shadow-md bg-white flex flex-col p-4">
             <div className="flex flex-col">
                 {candidateNotification.store && (
                     <h5 className="text-gray-900 font-semibold text-lg leading-7">

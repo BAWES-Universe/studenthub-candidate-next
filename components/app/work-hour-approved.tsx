@@ -4,11 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
-const WorkHourApproved = ({ candidateNotification }: { candidateNotification: any }) => {
+const WorkHourApproved = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
 
     return (
-        <div className={`ion-card rounded-lg shadow-md bg-white relative`}>
+        <div onClick={onClick} className={`ion-card rounded-lg shadow-md bg-white relative`}>
             <div className="ion-card-content p-4 flex flex-col">
                 <h5 className="text-gray-900 font-semibold text-lg">{t("Work Hour Approved")}</h5>
                 <p className="txt-meta text-gray-500 text-sm">

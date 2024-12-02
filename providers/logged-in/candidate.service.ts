@@ -3,6 +3,16 @@ import axios, { pdfget } from "../AxiosService";
  
 const _candidateEndpoint = '/candidates';
  
+  /**
+   * return work history
+   * @param candidate
+   */
+  export async function listWorkHistory(): Promise<any> {
+    const url = _candidateEndpoint + '/work-history?expand=store,company,company.parentCompany';
+    const response = await axios.get(url);
+    return response.data;
+  }
+
 /**
  * assignment details
    * @param id 
@@ -10,16 +20,6 @@ const _candidateEndpoint = '/candidates';
    */
   export async function workHistoryDetail(id: string | number): Promise<any> {
     const url = _candidateEndpoint + '/work-history/' + id + '?expand=store,company,company.parentCompany,contract,contract.amount';
-    const response = await axios.get(url);
-    return response.data;
-  }
-
-  /**
-   * return work history
-   * @param candidate
-   */
-  export async function workHistory(): Promise<any> {
-    const url = _candidateEndpoint + '/work-history?expand=store,company,company.parentCompany';
     const response = await axios.get(url);
     return response.data;
   }

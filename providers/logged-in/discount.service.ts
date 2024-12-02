@@ -6,7 +6,7 @@ const _discountEndpoint = "/discounts";
    * List of all discount
    * @returns {Observable<any>}
    */
-  export async function list(page: number, urlParams: string = ""): Promise<any> {
+  export async function listDiscounts(page: number, urlParams: string = ""): Promise<any> {
     let url = _discountEndpoint + '?expand=company,store,category&page=' + page + urlParams;
     const response = await axios.get(url);
     return response.data;

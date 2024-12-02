@@ -6,7 +6,7 @@ const _requestEndpoint = '/requests';
    * List all requests with page
    * @returns {Observable<any>}
    */
-export async function list(page: number, urlParams: string = ''): Promise<any> {
+export async function listRequests(page: number, urlParams: string = ''): Promise<any> {
     const url = _requestEndpoint + '?page=' + page + urlParams;
     const response = await axios.get(url);
     return response.data;
@@ -40,7 +40,7 @@ export async function list(page: number, urlParams: string = ''): Promise<any> {
    * @param request_uuid 
    * @returns 
    */
-  export async function apply(request_uuid: string): Promise<any> {
+  export async function applyRequest(request_uuid: string): Promise<any> {
     const url = _requestEndpoint + '/apply/' + request_uuid;
     const response = await axios.post(url, {});
     return response.data;
@@ -51,7 +51,7 @@ export async function list(page: number, urlParams: string = ''): Promise<any> {
    * @param request_uuid 
    * @returns 
    */
-  export async function view(request_uuid: string): Promise<any> {
+  export async function viewRequest(request_uuid: string): Promise<any> {
     const url = _requestEndpoint + '/' + request_uuid + '?expand=requestSkills';
     const response = await axios.get(url);
     return response.data;

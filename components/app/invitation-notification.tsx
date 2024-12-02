@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'; // Assuming you're using react-i
 import { CandidateNotification } from '@/models/candidate-notification';
 import { toDate } from '@/utils/common';
 
-const InvitationNotification = ({ candidateNotification }: { candidateNotification: CandidateNotification }) => {
+const InvitationNotification = ({ candidateNotification, onClick }: { candidateNotification: CandidateNotification, onClick: any }) => {
     const { t, i18n } = useTranslation();
 
     return (
-        <div className="card p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative">
+        <div onClick={onClick} className="card p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative">
             <h5 className="text-gray-900 font-semibold text-lg leading-7 m-0">
                 {t("New Part-Time Invitation")}
             </h5>

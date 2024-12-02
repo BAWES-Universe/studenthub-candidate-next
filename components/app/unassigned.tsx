@@ -4,11 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
-const Unassigned = ({ candidateNotification }: { candidateNotification: any }) => {
+const Unassigned = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
 
     return (
-        <div className={`ion-card rounded-lg shadow-md bg-white relative`}>
+        <div onClick={onClick} className={`ion-card rounded-lg shadow-md bg-white relative`}>
             <div className="ion-card-content p-4 flex flex-col">
                 {candidateNotification.store && (
                     <h5 className="text-gray-900 font-semibold text-lg">
