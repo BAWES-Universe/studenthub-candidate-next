@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import { errorMessage } from '@/utils/common';
 import { Candidate } from '@/models/candidate';
+import { Card, CardContent } from '@/components/ui/card';
+
 
 const AccountStatus = () => {
     
@@ -65,45 +67,51 @@ const AccountStatus = () => {
  
     return (
         <div className="account-status">
-            <div className="white-bg">
-                <h2>{t('Dear')} { transform(user?.candidate_name || '') }</h2>
+            <div className='text-[#22223d] text-2xl leading-loose mb-4'>
+                <span className=" font-normal ">
+                    { t("Hello")},
+                    </span>
+                    <span className=" font-bold"> { transform(user?.candidate_name || '') }</span>
             </div>
-            <div>
+ 
+            <Card className="p-0 mb-4">
+            <CardContent className='p-4'>      
                 {user?.store ? (
                     <>
-                        <p className="txt-job-status" dangerouslySetInnerHTML={{ 
+                        <p className="mt-[2px] mb-4 text-sm font-normal leading-tight" dangerouslySetInnerHTML={{ 
                             __html: t('txt_assigned', { 
                                 company: user?.company?.company_name, 
                                 store: user?.store?.store_name }) }} />
-                        <Button onClick={viewCompanyDetails} className="btn-learn-more">
+                        <Button variant={"outline"} onClick={viewCompanyDetails} className="btn-learn-more">
                             {t('txt_learn_more', { company: user?.company?.company_name })}
                         </Button>
                     </>
                 ) : user?.candidate_job_search_status ? (
                     <>
-                        <p className="txt-job-status">{
+                        <p className="mt-[2px] mb-4 text-sm font-normal leading-tight">{
                             t("We’re currently looking for a job for you. We’ll notify you when we find an open position.")}
                         </p>
-                        <p className="txt-job-status">{
+                        <p className="mt-[2px] mb-4 text-sm font-normal leading-tight">{
                             t("The more attractive your profile, the easier it is for us to find you a job.")
                         }</p>
                         <Link href="/profile">
-                            <Button className="btn-view-profile">{
+                            <Button variant={"outline"} className="btn-view-profile">{
                                 t("View my profile")
                             }</Button>
                         </Link>
                     </>
                 ) : (
                     <>
-                        <p className="txt-job-status">{
+                        <p className="mt-[2px] mb-4 text-sm font-normal leading-tight">{
                         t("You told us you’re not looking for a job, so we’re not going to bother you about it")
                         }</p>
-                        <Button className="btn-toggle-job" disabled={updating} onClick={updateJobSearchStatusClicked}>{
+                        <Button variant={"outline"} className="btn-toggle-job" disabled={updating} onClick={updateJobSearchStatusClicked}>{
                             t("I want a job. Sign me up again.")}
                         </Button>
                     </>
                 )}
-            </div>
+            </CardContent>
+            </Card>
         </div>
     );
 };

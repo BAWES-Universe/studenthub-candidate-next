@@ -20,6 +20,6 @@ export class CandidateWorkHistory {
 
     contract?: Contract;
     staff?: Staff;
-    company?: Company;
+    company!: Company;
     store?: Store;
 }

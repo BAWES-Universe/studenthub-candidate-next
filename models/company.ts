@@ -20,6 +20,7 @@ export class Company{
     country?: Country;
     subcompanies?: Company[];
     subCompanies?: Company[];
+    parentCompany?: Company;
     stores?: Store[];
     brands?: Brand[];
 }

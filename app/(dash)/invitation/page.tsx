@@ -17,13 +17,15 @@ const InvitationsPage = () => {
     const [pageCount, setPageCount] = useState(0);
 
     useEffect(() => {
-        page('Invitation List page');
+        
         loadInvitations();
 
         const subscription = requestUpdated$.subscribe(() => {
             loadInvitations();
         });
 
+        page('Invitation List page');
+        
         return () => {
             subscription.unsubscribe();
             track('page_exit', { 'page': 'Invitation List page' });

@@ -8,6 +8,11 @@ declare global {
 }
 
 export function setMixpanel() {
+
+  if (typeof window == 'undefined' || true) {
+    return;
+  }
+
   if (process.env.NEXT_PUBLIC_MIXPANEL_KEY)
     mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY);
 }
@@ -19,6 +24,9 @@ export function setMixpanel() {
  */
 export function identify(id: string, params: any) {
 
+  if (typeof window == 'undefined' || true) {
+    return;
+  }
   //segment
 
   if (window.analytics)
@@ -39,6 +47,10 @@ export function identify(id: string, params: any) {
  * @param name 
  */
 export function page(name: string) {
+
+  if (typeof window == 'undefined' || true) {
+    return;
+  }
 
   const state = store.getState(); // Get the state directly from the store
 
@@ -73,6 +85,9 @@ export function page(name: string) {
  */
 export function track(eventName: string, params: any) {
 
+  if (typeof window == 'undefined' || true) {
+    return;
+  }
   const state = store.getState(); // Get the state directly from the store
 
   const { language } = state.app;  
@@ -87,5 +102,10 @@ export function track(eventName: string, params: any) {
 }
 
 export function refreshAnalytics() {
+
+  if (typeof window == 'undefined' || true) {
+    return;
+  }
+
   mixpanel.reset();
 }  

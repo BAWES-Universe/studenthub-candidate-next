@@ -10,6 +10,10 @@ import { useAppSelector } from '@/store/store';
 import { CandidateWorkHistory } from '@/models/candidate-work-history';
 import { listWorkHistory } from '@/providers/logged-in/candidate.service';
 import { page, track } from '@/providers/analytics.service';
+import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const DashboardPage = () => {
     const [candidate, setCandidate] = useState(null);
@@ -19,6 +23,8 @@ const DashboardPage = () => {
     const [pushNotificationAvailable, setPushNotificationAvailable] = useState(true);
     const router = useRouter();
     const { user } = useAppSelector(state => state.user);
+
+    const { t} = useTranslation();
 
     useEffect(() => {
         loadProfile();
@@ -53,30 +59,7 @@ const DashboardPage = () => {
         const response = await listWorkHistory();
         setWorkHistory(response);
     };
-
-    const updateCivilID = (event: any) => {
-        event.preventDefault();
-        //router.push('/view/profile', { updateCivilId: true });
-    };
-
-    const updateBank = async (event: any) => {
-        event.preventDefault();
-        /*const modal = await openModal(UpdateBankPage, { candidate });
-        modal.onDidDismiss().then((e) => {
-            if (e.data && e.data.refresh) {
-                loadProfile();
-            }
-        });*/
-    };
-
-    const updateVideo = async (event: any) => {
-        /*const modal = await openModal(UploadVideoPage, { candidate });
-        modal.onDidDismiss().then((e) => {
-            if (e.data && e.data.candidate_video) {
-                setCandidate((prev) => ({ ...prev, candidate_video: e.data.candidate_video }));
-            }
-        });*/
-    };
+ 
 
     const downloadCertificate = async (event: any) => {
       /*  const modal = await openModal(WorkHistoryPage, { candidate, workHistory });
@@ -89,7 +72,7 @@ const DashboardPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-4">
-            <h3 className="text-3xl font-bold capitalize">Home</h3>
+             
             {loadingProfile && <div className="progress-bar">Loading...</div>}
             {candidate && (
                 <div>
@@ -98,74 +81,148 @@ const DashboardPage = () => {
 
                     {/* Push Notification Card */}
                     {pushNotificationAvailable && (
-                        <div className="card-notification">
-                            <h4>Receive faster updates by enabling push notifications</h4>
-                            <p>We’ll still email you important updates...</p>
-                            <button onClick={() => setSubscription()} className="btn-video-recording">Enable notifications</button>
-                        </div>
+                        <Card className="p-0 mb-4">
+                            <CardHeader>
+                            <CardTitle className='font-bold'>Receive faster updates by enabling push notifications</CardTitle>
+                        </CardHeader>
+                        <CardContent>      
+                            <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
+                                { t("We’ll still email you important updates. This is cool if you aren’t an email person or would like to receive faster updates.") }</p>
+                            <Button variant={'outline'}onClick={() => setSubscription()}>
+                                { t("Enable notifications") }
+                            </Button>
+                        </CardContent>
+                        </Card>
                     )}
 
                     {/* Scheduled Interviews Card */}
                     {user?.totalInterviewScheduled && user?.totalInterviewScheduled > 0 && (
-                        <div className="card-bank-details">
-                            <h4>Scheduled interviews</h4>
-                            <p>{`You have ${user?.totalInterviewScheduled} scheduled interviews.`}</p>
-                            <button onClick={() => router.push('/interview-list')} className="btn-bank-detail">View</button>
-                        </div>
+                        <Card className="p-0 mb-4">
+                             <CardHeader>
+                            <CardTitle className='font-bold'>Scheduled interviews</CardTitle>
+                        </CardHeader>
+
+                        <CardContent>    
+                            <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight" dangerouslySetInnerHTML={{ 
+                            __html: t('txt_interview_scheduled', { 
+                                value: user.totalInterviewScheduled }) }}></p>
+                            <Button variant={'outline'} onClick={() => router.push('/interview-list')} className="btn-bank-detail">View</Button>
+                        </CardContent>
+                        </Card>
                     )}
 
                     {/* Civil ID Card */}
-                    {(!user?.candidate_civil_photo_front || !user?.candidate_civil_photo_back || !user?.candidate_civil_expiry_date || user?.civilExpired) && (
-                        <div className="card-bank-details" onClick={updateCivilID}>
-                            <h4>Urgent Civil Detail</h4>
-                            <p>You won’t be able to receive payments until we have your valid civil ID.</p>
-                            <button className="btn-civil-detail">Upload Civil ID</button>
-                        </div>
+                    {(
+                        !user?.candidate_civil_photo_front || 
+                        !user?.candidate_civil_photo_back || 
+                        !user?.candidate_civil_expiry_date || 
+                        user?.civilExpired
+                    ) && (
+                        <Card className="p-0 mb-4"> 
+                            <CardHeader>
+                                <CardTitle className='font-bold'>Urgent Civil Detail</CardTitle>
+                            </CardHeader>
+                            <CardContent>    
+                                <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">You won’t be able to receive payments until we have your valid civil ID.</p>
+                                <Button variant={'outline'} className="btn-civil-detail" onClick={() => router.push('/civil-id')}>
+                                    Upload Civil ID
+                                </Button>
+                            </CardContent>
+                        </Card>
                     )}
 
                     {/* Bank Details Card */}
                     {user?.bank_account_needed && (
-                        <div className="card-bank-details" onClick={updateBank}>
-                            <h4>Urgent Bank Detail</h4>
-                            <p>You won’t be able to receive payments until we have your bank information.</p>
-                            <button className="btn-bank-detail">Enter my bank information</button>
-                        </div>
+                        <Card className="p-0 mb-4">
+                             <CardHeader>
+                            <CardTitle className='font-bold' dangerouslySetInnerHTML={{ __html: t('urgent_bank_detail') }}></CardTitle>
+                        </CardHeader>
+                        <CardContent>    
+                            <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">You won’t be able to receive payments until we have your bank information.</p>
+                            <Button variant={'outline'} className="btn-bank-detail" onClick={() => router.push('/bank')}>
+                                Enter my bank information
+                            </Button>
+                        </CardContent>
+                        </Card>
                     )}
 
                     {/* Video Recording Card */}
                     {user?.candidate_job_search_status && !user?.candidate_video && (
-                        <div className="card-bank-details" onClick={updateVideo}>
-                            <h4>Increase your chances of landing a job by recording an intro video</h4>
-                            <p>While optional, an intro video makes your profile stand out...</p>
-                            <button className="btn-video-recording">I’d like to start recording</button>
-                        </div>
+                        <Card className="p-0 mb-4">
+                            <CardHeader>
+                            <CardTitle className='font-bold'>Increase your chances of landing a job by recording an intro video</CardTitle>
+                        </CardHeader>
+                        <CardContent>  
+                            <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
+                            While optional, an intro video makes your profile stand out to employers. It shows that you have the confidence required for the job and gives them the first impression they need to see you as something more than just a paper CV.
+                            </p>
+                            <Button variant={'outline'} className="btn-video-recording" onClick={() => router.push('/video')}>
+                                I’d like to start recording
+                            </Button>
+                        </CardContent>
+                        </Card>
                     )}
 
                     {/* Working Logs Card */}
                     {user?.working_hour_count > 0 && (
-                        <div className="card-bank-details">
-                            <h4>Working logs</h4>
-                            <button onClick={() => router.push('/log-date-list')} className="btn-video-recording">Click here to view your working logs</button>
-                        </div>
+                        <Card className="p-0 mb-4">
+                        <CardHeader>
+                            <CardTitle className='font-bold'>Working logs</CardTitle>
+                        </CardHeader>
+                        <CardContent> 
+                            <Button variant={'outline'} onClick={() => router.push('/log-date-list')} className="btn-video-recording">Click here to view your working logs</Button>
+                        </CardContent>
+                        </Card>
                     )}
 
                     {/* Wallet Card */}
-                    <div className="card-bank-details">
-                        <h4>Wallet</h4>
-                        <button onClick={() => router.push('/wallet')} className="btn-video-recording">Click here to view your wallet balance</button>
-                    </div>
+                    <Card className="p-0 mb-4">
+                        <CardHeader>
+                            <CardTitle className='font-bold'>Wallet</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Button variant={'outline'} onClick={() => router.push('/wallet')} className="btn-video-recording">
+                                Click here to view your wallet balance
+                            </Button>
+                        </CardContent>
+                    </Card>
 
                     {/* Work History Card */}
                     {workHistory.length > 0 && (
+                        
                         <div className="card-work-details">
-                            <h4>Your history with StudentHub</h4>
+                            
+                            <h4 className='font-bold my-4'>Your history with StudentHub</h4>
+
                             {workHistory.map((history: CandidateWorkHistory, index: number) => (
-                                <div key={index} className="history">
-                                    <h5>{history.company && history.company.company_name}</h5>
-                                    <p>{`${history.start_date} to ${history.end_date || 'now'}`}</p>
-                                </div>
+                                <Card key={index} className="p-0 mb-4">
+                                    <CardHeader>
+                                        <CardTitle className='font-bold'>
+                                        { history.company.parentCompany && (
+                                                 history.company.parentCompany.company_common_name_en? 
+                                                 history.company.parentCompany.company_common_name_en: history.company.parentCompany.company_name) }
+                                                 
+                                            { !history.company.parentCompany && (
+                                                 history.company.company_common_name_en? 
+                                                 history.company.company_common_name_en: history.company.company_name) }
+
+                                        </CardTitle>
+                                        <CardDescription className='font-bold'>
+                                            {history.store && history.store.store_name}
+                                        </CardDescription>
+                                    </CardHeader>
+                                    
+                                    <CardContent>
+                                        <p className="mb-0 text-[#68687a] text-sm font-normal leading-tight">{
+                                            `${format(new Date(history.start_date || ""), 'MMMM d, yyyy')} to 
+                                            ${ history.end_date?format(new Date(history.end_date), 'MMMM d, yyyy') : t('now')}`
+                                            }</p>
+                                    </CardContent>
+                                </Card>
                             ))}
-                            <button onClick={downloadCertificate} className="download-btn">Download Certificates</button>
+                            <Button variant={'outline'}onClick={downloadCertificate} className="download-btn">
+                                Download Certificates
+                            </Button>
                         </div>
                     )}
                 </div>
