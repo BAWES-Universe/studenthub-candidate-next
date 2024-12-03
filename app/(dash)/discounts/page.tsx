@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/discounts/DiscountsPage.jsx
 
 import React, { useEffect, useState } from 'react';

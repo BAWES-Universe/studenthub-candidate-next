@@ -10,6 +10,10 @@ import Script from 'next/script';
 const inter = Inter({ subsets: ['latin'] });
 import NextTopLoader from 'nextjs-toploader'
 import { setCanGoForward } from "@/store/slices/appSlice";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { publicRoutes } from "@/_middleware";
+import { setMixpanel } from "@/providers/analytics.service";
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
   description: 'Join StudentHub to start your educational journey with the best resources and support.',
@@ -26,6 +30,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const router = useRouter();
+  
+  const state = store.getState(); // Get the state directly from the store
+
+  const { isAuthenticated } = state.auth;  
+
+  useEffect(() => {
+    setMixpanel();
+  }, []);
+
+  useEffect(() => {
+     
+    if (!isAuthenticated && !publicRoutes.includes(window.location.pathname)) {
+      router.push('/login');
+    } else if (isAuthenticated && ["/", ""].includes(window.location.pathname)) {
+      router.push('/home');
+    }
+    
+  }, [isAuthenticated, router]);
+
   return (
     <Provider store={store}>
       

@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/invitation/InvitationDetailPage.jsx
 
 import { Invitation } from '@/models/invitation';

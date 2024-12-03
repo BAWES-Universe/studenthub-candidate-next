@@ -1,7 +1,8 @@
+"use client"
 // app/(dash)/dashboard/DashboardPage.jsx
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { profile } from '@/providers/logged-in/account.service';
 //import { workHistory } from '@/providers/logged-in/candidate.service';
 import AccountStatus from '@/components/app/account-status';
@@ -24,10 +25,10 @@ const DashboardPage = () => {
         loadWorkHistoryData();
         //setInvitationSubscription();
 
-        page('Home Page');
+     //   page('Home Page');
 
         return () => {
-            track('page_exit', { page: 'Home Page' });
+       //     track('page_exit', { page: 'Home Page' });
         }
   
     }, []);

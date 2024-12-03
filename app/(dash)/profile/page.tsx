@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/profile/ProfilePage.jsx
 
 import { Candidate } from '@/models/candidate';

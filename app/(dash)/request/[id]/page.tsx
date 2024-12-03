@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/request/RequestViewPage.tsx
 
 import { Request } from '@/models/request';

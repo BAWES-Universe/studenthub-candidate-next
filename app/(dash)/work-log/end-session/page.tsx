@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/end-session/page.tsx
 
 import { page, track } from '@/providers/analytics.service';

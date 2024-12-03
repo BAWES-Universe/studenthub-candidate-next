@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/chat/ChatViewPage.tsx
 
 import React, { useEffect, useRef, useState } from 'react';

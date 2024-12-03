@@ -1,3 +1,5 @@
+"use client"
+
 // app/(dash)/update-bank/page.tsx
 
 import { profile, updateBankDetail } from '@/providers/logged-in/account.service';

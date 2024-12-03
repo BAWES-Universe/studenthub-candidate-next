@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/log-time-manually/page.tsx
 
 import { useEffect, useState } from 'react';

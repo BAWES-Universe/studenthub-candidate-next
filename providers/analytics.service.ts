@@ -1,5 +1,5 @@
 import { store } from '@/store/store';
-import * as mixpanel from 'mixpanel-browser';
+import mixpanel from 'mixpanel-browser';
 
 declare global {
   interface Window {

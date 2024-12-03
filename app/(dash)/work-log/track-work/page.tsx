@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/track-work/page.tsx
 
 import { useEffect, useState } from 'react';

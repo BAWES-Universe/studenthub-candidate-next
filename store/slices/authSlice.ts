@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+//import { cookies } from 'next/headers';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -19,10 +20,16 @@ const authSlice = createSlice({
     setCredentials: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
       state.isAuthenticated = true;
+      /*cookies().then(cookieStore => {
+        cookieStore.set('isAuthenticated', 'true');
+      });*/
     },
     logout: (state) => {
       state.token = null;
       state.isAuthenticated = false;
+      /*cookies().then(cookieStore => {
+        cookieStore.delete('isAuthenticated');
+      });*/
     },
     setUnVerifiedToken: (state, action: PayloadAction<{ token: string | null }>) => {
       state.unVerifiedToken = action.payload.token;

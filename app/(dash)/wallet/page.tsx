@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/wallet/WalletBalanceListPage.tsx
 
 import { page, track } from '@/providers/analytics.service';

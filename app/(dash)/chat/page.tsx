@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/chat/ChatListPage.tsx
 
 import Pager from '@/components/common/pager';

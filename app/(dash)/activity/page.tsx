@@ -1,3 +1,5 @@
+"use client"
+
 // src/components/ActivityPage.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';

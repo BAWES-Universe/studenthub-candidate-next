@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/log-date-list/page.tsx
 
 import { CandidateWorkingDate } from '@/models/candidate-working-date';

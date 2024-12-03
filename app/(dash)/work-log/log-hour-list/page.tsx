@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/log-hour-list/page.tsx
 
 import { useEffect, useState, useRef } from 'react';

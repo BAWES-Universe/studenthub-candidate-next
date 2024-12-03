@@ -2,9 +2,10 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { RootState, store, useAppSelector } from '@/store/store';
+import { cookies } from 'next/headers';
  
 // 1. Specify protected and public routes
-const protectedRoutes = ['/activity', '/assignment/[id]', '/bank', 
+export const protectedRoutes = ['/activity', '/assignment/[id]', '/bank', 
   "/change-password", "/chat", "/chat/[id]", "/company", "/discount", "/discount/[id]",
   "/home", "/interview", "/interview/[id]",  "/invitation", "/invitation/[id]", "/invitation/feedback",
   "/payments",  "/profile", "/request", "/request/[id]", "/wallet", "/work-history", 
@@ -14,7 +15,7 @@ const protectedRoutes = ['/activity', '/assignment/[id]', '/bank',
   "/personal-photo", "/personal-info-complete", "/phone-number", "/preferred-time", "/profile-url", 
   "/skills", "/video"]
 
-const publicRoutes = ['/login', '/', "/verify-email/[email]", 
+export const publicRoutes = ['/login', '/', "/verify-email/[email]", 
   "/forgot-password", "/reset-password", "/name", "/email"]
  
 export default async function middleware(req: NextRequest) {
@@ -22,8 +23,7 @@ export default async function middleware(req: NextRequest) {
   const state = store.getState(); // Get the state directly from the store
 
   const { isAuthenticated } = state.auth;  
- 
-  alert(isAuthenticated);
+  
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)

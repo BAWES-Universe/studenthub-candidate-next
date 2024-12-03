@@ -1,3 +1,4 @@
+"use client"
 // app/(dash)/assignment/page.tsx
 
 import React, { useEffect, useState } from 'react';
