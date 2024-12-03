@@ -18,6 +18,7 @@ import { setMixpanel } from "@/providers/analytics.service";
   title: 'StudentHub - Your Learning Journey Starts Here',
   description: 'Join StudentHub to start your educational journey with the best resources and support.',
 };*/
+//import { reactI18nextModule } from 'react-i18next';
 
 if (typeof window !== 'undefined') {
   window.onpopstate = (event) => { 

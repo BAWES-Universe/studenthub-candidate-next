@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import mixpanel from "mixpanel-browser";
+//import mixpanel from "mixpanel-browser";
 
 interface AppState {
   language: string;
@@ -27,6 +27,7 @@ const appSlice = createSlice({
   reducers: {
     setLanguage: (state, action: PayloadAction<{ language: string }>) => {
       state.language = action.payload.language;
+      //i18n.changeLanguage(action.payload.language);
     },
     setTempBucket: (state, action: PayloadAction<{ temp_bucket: string }>) => {
       state.temp_bucket = action.payload.temp_bucket;

@@ -18,6 +18,7 @@ import { basicAuth } from "@/providers/auth.service";
 import { useState } from "react";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { useRouter } from 'next/navigation'; 
+import Link from "next/link";
  
 
 const formSchema = z.object({
@@ -91,7 +92,8 @@ export default function Email() {
               form={form as any}
               type="password"
             />
- 
+            <Link href="/forgot-password">Forgot Password?</Link>
+
             <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>

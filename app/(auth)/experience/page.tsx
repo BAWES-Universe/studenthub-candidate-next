@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { saveExperience } from "@/providers/logged-in/candidate-experience.service";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   experiences: z.array(z.object({
@@ -40,6 +41,8 @@ export default function Experiences() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   let formattedExperiences: any[] = [];
 
@@ -117,7 +120,7 @@ export default function Experiences() {
       <OnboardProgress />
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-        Do you have any work experience?
+        { t("Do you have any work experience?")}
       </h5>
 
       <Form {...form}>
@@ -126,7 +129,7 @@ export default function Experiences() {
             <div key={field.id} className="space-y-4">
               <FormInput
                 name={`experiences.${index}.experience`}
-                label="Job Title"
+                label={ t("Job Title") }
                 form={form as any}
               />
 
@@ -134,7 +137,7 @@ export default function Experiences() {
                 <div className="xs:w-full sm:w-[318px] me-[16px]">
                 <FormInput
                     name={`experiences.${index}.employer`}
-                    label="Employer"
+                    label={ t("Employer") }
                     form={form as any}
                 />
                 </div>  
@@ -143,7 +146,7 @@ export default function Experiences() {
                 <div className="flex-col me-[16px]">
                 <FormInput
                     name={`experiences.${index}.start_year`}
-                    label="Start Year"
+                    label={ t("Start Year") }
                     form={form as any}
                     type="number"
                 />
@@ -152,7 +155,7 @@ export default function Experiences() {
                 <div className="flex-col">
                 <FormInput
                     name={`experiences.${index}.end_year`}
-                    label="End Year"
+                    label={ t("End Year") }
                     form={form as any}
                     type="number"
                 />
@@ -167,7 +170,7 @@ export default function Experiences() {
                         onClick={() => remove(index)}
                         className="text-red-500"
                         >
-                        Remove 
+                        { t("Remove") }
                     </Button>)
                }
 
@@ -185,7 +188,7 @@ export default function Experiences() {
             className="text-[color:var(--Primary-Main,#4C70F2)] text-sm font-medium leading-5"
           >
             
-            <img src="/assets/icons/plus.svg" /> Add experience
+            <img src="/assets/icons/plus.svg" /> { t("Add experience") }
           </Button>
 
           { /**!form.formState.isValid || */}
