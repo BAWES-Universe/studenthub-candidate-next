@@ -114,7 +114,7 @@ import axios from "@/providers/AxiosService";
    * @returns {Observable<any>}
    */
   export async function viewSalary(tc_id: number): Promise<any> {
-    const url = _accountEndpoint + '/salary/' + tc_id + '&expand=bank';
+    const url = _accountEndpoint + '/salary/' + tc_id + '?expand=bank';
     const response = await axios.get(url);
     return response.data;
   }

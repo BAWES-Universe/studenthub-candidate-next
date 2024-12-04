@@ -105,7 +105,7 @@ const PaymentsPage = () => {
                                 <Card 
                                     key={salary.tc_id} 
                                     onClick={() => router.push('/payments/' + salary.tc_id)}
-                                    className={`salary-card ${salary.status === 'Unpaid' ? 'border-l-4 border-yellow-400' : 'border-l-4 border-green-500'} shadow-md bg-white rounded-md my-4`}
+                                    className={`cursor-pointer salary-card ${salary.status === 'Unpaid' ? 'border-l-4 border-yellow-400' : 'border-l-4 border-green-500'} shadow-md bg-white rounded-md my-4`}
                                 >
                                     <CardContent className="p-6">  
                                         <span className="text-black text-sm">{format(new Date(salary.tc_created_at || ''), 'MMMM d, yyyy')}</span>
