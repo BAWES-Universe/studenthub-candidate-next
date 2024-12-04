@@ -44,12 +44,12 @@ const InterviewListPage = () => {
       current_page: page
     });
 
-    loadData();
+    loadData(page);
   }
 
-    const loadData = async () => {
+    const loadData = async (page = 1) => {
         setLoading(true);
-        const response = await listInterviewRequests(pagination.current_page);
+        const response = await listInterviewRequests(page);
         setInterviews(response.data);
 
         setPagination({

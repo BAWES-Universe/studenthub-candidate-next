@@ -110,6 +110,16 @@ import axios from "@/providers/AxiosService";
   }
 
   /**
+   * view salary detail
+   * @returns {Observable<any>}
+   */
+  export async function viewSalary(tc_id: number): Promise<any> {
+    const url = _accountEndpoint + '/salary/' + tc_id + '&expand=bank';
+    const response = await axios.get(url);
+    return response.data;
+  }
+
+  /**
    * Create
    * @param {oldPassword} string
    * @param {newPassword} string

@@ -62,9 +62,9 @@ const TrackWorkPage = () => {
     setStats(response);
   };
 
-  const loadSessions = async () => {
+  const loadSessions = async (page = 1) => {
     setLoading(true);
-    const response = await listHours(pagination.current_page, getUrlParams());
+    const response = await listHours(page, getUrlParams());
 
     setPagination({
       current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
@@ -87,7 +87,7 @@ const TrackWorkPage = () => {
       current_page: page
     });
 
-    loadSessions();
+    loadSessions(page);
   }
 
   const getUrlParams = () => {

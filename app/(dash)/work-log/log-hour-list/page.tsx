@@ -41,9 +41,9 @@ const LogHourListPage = () => {
     setCandidateWorkingDate(res);
   };
 
-  const loadData = async () => {
+  const loadData = async (page  = 1) => {
     setLoading(true);
-    const response = await listHours(pagination.current_page, getUrlParams());
+    const response = await listHours(page, getUrlParams());
     setLoading(false);
 
     setPagination({
@@ -72,7 +72,7 @@ const LogHourListPage = () => {
       current_page: page
     });
 
-    loadData();
+    loadData(page);
   }
 
   const getUrlParams = () => {

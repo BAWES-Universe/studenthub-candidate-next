@@ -43,9 +43,9 @@ const ChatListPage = () => {
         }
     }, []);
 
-    const loadChatData = async () => {
+    const loadChatData = async (page = 1) => {
         setLoading(true);
-        const response = await listChats(pagination.current_page, {});
+        const response = await listChats(page, {});
         setLoading(false);
 
         setPagination({
@@ -79,7 +79,7 @@ const ChatListPage = () => {
       current_page: page
     });
 
-    loadChatData();
+    loadChatData(page);
   }
 
     const handleRefresh = () => {

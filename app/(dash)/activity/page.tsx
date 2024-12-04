@@ -53,13 +53,13 @@ const ActivityPage = () => {
       current_page: page
     });
 
-    loadData();
+    loadData(page);
   }
 
-  const loadData = async () => {
+  const loadData = async (page = 1) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/notifications?page=${pagination.current_page}`);
+      const response = await axios.get(`/api/notifications?page=${page}`);
       setCandidateNotifications(response.data.notifications);
       setPagination({
         current_page: parseInt(response.headers['X-Pagination-Current-Page']),

@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
  
   return (
-    <div className="bg-[#f7f8fa] min-h-screen">
+    <div className="bg-[#f7f8fa] min-h-screen xs:pb-20 sm:pb-0">
 
       <Header></Header>
       <div className="max-w-5xl mx-auto p-[24px]" suppressHydrationWarning={true}>

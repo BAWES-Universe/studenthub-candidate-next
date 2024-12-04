@@ -37,9 +37,9 @@ const InvitationsPage = () => {
         };
     }, []);
 
-    const loadInvitations = async () => {
+    const loadInvitations = async (page = 1) => {
         setLoading(true);
-        const data = await listInvitations(pagination.current_page);
+        const data = await listInvitations(page);
         setInvitations(data);
         setLoading(false);
     };
@@ -56,7 +56,7 @@ const InvitationsPage = () => {
       current_page: page
     });
 
-    loadInvitations();
+    loadInvitations(page);
   }
 
     return (

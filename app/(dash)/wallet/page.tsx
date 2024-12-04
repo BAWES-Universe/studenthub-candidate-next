@@ -32,9 +32,9 @@ const WalletBalanceListPage = () => {
         };
     }, []);
 
-    const loadData = async () => {
+    const loadData = async (page = 1) => {
         setLoading(true);
-        const response = await payableList(pagination.current_page);
+        const response = await payableList(page);
         setLoading(false);
 
         setPagination({
@@ -57,7 +57,7 @@ const WalletBalanceListPage = () => {
       current_page: page
     });
 
-    loadData();
+    loadData(page);
   }
 
     const positive = (value: number) => Math.abs(value);

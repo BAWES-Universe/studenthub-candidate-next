@@ -10,13 +10,15 @@ import { errorMessage } from '@/utils/common';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/dist/client/components/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { Form, useForm } from 'react-hook-form'; // Assuming you're using react-hook-form for form handling
+import { useForm } from 'react-hook-form'; // Assuming you're using react-hook-form for form handling
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { z } from 'zod';
-import { FormInput } from '@/components/ui/form-input';
 import SubmitButton from '@/components/ui/submit-button';
 import { page, track } from '@/providers/analytics.service';
-
+import {
+  Form
+} from "@/components/ui/form"
+import { FormInput } from "@/components/ui/form-input";
 
 const formSchema = z.object({
   benef_name: z.string({
@@ -28,7 +30,7 @@ const formSchema = z.object({
 })
 
 const UpdateBankPage = () => {
-  const { register, handleSubmit, formState: { errors }, setFocus } = useForm();
+   
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
    
@@ -109,7 +111,8 @@ const UpdateBankPage = () => {
           bank: res.bank,
         };
         //bankUpdated$.next(eventData);
-        dismiss(eventData);
+        //dismiss(eventData);
+        router.push("/payments");
       } else {
         handleError(res);
       }
@@ -125,12 +128,11 @@ const UpdateBankPage = () => {
   };
 
   return (
-    <div className="max-w-screen-lg p-6">
-      <button onClick={dismiss} className="btn-close">
-        <img src="assets/images/ic_cancel.svg" alt="Close" />
-      </button>
-
-      <h3>{t("Where would you like your money transferred?")}</h3>
+    <div className="max-w-4xl p-6">
+      
+      <h3 className="mt-[52px] mb-[40px] text-center text-[24px] font-bold leading-[56px]">
+        {t("Where would you like your money transferred?")}
+      </h3>
 
       <Form {...form} >
           <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} 

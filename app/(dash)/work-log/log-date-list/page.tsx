@@ -29,9 +29,9 @@ const LogDateListPage = () => {
     }
   }, []);
 
-  const loadData = async () => {
+  const loadData = async (page = 1) => {
     setLoading(true);
-    const response = await listWorkingDates(pagination.current_page, '&expand=dateStatus,checkIn,checkOut');
+    const response = await listWorkingDates(page, '&expand=dateStatus,checkIn,checkOut');
     setLoading(false);
 
     setPagination({
@@ -58,7 +58,7 @@ const LogDateListPage = () => {
       current_page: page
     });
 
-    loadData();
+    loadData(page);
   }
 
   const secondsToTime = (secs: number) => {

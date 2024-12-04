@@ -28,9 +28,9 @@ const RequestListPage = () => {
         }
     }, []);
 
-    const loadData = async () => {
+    const loadData = async (page = 1) => {
         setLoading(true);
-        const response = await listRequests(pagination.current_page, "&expand=requestSkills,candidateApplication");
+        const response = await listRequests(page, "&expand=requestSkills,candidateApplication");
         setRequests(response.data);
 
         setPagination({
@@ -52,7 +52,7 @@ const RequestListPage = () => {
       current_page: page
     });
 
-    loadData();
+    loadData(page);
   }
 
     const viewRequest = async (event: React.MouseEvent<HTMLDivElement>, request: Request) => {
