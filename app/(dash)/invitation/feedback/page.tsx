@@ -9,8 +9,12 @@ import { Invitation } from '@/models/invitation';
 import { accept } from '@/providers/logged-in/invitation.service';
 import { reject } from '@/providers/logged-in/invitation.service';
 import { requestUpdated$ } from '@/providers/event.service';
+import { Button } from '@/components/ui/button';
+//import { X } from 'lucide-react';
 
-const FeedbackPage = ({ invitation, onClose }: { invitation: Invitation, onClose: (value: boolean) => void }) => {
+const FeedbackPage = ({ invitation, invitation_status, onClose }: { 
+        invitation: Invitation, invitation_status: number, onClose: (value: boolean) => void }) => {
+
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
@@ -31,7 +35,7 @@ const FeedbackPage = ({ invitation, onClose }: { invitation: Invitation, onClose
         setLoading(true);
         try {
             let action;
-            if (invitation.invitation_status === 2) {
+            if (invitation_status === 2) {
                 action = await reject(invitation.invitation_uuid || "", data.reason);
             } else {
                 action = await accept(invitation.invitation_uuid || "", data.reason);
@@ -51,13 +55,13 @@ const FeedbackPage = ({ invitation, onClose }: { invitation: Invitation, onClose
     };
 
     return (
-        <div className="p-4">
-            <button onClick={() => onClose(false)} className="btn-close">
-                <img src="assets/images/ic_cancel.svg" alt="Close" />
-            </button>
-
-            <div className="title-txt">
-                {invitation.invitation_status === 3 ? t("Why do you think you’d be good for this job?") : t("Why do you feel that this job isn’t good for you?")}
+        <div className="">
+            
+             
+            <div className="title-txt pb-4 pt-0">
+                {invitation_status == 3 ? 
+                    t("Why do you think you’d be good for this job?") : 
+                    t("Why do you feel that this job isn’t good for you?")}
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -68,9 +72,15 @@ const FeedbackPage = ({ invitation, onClose }: { invitation: Invitation, onClose
                 />
                 {errors.reason && <span className="text-red-500">This field is required</span>}
 
-                <button type="submit" disabled={!loading} className="btn-submit">
-                    {loading ? <span>Loading...</span> : (invitation.invitation_status === 2 ? t("Reject") : t("Apply"))}
-                </button>
+                <Button disabled={loading} className="btn-submit float-start">
+                    {loading ? <span>Loading...</span> : (invitation_status === 2 ? t("Reject") : t("Apply"))}
+                </Button>
+
+                <Button onClick={() => onClose(false)} variant={"ghost"} className='float-start'>
+                    Cancel
+                </Button>
+
+                 <div className='clearfix'></div>   
             </form>
         </div>
     );

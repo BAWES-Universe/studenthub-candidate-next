@@ -15,8 +15,8 @@ export class Invitation {
     invitation_created_at?: string;
     invitation_updated_at?: string;
     candidate?: Candidate;
-    request?: Request;
-    company?: Company;
+    request!: Request;
+    company!: Company;
     suggestion?: Suggestion;
     note?: any;
     reply?: any;

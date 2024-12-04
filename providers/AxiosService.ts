@@ -1,7 +1,7 @@
 import { logout } from '@/store/slices/authSlice';
 import { store } from '@/store/store'; 
 import axios from 'axios';
-import Router from 'next/router';
+import Router from 'next/navigation';
 //import { map } from 'zod';
 import { saveAs } from 'file-saver';
 //import { useRouter } from 'next/navigation'; 

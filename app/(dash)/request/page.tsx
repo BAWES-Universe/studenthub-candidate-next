@@ -6,12 +6,17 @@ import { listRequests } from '@/providers/logged-in/request.service';
 import React, { useEffect, useState } from 'react';
 import { Request } from '@/models/request';
 import { useTranslation } from 'react-i18next';
+import Pager from '@/components/common/pager';
 const RequestListPage = () => {
       
     const [loading, setLoading] = useState(false);
     const [requests, setRequests] = useState<Request[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(0);
+    
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        total_pages: 1,
+    });
+
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -25,22 +30,30 @@ const RequestListPage = () => {
 
     const loadData = async () => {
         setLoading(true);
-        const response = await listRequests(currentPage, "&expand=requestSkills,candidateApplication");
-        setRequests(response.body);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count'), 10));
-        setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page'), 10));
+        const response = await listRequests(pagination.current_page, "&expand=requestSkills,candidateApplication");
+        setRequests(response.data);
+
+        setPagination({
+            current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+            total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+        });
+
         setLoading(false);
     };
 
-    const doInfinite = async () => {
-        if (currentPage < pageCount) {
-            setLoading(true);
-            const response = await listRequests(currentPage + 1, "&expand=requestSkills,candidateApplication");
-            setRequests(prevRequests => [...prevRequests, ...response.body]);
-            setCurrentPage(prevPage => prevPage + 1);
-            setLoading(false);
-        }
-    };
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
 
     const viewRequest = async (event: React.MouseEvent<HTMLDivElement>, request: Request) => {
         event.preventDefault();
@@ -81,11 +94,8 @@ const RequestListPage = () => {
                     <p className="text-center">{t("No match found yet")}</p>
                 )}
 
-                {currentPage < pageCount && (
-                    <button onClick={doInfinite} className="mt-4 text-blue-500">
-                        {loading ? t("Loading more...") : t("Load More")}
-                    </button>
-                )}
+                <Pager pagination={pagination} loadPage={loadPage} />
+ 
             </div>
         </div>
     );

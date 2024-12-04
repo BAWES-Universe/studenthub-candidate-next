@@ -16,13 +16,18 @@ import InvitationNotification from '@/components/app/invitation-notification';
 import TransferInit from '@/components/app/transfer-init';
 import { CandidateNotification } from '@/models/candidate-notification';
 import { page, track } from '@/providers/analytics.service';
+import Pager from '@/components/common/pager';
 
 const ActivityPage = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [candidateNotifications, setCandidateNotifications] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(0);
+  
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    total_pages: 1,
+  });
+
   const [totalUnreadActivity, setTotalUnreadActivity] = useState(0);
   const [showRefresh, setShowRefresh] = useState(false);
   const contentRef = useRef(null);
@@ -35,19 +40,33 @@ const ActivityPage = () => {
     return () => {
       track('page_exit', { page: 'Activity List Page' });
     }
-  }, [currentPage]);
+  }, [pagination.current_page]);
 
-  const loadData = async (event: any = null) => {
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
+
+  const loadData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/notifications?page=${currentPage}`);
+      const response = await axios.get(`/api/notifications?page=${pagination.current_page}`);
       setCandidateNotifications(response.data.notifications);
-      setPageCount(response.data.pageCount);
+      setPagination({
+        current_page: parseInt(response.headers['X-Pagination-Current-Page']),
+        total_pages: parseInt(response.headers['X-Pagination-Page-Count']),
+      });
       setTotalUnreadActivity(response.data.totalUnreadActivity);
-      if (event) {
-        event.target.complete();
-      }
-
+      
     } catch (error) {
       console.error(error);
     } finally {
@@ -57,7 +76,7 @@ const ActivityPage = () => {
 
   const doRefresh = async (event: any) => {
     setShowRefresh(false);
-    await loadData(event);
+    await loadPage(1);
   };
 
   const markRead = async (notification: CandidateNotification) => {
@@ -149,12 +168,8 @@ const ActivityPage = () => {
           </button>
         )}
 
-        {currentPage < pageCount && (
-          <button onClick={() => setCurrentPage(currentPage + 1)} className="text-blue-500">
-            Load More
-          </button>
-        )}
-
+        <Pager pagination={pagination} loadPage={loadPage} />
+         
         {candidateNotifications.length === 0 && !loading && (
           <div className="text-center">
             <img src="assets/icons/no-invitation.svg" alt="No activity" />

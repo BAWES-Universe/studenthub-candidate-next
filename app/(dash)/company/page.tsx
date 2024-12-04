@@ -7,9 +7,11 @@ import { Company } from '@/models/company'; // Adjust the import path as necessa
 import { langContent } from '@/utils/common';
 import { Brand } from '@/models/brand';
 import { page, track } from '@/providers/analytics.service';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-const CompanyPage = () => {
-  const [company, setCompany] = useState<Company | null>(null);
+const CompanyPage = ({ company, dismiss }: { company: Company, dismiss: () => void}) => {
+  //const [company, setCompany] = useState<Company | null>(null);
   const { t } = useTranslation(); // Translation hook
   const slideOpts = {
     // Default parameters
@@ -31,24 +33,20 @@ const CompanyPage = () => {
       track('page_exit', { page: 'Company page' });
     };
   }, []);
-
-  const dismiss = () => {
-    // Logic to dismiss modal
-  };
-
+ 
   const setNull = () => {
     if (company) {
-      setCompany({ ...company, company_logo: null });
+    //  setCompany({ ...company, company_logo: null });
     }
   };
 
   return (
-    <div className="max-w-screen-lg p-6">
+    <div className="max-w-screen-lg">
       {company && (
         <>
-          <button onClick={dismiss} className="btn-close">
-            <img src="assets/images/ic_cancel.svg" alt="Close" />
-          </button>
+          <Button onClick={dismiss} variant={"ghost"} className="btn-close float-end fixed end-o right-0">
+            <X className='w-4 h-4'></X>
+          </Button>
 
           {company.company_logo && (
             <div className="flex items-center">
@@ -61,7 +59,7 @@ const CompanyPage = () => {
             </div>
           )}
 
-          <h3 className="font-bold text-2xl my-12">
+          <h3 className="font-bold text-2xl mb-4">
             {t(company.company_common_name_en || company.company_name || '')}
           </h3>
 
@@ -69,7 +67,7 @@ const CompanyPage = () => {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              className="website"
+              className="website mb-4"
               href={company.company_website}
             >
               {company.company_website}
@@ -77,7 +75,8 @@ const CompanyPage = () => {
           )}
 
           {company.company_description_en && (
-            <p className="desc" dangerouslySetInnerHTML={{ __html: langContent(company.company_description_en, company.company_description_ar || '' ) }} />
+            <p className="desc mt-4" dangerouslySetInnerHTML={{ 
+              __html: langContent(company.company_description_en, company.company_description_ar || '' ) }} />
           )}
 
           {company.brands && (

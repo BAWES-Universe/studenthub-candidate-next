@@ -13,6 +13,7 @@ import LogTimeManuallyPage from '../log-time-manually/page';
 import EndSessionPage from '../end-session/page';
 import Spinner from '@/components/common/spinner';
 import { page, track } from '@/providers/analytics.service';
+import Pager from '@/components/common/pager';
 
 const TrackWorkPage = () => {
   const { t } = useTranslation();
@@ -20,9 +21,13 @@ const TrackWorkPage = () => {
   const [loading, setLoading] = useState(false);
   const [savingHours, setSavingHours] = useState(false);
   const [startingWork, setStartingWork] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
+  
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    total_pages: 0,
+    total_count: 0
+  });
+
   const [candidateWorkingHourData, setCandidateWorkingHourData] = useState([]);
   const [today, setToday] = useState(new Date());
   const [stats, setStats] = useState<any>(null);
@@ -59,13 +64,31 @@ const TrackWorkPage = () => {
 
   const loadSessions = async () => {
     setLoading(true);
-    const response = await listHours(currentPage, getUrlParams());
-    setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-    setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-    setTotalCount(parseInt(response.headers.get('X-Pagination-Total-Count')));
-    setCandidateWorkingHourData(response.body);
+    const response = await listHours(pagination.current_page, getUrlParams());
+
+    setPagination({
+      current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+      total_pages: parseInt(response.headers.get('X-Pagination-Page-Count')),
+      total_count: parseInt(response.headers.get('X-Pagination-Total-Count')),
+    });
+
+    setCandidateWorkingHourData(response.data);
     setLoading(false);
   };
+
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadSessions();
+  }
 
   const getUrlParams = () => {
     return `&date=${today.toISOString().split('T')[0]}`; // Format date as YYYY-MM-DD
@@ -179,7 +202,7 @@ const TrackWorkPage = () => {
       </div> }
 
       <div className="session-wrapper" style={{ marginTop: '24px' }}>
-        <h5 className="txt-session-heading">{t("Sessions")} <span>({totalCount})</span></h5>
+        <h5 className="txt-session-heading">{t("Sessions")} <span>({pagination.total_count})</span></h5>
         {candidateWorkingHourData.map((hour: CandidateWorkingHour) => (
           <p key={hour.candidate_working_hour_uuid}>
             <b>{ hour.total_time && secondsToTime(hour.total_time)}</b>
@@ -190,6 +213,9 @@ const TrackWorkPage = () => {
             </span>
           </p>
         ))}
+
+        <Pager pagination={pagination} loadPage={loadPage} />
+
       </div>
     </div>
   );

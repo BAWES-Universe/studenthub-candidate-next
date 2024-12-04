@@ -2,6 +2,7 @@
 // app/(dash)/interview/InterviewListPage.jsx
 
 import Request from '@/components/app/request';
+import Pager from '@/components/common/pager';
 import { RequestInterview } from '@/models/request-interview';
 import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
@@ -12,8 +13,11 @@ import React, { useEffect, useState } from 'react';
 const InterviewListPage = () => {
     const [loading, setLoading] = useState(false);
     const [interviews, setInterviews] = useState<any[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(0);
+
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        total_pages: 1,
+    });
 
     useEffect(() => {
         page('Interview List page');
@@ -29,24 +33,31 @@ const InterviewListPage = () => {
         };
     }, []);
 
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
+
     const loadData = async () => {
         setLoading(true);
-        const response = await listInterviewRequests(currentPage);
-        setInterviews(response.body);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-        setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-        setLoading(false);
-    };
+        const response = await listInterviewRequests(pagination.current_page);
+        setInterviews(response.data);
 
-    const doInfinite = async () => {
-        if (currentPage < pageCount) {
-            setLoading(true);
-            const nextPage = currentPage + 1;
-            const response = await listInterviewRequests(nextPage);
-            setInterviews((prev: any[]) => [...prev, ...response.body]);
-            setCurrentPage(nextPage);
-            setLoading(false);
-        }
+        setPagination({
+            current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+            total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+        });
+
+        setLoading(false);
     };
 
     return (
@@ -61,11 +72,10 @@ const InterviewListPage = () => {
                     <p>~ Your scheduled interviews will be listed here ~</p>
                 )}
             </div>  
-            {currentPage < pageCount && (
-                <button onClick={doInfinite} className="btn-infinite-scroll">
-                    Load More
-                </button>
-            )}
+
+
+            <Pager pagination={pagination} loadPage={loadPage} />
+          
         </div>
     );
 };

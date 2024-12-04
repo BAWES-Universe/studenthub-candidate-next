@@ -7,13 +7,18 @@ import { Discount } from '@/models/discount';
 import { listDiscountCategories } from '@/providers/logged-in/discount-category.service';
 import { listDiscounts } from '@/providers/logged-in/discount.service';
 import { page, track } from '@/providers/analytics.service';
+import Pager from '@/components/common/pager';
 
 const DiscountsPage = () => {
     const [discounts, setDiscounts] = useState<Discount[]>([]);
     const [discountCategories, setDiscountCategories] = useState<DiscountCategory[]>([]);
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(0);
+    
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        total_pages: 1,
+    });
+    
     const [filters, setFilters] = useState<{ category_id: number | null | undefined }>({ category_id: null });
 
     useEffect(() => {
@@ -30,7 +35,7 @@ const DiscountsPage = () => {
 
     const loadCategories = async () => {
         const response = await listDiscountCategories(-1);
-        setDiscountCategories(response.body);
+        setDiscountCategories(response.data);
     };
 
     const loadData = async (page: number, silent = false) => {
@@ -40,21 +45,15 @@ const DiscountsPage = () => {
 
         const response = await listDiscounts(page, getUrlParams());
         setLoading(false);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-        setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
+
+        setPagination({
+            current_page: parseInt(response.headers['X-Pagination-Current-Page']),
+            total_pages: parseInt(response.headers['X-Pagination-Page-Count']),
+        });
+
         setDiscounts(response.data);
     };
-
-    const doInfinite = async () => {
-        const nextPage = currentPage + 1;
-        setLoading(true);
-        const response = await listDiscounts(nextPage, getUrlParams());
-        setLoading(false);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-        setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-        setDiscounts([...discounts, ...response.data]);
-    };
-
+ 
     const getUrlParams = () => {
         let url = "";
         if (filters.category_id) {
@@ -137,11 +136,7 @@ const DiscountsPage = () => {
                 </div>
             )}
 
-            {currentPage < pageCount && (
-                <button onClick={doInfinite} className="load-more">
-                    Load More
-                </button>
-            )}
+            <Pager pagination={pagination} loadPage={loadData} />
         </div>
     );
 };

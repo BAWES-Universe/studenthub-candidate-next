@@ -1,4 +1,5 @@
 "use client"
+import Pager from '@/components/common/pager';
 // app/(dash)/log-date-list/page.tsx
 
 import { CandidateWorkingDate } from '@/models/candidate-working-date';
@@ -11,8 +12,12 @@ const LogDateListPage = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [candidateWorkingDates, setCandidateWorkingDates] = useState<CandidateWorkingDate[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(0);
+  
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    total_pages: 1,
+  });
+
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -26,26 +31,35 @@ const LogDateListPage = () => {
 
   const loadData = async () => {
     setLoading(true);
-    const response = await listWorkingDates(currentPage, '&expand=dateStatus,checkIn,checkOut');
+    const response = await listWorkingDates(pagination.current_page, '&expand=dateStatus,checkIn,checkOut');
     setLoading(false);
-    setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-    setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-    setCandidateWorkingDates(response.body);
+
+    setPagination({
+      current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+      total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+    });
+
+    setCandidateWorkingDates(response.data);
   };
 
   const handleRefresh = async () => {
     await loadData();
   };
 
-  const handleInfiniteScroll = async () => {
-    if (currentPage < pageCount) {
-      setLoading(true);
-      const response = await listWorkingDates(currentPage + 1);
-      setCandidateWorkingDates((prev) => [...prev, ...response.body]);
-      setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-      setLoading(false);
+
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
     }
-  };
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
 
   const secondsToTime = (secs: number) => {
     const h = Math.floor(secs / (60 * 60));
@@ -93,11 +107,8 @@ const LogDateListPage = () => {
 
           {candidateWorkingDates.length === 0 && !loading && <p>{t("No record found")}</p>}
 
-          {currentPage < pageCount && (
-            <button onClick={handleInfiniteScroll} className="load-more">
-              Load More
-            </button>
-          )}
+          <Pager pagination={pagination} loadPage={loadPage} />
+
         </div>
       </div>
     </div>

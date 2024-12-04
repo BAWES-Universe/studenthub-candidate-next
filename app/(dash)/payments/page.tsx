@@ -1,4 +1,5 @@
 "use client"
+import Pager from '@/components/common/pager';
 // app/(dash)/payments/PaymentsPage.jsx
 
 import { Salary } from '@/models/salary';
@@ -13,8 +14,11 @@ const PaymentsPage = () => {
     
     const [salaries, setSalaries] = useState<Salary[]>([]);
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(0);
+
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        total_pages: 1,
+    });
 
     const { user } = useAppSelector(state => state.user);
     const dispatch = useAppDispatch();
@@ -45,12 +49,31 @@ const PaymentsPage = () => {
 
     const loadData = async (refresh = false) => {
         setLoading(true);
-        const response = await listSalary(currentPage);
+        const response = await listSalary(pagination.current_page);
         setSalaries(response.data);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
+
+        setPagination({
+            current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+            total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+        });
+
         setLoading(false);
     };
  
+
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
 
     const updateBank = async () => {
         // Logic to open modal and update bank information
@@ -96,6 +119,10 @@ const PaymentsPage = () => {
                                     )}
                                 </div>
                             ))}
+
+
+                            <Pager pagination={pagination} loadPage={loadPage} />
+
                         </div>
                     )}
                 </>

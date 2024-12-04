@@ -1,4 +1,5 @@
 "use client"
+import Pager from '@/components/common/pager';
 // app/(dash)/wallet/WalletBalanceListPage.tsx
 
 import { page, track } from '@/providers/analytics.service';
@@ -11,8 +12,11 @@ const WalletBalanceListPage = () => {
 
     const [loading, setLoading] = useState(false);
     const [balances, setBalances] = useState<any[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(0);
+    
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        total_pages: 1,
+    });
 
     const { t } = useTranslation();
     
@@ -30,22 +34,31 @@ const WalletBalanceListPage = () => {
 
     const loadData = async () => {
         setLoading(true);
-        const response = await payableList(currentPage);
+        const response = await payableList(pagination.current_page);
         setLoading(false);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-        setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-        setBalances(response.body);
+
+        setPagination({
+            current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+            total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+        });
+
+        setBalances(response.data);
     };
 
-    const doInfinite = async () => {
-        if (currentPage < pageCount) {
-            setLoading(true);
-            const response = await payableList(currentPage + 1);
-            setBalances(prevBalances => [...prevBalances, ...response.body]);
-            setCurrentPage(prevPage => prevPage + 1);
-            setLoading(false);
-        }
-    };
+
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
 
     const positive = (value: number) => Math.abs(value);
 
@@ -78,11 +91,8 @@ const WalletBalanceListPage = () => {
                 <p className="text-center">{t("No record found")}</p>
             )}
 
-            {currentPage < pageCount && (
-                <button onClick={doInfinite} className="mt-4 text-blue-500">
-                    {loading ? t("Loading more...") : t("Load More")}
-                </button>
-            )}
+            <Pager pagination={pagination} loadPage={loadPage} />
+
         </div>
     );
 };

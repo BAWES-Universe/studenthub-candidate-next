@@ -15,9 +15,13 @@ const ChatListPage = () => {
     const { t } = useTranslation();
 
     const [chats, setChats] = useState<Chat[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(0);
+    const [loading, setLoading] = useState(false);  
+
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        total_pages: 1,
+    });
+    
     const [totalUnreadCount, setTotalUnreadCount] = useState(0);
     const contentRef = useRef(null);
 
@@ -41,10 +45,14 @@ const ChatListPage = () => {
 
     const loadChatData = async () => {
         setLoading(true);
-        const response = await listChats(currentPage, {});
+        const response = await listChats(pagination.current_page, {});
         setLoading(false);
-        setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-        setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
+
+        setPagination({
+            current_page: parseInt(response.headers['X-Pagination-Current-Page']),
+            total_pages: parseInt(response.headers['X-Pagination-Page-Count']),
+        });
+           
         setChats(response.data);
     };
 
@@ -59,15 +67,23 @@ const ChatListPage = () => {
         setChats([...chats].sort((a: any, b: any) => b.candidateUnreadCount - a.candidateUnreadCount));
     };
 
-    const handleRefresh = () => {
-        loadChatData();
-    };
 
-    const handleInfiniteScroll = async () => {
-        if (currentPage >= pageCount) return;
-        setCurrentPage(prev => prev + 1);
-        const response = await listChats(currentPage + 1, {});
-        setChats([...chats, ...response.data]);
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
+    }
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadChatData();
+  }
+
+    const handleRefresh = () => {
+        loadPage(1);
     };
 
     const handleChatDetail = (conversation: Chat) => {
@@ -110,10 +126,9 @@ const ChatListPage = () => {
                             </div>
                         </div>
                     ))}
-                    {currentPage < pageCount && (
-                        <button onClick={handleInfiniteScroll} className="text-blue-500">Load More</button>
-                    )}
 
+                    <Pager pagination={pagination} loadPage={loadPage} />
+         
                     {/* <Pager pagination={pagination} loadPage={loadChatData} /> */}
 
                 </div>

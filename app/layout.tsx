@@ -44,9 +44,9 @@ export default function RootLayout({
 
   useEffect(() => {
      
-    if (!isAuthenticated && !publicRoutes.includes(window.location.pathname)) {
+    if (!isAuthenticated && !publicRoutes.includes(window?.location.pathname)) {
       router.push('/login');
-    } else if (isAuthenticated && ["/", ""].includes(window.location.pathname)) {
+    } else if (isAuthenticated && ["/", ""].includes(window?.location.pathname)) {
       router.push('/home');
     }
     
@@ -57,7 +57,7 @@ export default function RootLayout({
       
     <html lang="en">
       
-      <body className={inter.className}>
+      <body className={ `${inter.className}` }>
         <NextTopLoader showSpinner={false} />
 
         {children} 

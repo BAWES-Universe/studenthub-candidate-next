@@ -60,7 +60,7 @@ export default function Email() {
       //todo: set language based on saved preference?
       //language_pref
 
-      router.push('/');
+      router.push('/home');
     }).catch(err => {
      // alert("err:" + err);
     }).finally(() => {
@@ -69,7 +69,7 @@ export default function Email() {
   } 
 
   return (
-    <>
+    <div className="bg-[#fff]">
         <OnboardProgress></OnboardProgress>
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
@@ -100,6 +100,6 @@ export default function Email() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </div>
   );
 }

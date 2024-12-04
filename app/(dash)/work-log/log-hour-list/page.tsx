@@ -9,6 +9,7 @@ import { listHours, workingDateDetail } from '@/providers/logged-in/candidate-wo
 import { page, track } from '@/providers/analytics.service';
 import WorkLog from '@/components/app/work-log';
 import { secondsToTime } from '@/utils/common';
+import Pager from '@/components/common/pager';
 
 const LogHourListPage = () => {
   const { date } = useParams() as { date: string }; // Get date from URL parameters
@@ -16,8 +17,12 @@ const LogHourListPage = () => {
   const [loading, setLoading] = useState(false);
   const [candidateWorkingHourData, setCandidateWorkingHourData] = useState<any[]>([]);
   const [candidateWorkingDate, setCandidateWorkingDate] = useState<any>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(0);
+  
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    total_pages: 1,
+  });
+
   const [totalCount, setTotalCount] = useState(0);
   const contentRef = useRef(null);
 
@@ -38,12 +43,16 @@ const LogHourListPage = () => {
 
   const loadData = async () => {
     setLoading(true);
-    const response = await listHours(currentPage, getUrlParams());
+    const response = await listHours(pagination.current_page, getUrlParams());
     setLoading(false);
-    setPageCount(parseInt(response.headers.get('X-Pagination-Page-Count')));
-    setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
+
+    setPagination({
+      current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
+      total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+    });
+
     setTotalCount(parseInt(response.headers.get('X-Pagination-Total-Count')));
-    setCandidateWorkingHourData(response.body);
+    setCandidateWorkingHourData(response.data);
   };
 
   const doRefresh = async () => {
@@ -51,15 +60,20 @@ const LogHourListPage = () => {
     await loadDetail();
   };
 
-  const doInfinite = async () => {
-    if (currentPage < pageCount) {
-      setLoading(true);
-      const response = await listHours(currentPage + 1, getUrlParams());
-      setCandidateWorkingHourData((prev) => [...prev, ...response.body]);
-      setCurrentPage(parseInt(response.headers.get('X-Pagination-Current-Page')));
-      setLoading(false);
+  
+  const loadPage = (page: number) => {
+
+    if (page > pagination.total_pages || page < 1) {
+      return;
     }
-  };
+
+    setPagination({
+      ...pagination,
+      current_page: page
+    });
+
+    loadData();
+  }
 
   const getUrlParams = () => {
     return `&date=${format(parseISO(date), 'yyyy-MM-dd')}`;
@@ -162,11 +176,8 @@ const LogHourListPage = () => {
               <WorkLog key={hour.candidate_working_hour_uuid} hour={hour} />
             ))}
 
-            {currentPage < pageCount && (
-              <button onClick={doInfinite} className="load-more">
-                Load More
-              </button>
-              )}
+            <Pager pagination={pagination} loadPage={loadPage} />
+ 
             </div>
           )}
         </div>
