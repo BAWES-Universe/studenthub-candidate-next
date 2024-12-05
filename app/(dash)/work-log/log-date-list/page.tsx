@@ -5,6 +5,7 @@ import Pager from '@/components/common/pager';
 import { CandidateWorkingDate } from '@/models/candidate-working-date';
 import { page, track } from '@/providers/analytics.service';
 import { listWorkingDates } from '@/providers/logged-in/candidate-working-hour.service';
+import { format } from 'date-fns';
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 
@@ -87,7 +88,9 @@ const LogDateListPage = () => {
         <div className="max-w-7xl mx-auto p-4">
           {candidateWorkingDates.map((candidateWorkingDate: any) => (
             <div key={candidateWorkingDate.date} className="date-wrapper bg-white shadow-md rounded-lg p-4 mb-4">
-              <h2 className="text-lg font-semibold">{new Date(candidateWorkingDate.date).toLocaleDateString()}</h2>
+              <h2 className="text-lg font-semibold">
+                {format(candidateWorkingDate.date || '', 'MMMM d, yyyy')}
+              </h2>
               <div className="health-indicator">
                 {candidateWorkingDate.total_pending > 0 && <span className="pending">{candidateWorkingDate.total_pending}</span>}
                 {candidateWorkingDate.total_approved > 0 && <span className="approved">{candidateWorkingDate.total_approved}</span>}
@@ -97,9 +100,9 @@ const LogDateListPage = () => {
               <div className="time-wrapper">
                 <b>{candidateWorkingDate.end_time ? secondsToTime(candidateWorkingDate.total_time) : t("On-Going")}</b>
                 <span>
-                  {new Date(candidateWorkingDate.start_time).toLocaleTimeString()} 
+                {format(candidateWorkingDate.start_time || '', 'hh:mm a')}
                   <span className="mx-2">→</span>
-                  {candidateWorkingDate.end_time ? new Date(candidateWorkingDate.end_time).toLocaleTimeString() : t("Now")}
+                  {candidateWorkingDate.end_time ? format(candidateWorkingDate.end_time, 'hh:mm a') : t("Now")}
                 </span>
               </div>
             </div>

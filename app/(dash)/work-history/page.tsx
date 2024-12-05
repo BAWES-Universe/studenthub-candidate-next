@@ -4,6 +4,7 @@
 import { page, track } from '@/providers/analytics.service';
 import { downloadCertificate, listWorkHistory } from '@/providers/logged-in/candidate.service';
 import { toDate } from '@/utils/common';
+import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -71,9 +72,9 @@ const WorkHistoryPage = () => {
                                 </h2>
                                 <h5>{historyItem.store?.store_name}</h5>
                                 <p>
-                                    {toDate(historyItem.start_date)?.toLocaleDateString()} 
+                                    {format(historyItem.start_date || '', 'MMMM d, yyyy')} 
                                     {historyItem.end_date ? 
-                                        ` ${t("to")} ${toDate(historyItem.end_date)?.toLocaleDateString()}` : 
+                                        ` ${t("to")} ${format(historyItem.end_date || '', 'MMMM d, yyyy')}` : 
                                         !isFutureDate(historyItem.start_date) ? ` ${t("to")} ${t("now")}` : ''}
                                 </p>
                             </div>

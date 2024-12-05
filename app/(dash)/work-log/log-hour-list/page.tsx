@@ -92,7 +92,7 @@ const LogHourListPage = () => {
           </button>
           {candidateWorkingDate && (
             <h1 className="text-2xl font-bold">
-              {new Date(date).toLocaleDateString()}
+              {format(date || '', 'MMMM d, yyyy')}
             </h1>
           )}
         </div>
@@ -127,7 +127,7 @@ const LogHourListPage = () => {
                     <b>{t("Start Time:")}</b>
                     <span>
                       {candidateWorkingDate.start_time
-                        ? new Date(candidateWorkingDate.start_time).toLocaleTimeString()
+                        ? format(candidateWorkingDate.start_time || '', 'hh:mm a') 
                         : '-'}
                     </span>
                   </div>
@@ -135,7 +135,7 @@ const LogHourListPage = () => {
                     <b>{t("End Time:")}</b>
                     <span>
                       {candidateWorkingDate.end_time
-                        ? new Date(candidateWorkingDate.end_time).toLocaleTimeString()
+                        ? format(candidateWorkingDate.end_time || '', 'hh:mm a') 
                         : t("Now")}
                     </span>
                   </div>

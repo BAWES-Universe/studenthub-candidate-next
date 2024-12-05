@@ -146,38 +146,7 @@ export const useTimeAgo = (value: string) => {
 
   return timeAgo;
 };
-
-export const useTimer = (start: string, end: string | null = null) => {
-  const [time, setTime] = useState('');
-
-  useEffect(() => {
-    const date1 = new Date(start.replace(/-/g, '/') + ' GMT+03:00');
-    const date2 = end ? new Date(end.replace(/-/g, '/') + ' GMT+03:00') : new Date();
-
-    const updateTimer = () => {
-      const diff = date2.getTime() - date1.getTime();
-      const seconds = Math.round(Math.abs(diff / 1000));
-
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const rSeconds = seconds % 60;
-
-      const formattedTime = 
-        `${hours < 10 ? '0' + hours : hours}:` +
-        `${minutes < 10 ? '0' + minutes : minutes}:` +
-        `${rSeconds < 10 ? '0' + rSeconds : rSeconds}`;
-
-      setTime(formattedTime);
-    };
-
-    updateTimer(); // Initial call
-    const timerId = setInterval(updateTimer, 1000); // Update every second
-
-    return () => clearInterval(timerId); // Cleanup on unmount
-  }, [start, end]);
-
-  return time;
-};
+ 
  
 export const timeSpent = (value: number) => {
     if (!value) {

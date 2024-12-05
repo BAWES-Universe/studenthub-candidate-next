@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
+import { format } from 'date-fns';
 
 const WorkSessionRejected = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
   const { t } = useTranslation();
@@ -13,14 +14,14 @@ const WorkSessionRejected = ({ candidateNotification, onClick }: { candidateNoti
       
       <p className="text-gray-600 text-sm leading-4 my-0">
         {t("txt_session_rejected", {
-          start_time: new Date(candidateNotification.candidateWorkingHour.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          end_time: new Date(candidateNotification.candidateWorkingHour.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          date: new Date(candidateNotification.candidateWorkingHour.date).toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
+          start_time: format(candidateNotification.candidateWorkingHour.start_time || '', 'hh:mm a'),
+          end_time: format(candidateNotification.candidateWorkingHour.end_time || '', 'hh:mm a'),
+          date: format(candidateNotification.candidateWorkingHour.date|| '', 'MMMM d, yyyy'),
         })}
       </p>
 
       <p className="text-gray-500 text-xs text-right my-0">
-        {new Date(candidateNotification.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+        {format(candidateNotification.created_at || '', 'MMMM d, yyyy')}
       </p>
 
       {candidateNotification.is_new && (

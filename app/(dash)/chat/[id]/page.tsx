@@ -9,6 +9,7 @@ import { Chat } from '@/models/chat';
 import { ChatMessage } from '@/models/chat-message';
 import { useTranslation } from 'react-i18next';
 import { page, track } from '@/providers/analytics.service';
+import { format } from 'date-fns';
 
 const ChatViewPage = () => {
     const { id } = useParams() as { id: string };
@@ -56,7 +57,7 @@ const ChatViewPage = () => {
 
     const processMessageList = () => {
         const groupedMessages = messages.reduce((acc: any, message: any) => {
-            const date = new Date(message.created_at || new Date()).toLocaleDateString();
+            const date = format(message.created_at, 'MMMM d, yyyy');
             if (!acc[date]) {
                 acc[date] = { date, messages: [] };
             }
@@ -114,7 +115,9 @@ const ChatViewPage = () => {
                                     </div>
                                     <div className="chat-content">
                                         <p className="message-text">{message.message}</p>
-                                        <span className="message-created_at">{new Date(message.created_at).toLocaleTimeString()}</span>
+                                        <span className="message-created_at">
+                                            {format(message.created_at || '', 'hh:mm a')}
+                                        </span>
                                     </div>
                                 </div>
                             ))}

@@ -6,7 +6,7 @@ import { CircleX } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 
-const EndSessionPage = ({ close }: { close: any }) => {
+const EndSessionPage = ({ onClose }: { onClose: any }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -18,6 +18,7 @@ const EndSessionPage = ({ close }: { close: any }) => {
   }, []);
 
   return (
+   
     <div className="p-6 bg-white">
       <h5 className="text-neutral-95 font-bold text-lg border-b border-gray-300 pb-6 mb-6">
         {t("End Session?")}
@@ -34,14 +35,14 @@ const EndSessionPage = ({ close }: { close: any }) => {
       <div className="flex">
         <button
           className="btn-end flex items-center justify-center border border-red-500 bg-white text-red-500 rounded-lg h-14 w-full mr-4"
-          onClick={() => close({ discard: true })}
+          onClick={() => onClose({ discard: true })}
         >
           {t("End & Discard")}
         </button>
 
         <button
           className="btn-submit flex items-center justify-center bg-black text-white rounded-lg h-14 w-full"
-          onClick={() => close({ submit: true })}
+          onClick={() => onClose({ submit: true })}
         >
           {t("Stop & Submit")}
         </button>

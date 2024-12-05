@@ -5,6 +5,7 @@ import { Request } from '@/models/request';
 import { page, track } from '@/providers/analytics.service';
 import { viewRequest, applyRequest } from '@/providers/logged-in/request.service';
 import { errorMessage, toDate } from '@/utils/common';
+import { format } from 'date-fns';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -101,7 +102,7 @@ const RequestViewPage = () => {
                         <p>
                             {
                                 t("txt_applied_at", { 
-                                    value: toDate(request.candidateApplication.created_at)?.toLocaleDateString() 
+                                    value: format(request.candidateApplication.created_at || '', 'MMMM d, yyyy')
                                 })
                             }
                         </p>

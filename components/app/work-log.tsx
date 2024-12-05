@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { MoveRight } from 'lucide-react';
 import { secondsToTime } from '@/utils/common';
+import { format } from 'date-fns';
 
 const WorkLog = ({ hour }: { hour: any }) => {
     const { t } = useTranslation();
@@ -15,10 +16,10 @@ const WorkLog = ({ hour }: { hour: any }) => {
                 <p>
                     <b>{hour.end_time ? secondsToTime(hour.total_time) : t("On-Going")}</b>
                     <span>
-                        {new Date(hour.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} 
+                        {format(hour.start_time || '', 'hh:mm a')} 
                         <MoveRight />
                         {hour.end_time 
-                            ? new Date(hour.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+                            ? format(hour.start_time || '', 'hh:mm a') 
                             : t("Now")}
                     </span>
                 </p>

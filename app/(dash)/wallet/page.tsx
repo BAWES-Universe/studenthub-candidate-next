@@ -5,6 +5,7 @@ import Pager from '@/components/common/pager';
 import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { payableList } from '@/providers/logged-in/balance.service';
+import { format } from 'date-fns';
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -83,8 +84,11 @@ const WalletBalanceListPage = () => {
                         </p>
                         <p><strong>{t("Balance:")}</strong> {balance.balance.toLocaleString('en-US', { style: 'currency', currency: 'KWD' })}</p>
                         <p><strong>{t("Note:")}</strong> {balance.data}</p>
-                        <p><strong>{t("Created At:")}</strong> {new Date(balance.created_at).toLocaleDateString()}</p>
-                        <p><strong>{t("Transaction time:")}</strong> {new Date(balance.transaction_datetime).toLocaleDateString()}</p>
+                        <p><strong>{t("Created At:")}</strong> 
+                            {format(balance.created_at || '', 'MMMM d, yyyy')}</p>
+                        <p><strong>{t("Transaction time:")}</strong> 
+                            {format(balance.transaction_datetime || '', 'MMMM d, yyyy')}
+                        </p>
                     </div>
                 ))
             ) : (

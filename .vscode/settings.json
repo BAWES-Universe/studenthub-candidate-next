@@ -1,0 +1,5 @@
+{
+    "editor.suggest.snippetsPreventQuickSuggestions": true,
+    "editor.suggest.preview": true,
+    "editor.suggest.shareSuggestSelections": true
+}

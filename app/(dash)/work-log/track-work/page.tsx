@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Geolocation } from '@capacitor/geolocation'; // Assuming you're using Capacitor for geolocation
 import { ChevronRight } from 'lucide-react';
-import { secondsToTime } from '@/utils/common';
+import { secondsToTime, toDate } from '@/utils/common';
 import { CandidateWorkingHour } from '@/models/candidate';
 import { checkWorkStatus, startWork, stopWork, discardSession } from '@/providers/logged-in/account.service';
 import { listHours } from '@/providers/logged-in/candidate-working-hour.service';
@@ -14,6 +14,11 @@ import EndSessionPage from '../end-session/page';
 import Spinner from '@/components/common/spinner';
 import { page, track } from '@/providers/analytics.service';
 import Pager from '@/components/common/pager';
+import { format } from 'date-fns';
+import { Timer } from '@/components/common/timer';
+import { setUser } from '@/store/slices/userSlice';
+import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
+import Modal from 'react-modal';
 
 const TrackWorkPage = () => {
   const { t } = useTranslation();
@@ -22,6 +27,9 @@ const TrackWorkPage = () => {
   const [savingHours, setSavingHours] = useState(false);
   const [startingWork, setStartingWork] = useState(false);
   
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user);
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     total_pages: 0,
@@ -31,6 +39,8 @@ const TrackWorkPage = () => {
   const [candidateWorkingHourData, setCandidateWorkingHourData] = useState([]);
   const [today, setToday] = useState(new Date());
   const [stats, setStats] = useState<any>(null);
+
+  const [modalStopWorkIsOpen, setModalStopWorkIsOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is working and load initial data
@@ -102,7 +112,7 @@ const TrackWorkPage = () => {
 
   const toggleTrack = () => {
     if (started) {
-      confirmStopWork();
+      setModalStopWorkIsOpen(true);
     } else {
       startWorkClicked();
     }
@@ -112,9 +122,16 @@ const TrackWorkPage = () => {
     setStartingWork(true);
     const resp = await Geolocation.getCurrentPosition();
     if (resp && resp.coords) {
-      const data = await startWork(resp.coords.latitude, resp.coords.longitude);
-      if (data.operation === "success") {
-        setStarted(data.data);
+      const json = await startWork(resp.coords.latitude, resp.coords.longitude);
+      if (json.operation === "success") {
+        setStarted(json.data.start_time);
+       // user.isWorking = json.data;
+        dispatch(setUser({
+          user: {
+            ...user,
+            isWorking: json.data
+          }
+        }))
         await loadStats();
       }
     }
@@ -133,16 +150,15 @@ const TrackWorkPage = () => {
     setSavingHours(false);
   };
 
-  const confirmStopWork = async () => {
-    // todo: Logic to open EndSessionPage modal
-    const result: any = await openModal(EndSessionPage);
+  const handleModalStopWorkClose = async (result: any) => {
+    setModalStopWorkIsOpen(false);
     if (result && result.submit) {
       await stopWorkClicked();
     } else if (result && result.discard) {
       discardSessionClicked();
     }
   };
-
+ 
   const discardSessionClicked = async () => {
     await discardSession();
     setStarted(null);
@@ -163,60 +179,99 @@ const TrackWorkPage = () => {
 
   return (
     <div className="p-6">
-      <div className="current-datetime">
-        <b className="time">{today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</b>
+
+      { today && <div className="current-datetime text-center my-2">
+        <b className="text-black text-lg font-medium leading-7">{format(today, 'hh:mm a')}</b>
         <br />
-        <span className="date">{today.toLocaleDateString()}</span>
+        <span className="text-neutral-700 text-sm font-normal leading-5">{format(today, 'MMMM d, yyyy')}</span>
+      </div> }
+ 
+      <div className="w-[184px] h-[184px] p-3 mx-auto my-2 rounded-[96px] border-2 border-[#c5c5cc] justify-center items-center flex">
+        
+        { !started && <div className={ `${savingHours || startingWork ? 'opacity-70' : ''} cursor-pointer w-40 h-40 relative bg-[#4c6ff2] rounded-[80px] shadow items-center justify-center` } 
+            onClick={ () => !(savingHours || startingWork) && toggleTrack()}>
+
+            {savingHours || startingWork ? 
+              <div className="left-[52px] top-[66px] absolute text-white">
+                { savingHours? 'Saving...': 'Starting...'}
+              </div> : null}
+
+            {!savingHours && !startingWork && <div className="left-[41px] top-[52px] absolute text-center text-white text-lg font-semibold leading-7">
+              Start<br/>Tracking
+            </div> }
+        </div> }
+
+        { started && 
+        <div className="cursor-pointer w-28 h-28 pl-[22px] pr-[21px] pt-7 pb-[29px] bg-[#eb5757] rounded-[32px] shadow flex-col justify-center items-center gap-2 inline-flex"
+          onClick={ () => !(savingHours || startingWork) && toggleTrack()}>
+            <div className="text-center text-white text-lg font-semibold leading-7">End</div>
+            <div>
+              <Timer start={started} />
+            </div>
+        </div> }
+  
       </div>
 
-      <div className="btn-wrapper">
-        <button
-          disabled={savingHours || startingWork}
-          className={`btn-track ${started ? 'btn-track-tracking' : ''}`}
-          onClick={toggleTrack}
-        >
-          {savingHours || startingWork ? <Spinner /> : null}
-          {!savingHours && !startingWork && !started && <span>{t("Start Tracking")}</span>}
-          {started && <span className="end">{t("End Tracking")}</span>}
-        </button>
-      </div>
-
-      <button className="btn-manual" onClick={addManually}>
+      <button className="m-auto block text-center text-neutral-600 text-sm font-medium leading-5">
         {t("Manual Logging")}
-        <ChevronRight className="text-gray-600 text-xl" />
+        <ChevronRight className="text-gray-600 text-xl inline" />
       </button>
 
-      { stats && <div className="stats">
-        <div>
-          <b>{stats?.checkIn ? new Date(stats.checkIn).toLocaleTimeString() : '00:00'}</b>
-          <span>{t("Check-in")}</span>
+      <div className="w-full max-w-[400px] mx-auto h-11 justify-start items-start gap-[52px] flex mt-8">
+        <div className="grow shrink basis-0 flex-col justify-center items-center inline-flex">
+            <div className="self-stretch text-center text-black text-base font-medium leading-normal">
+            {stats?.checkIn ? format(stats.checkIn, "hh:mm a") : '00:00'}
+            </div>
+            <div className="self-stretch text-center text-[#68687a] text-sm font-normal leading-tight">
+            {t("Check-in")}
+            </div>
         </div>
-        <div>
-          <b>{stats?.checkOut ? new Date(stats.checkOut).toLocaleTimeString() : '00:00'}</b>
-          <span>{t("Check-out")}</span>
+        <div className="grow shrink basis-0 flex-col justify-center items-center inline-flex">
+            <div className="self-stretch text-center text-black text-base font-medium leading-normal">
+            {stats?.checkOut ? format(stats.checkOut, "hh:mm a") : '00:00'}
+            </div>
+            <div className="self-stretch text-center text-[#68687a] text-sm font-normal leading-tight">
+            {t("Check-out")}
+            </div>
         </div>
-        <div>
-          <b>{stats?.totalTime ? secondsToTime(stats.totalTime) : '00:00'}</b>
-          <span>{t("Total hours")}</span>
+        <div className="grow shrink basis-0 flex-col justify-center items-center inline-flex">
+            <div className="self-stretch text-center text-black text-base font-medium leading-normal">
+            {stats?.totalTime ? secondsToTime(stats.totalTime) : '00:00'}
+            </div>
+            <div className="self-stretch text-center text-[#68687a] text-sm font-normal leading-tight">
+            {t("Total hours")}
+            </div>
         </div>
-      </div> }
-
-      <div className="session-wrapper" style={{ marginTop: '24px' }}>
-        <h5 className="txt-session-heading">{t("Sessions")} <span>({pagination.total_count})</span></h5>
+    </div>
+ 
+    {candidateWorkingHourData.length > 0 && <div className="session-wrapper mt-6">
+        <h5 className="txt-session-heading text-neutral-900 text-lg font-semibold leading-7 border-t border-neutral-300 pt-6 text-left">
+          {t("Sessions")} <span className="text-neutral-600">{`(${pagination.total_count})`}</span>
+        </h5>
         {candidateWorkingHourData.map((hour: CandidateWorkingHour) => (
-          <p key={hour.candidate_working_hour_uuid}>
-            <b>{ hour.total_time && secondsToTime(hour.total_time)}</b>
-            <span>
-              { hour.start_time ? (new Date(hour.start_time))?.toLocaleTimeString() : '00:00'} 
+          <p key={hour.candidate_working_hour_uuid} className="flex justify-between items-center bg-white shadow-md rounded-lg p-4 my-2">
+            <b className="text-neutral-900 text-base font-medium leading-6">{ hour.total_time && secondsToTime(hour.total_time)}</b>
+            <span className="text-neutral-600 text-sm font-normal leading-5">
+              { hour.start_time ? format(hour.start_time, "hh:mm a") : '00:00'} 
               <ChevronRight className="text-gray-600 text-xl" />
-              { hour.end_time ? (new Date(hour.end_time))?.toLocaleTimeString() : '00:00'}
+              { hour.end_time ? format(hour.end_time, "hh:mm a") : '00:00'}
             </span>
           </p>
         ))}
 
         <Pager pagination={pagination} loadPage={loadPage} />
+    
+      </div> }
 
-      </div>
+      { modalStopWorkIsOpen && <EndSessionPage onClose={handleModalStopWorkClose} /> }
+      
+      { /**<Modal
+            isOpen={modalStopWorkIsOpen}
+            onRequestClose={() => handleModalStopWorkClose(null)}
+            contentLabel="Modal"
+          >
+            <EndSessionPage onClose={handleModalStopWorkClose} />
+          </Modal> */}
     </div>
   );
 };

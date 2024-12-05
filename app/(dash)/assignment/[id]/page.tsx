@@ -112,7 +112,7 @@ const CandidateAssignmentPage = () => {
                         {/* Render logs here */}
                         {candidateWorkingDates.map((date: CandidateWorkingDate) => (
                             <div key={date.date} className="border p-4 mb-4">
-                                <h2>{format(new Date(date.date || ''), 'MMMM d, yyyy')}</h2>
+                                <h2>{format(date.date || '', 'MMMM d, yyyy')}</h2>
                                 {/* Add more log details */}
                             </div>
                         ))}

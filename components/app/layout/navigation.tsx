@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Navigation() {
 
-    const [path, setPath] = useState<string>(window.location.pathname);
+    const [path, setPath] = useState<string>(window?.location.pathname || "/home");
 
     const { t } = useTranslation();
     const router = useRouter();
@@ -57,7 +57,7 @@ export default function Navigation() {
                             <path d="M15 8H21" stroke={path == "/work-log/track-work" ? '#4C70F2' : '#7d7d8d'} strokeWidth="2" strokeLinecap="round" />
                         </svg>
 
-                        <div className={`sm:mt-3 sm:ms-2 self-stretch text-center text-[#7d7d8d] text-xs font-semibold leading-none`}>
+                        <div className={`sm:mt-3 sm:ms-2 self-stretch text-center ${path == "/work-log/track-work" ? 'text-[#4c6ff2]' : 'text-[#7d7d8d]'}  text-xs font-semibold leading-none`}>
                             {t('Track')}
                         </div>
                     </div>

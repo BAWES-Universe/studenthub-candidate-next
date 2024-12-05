@@ -90,7 +90,7 @@ const PaymentDetailPage = () => {
                         Date
                         </span>
                         <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
-                        {format(new Date(salary.tc_created_at || ''), 'MMMM d, yyyy')}
+                        {format(salary.tc_created_at || '', 'MMMM d, yyyy')}
                         </span>
                     </div>
                 </div>
