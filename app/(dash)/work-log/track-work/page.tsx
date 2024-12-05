@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Geolocation } from '@capacitor/geolocation'; // Assuming you're using Capacitor for geolocation
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight } from 'lucide-react';
 import { secondsToTime, toDate } from '@/utils/common';
 import { CandidateWorkingHour } from '@/models/candidate';
 import { checkWorkStatus, startWork, stopWork, discardSession } from '@/providers/logged-in/account.service';
@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import { Timer } from '@/components/common/timer';
 import { setUser } from '@/store/slices/userSlice';
 import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
-import Modal from 'react-modal';
+import { workingDateStats } from '@/providers/logged-in/candidate-working-hour.service';
 
 const TrackWorkPage = () => {
   const { t } = useTranslation();
@@ -41,6 +41,7 @@ const TrackWorkPage = () => {
   const [stats, setStats] = useState<any>(null);
 
   const [modalStopWorkIsOpen, setModalStopWorkIsOpen] = useState(false);
+  const [modalLogTimeIsOpen, setModalLogTimeIsOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is working and load initial data
@@ -68,7 +69,8 @@ const TrackWorkPage = () => {
   };
 
   const loadStats = async () => {
-    const response = await stats(getUrlParams());
+    const response = await workingDateStats(getUrlParams());
+    console.log(response, 'stats');
     setStats(response);
   };
 
@@ -164,17 +166,12 @@ const TrackWorkPage = () => {
     setStarted(null);
   };
 
-  const addManually = async () => {
-    //todo: open modal
-    const result: any = await openModal(LogTimeManuallyPage);
+  const handleModalLogTimeClose = async (result: any) => {  
+    setModalLogTimeIsOpen(false);
     if (result && result.refresh) {
       await loadSessions();
       await loadStats();
     }
-  };
-
-  const openModal = async (Component: any) => {
-    // Logic to open modal and return result
   };
 
   return (
@@ -212,7 +209,7 @@ const TrackWorkPage = () => {
   
       </div>
 
-      <button className="m-auto block text-center text-neutral-600 text-sm font-medium leading-5">
+      <button onClick={() => setModalLogTimeIsOpen(true)} className="m-auto block text-center text-neutral-600 text-sm font-medium leading-5">
         {t("Manual Logging")}
         <ChevronRight className="text-gray-600 text-xl inline" />
       </button>
@@ -246,15 +243,22 @@ const TrackWorkPage = () => {
  
     {candidateWorkingHourData.length > 0 && <div className="session-wrapper mt-6">
         <h5 className="txt-session-heading text-neutral-900 text-lg font-semibold leading-7 border-t border-neutral-300 pt-6 text-left">
-          {t("Sessions")} <span className="text-neutral-600">{`(${pagination.total_count})`}</span>
+          {t("Sessions")} <span className="text-[#7D7D8D]">({pagination.total_count})</span>
         </h5>
         {candidateWorkingHourData.map((hour: CandidateWorkingHour) => (
-          <p key={hour.candidate_working_hour_uuid} className="flex justify-between items-center bg-white shadow-md rounded-lg p-4 my-2">
-            <b className="text-neutral-900 text-base font-medium leading-6">{ hour.total_time && secondsToTime(hour.total_time)}</b>
+
+          <p key={hour.candidate_working_hour_uuid} className="flex justify-between items-center bg-white shadow-md rounded-lg p-4 my-4">
+            <b className="text-neutral-900 text-base font-medium leading-6">
+              { hour.total_time ? secondsToTime(hour.total_time): "On-Going" } 
+            </b>
             <span className="text-neutral-600 text-sm font-normal leading-5">
               { hour.start_time ? format(hour.start_time, "hh:mm a") : '00:00'} 
-              <ChevronRight className="text-gray-600 text-xl" />
-              { hour.end_time ? format(hour.end_time, "hh:mm a") : '00:00'}
+              { /**<ArrowRight className="inline text-gray-600 text-small" /> */}
+               
+                &nbsp;<img src='/assets/icons/chevron-right.svg' className="inline relative top-[-2px]" />&nbsp;
+                { hour.end_time ? format(hour.end_time, "hh:mm a") : 'Now'}
+                
+    
             </span>
           </p>
         ))}
@@ -264,7 +268,8 @@ const TrackWorkPage = () => {
       </div> }
 
       { modalStopWorkIsOpen && <EndSessionPage onClose={handleModalStopWorkClose} /> }
-      
+      { modalLogTimeIsOpen && <LogTimeManuallyPage onClose={handleModalLogTimeClose} /> }
+
       { /**<Modal
             isOpen={modalStopWorkIsOpen}
             onRequestClose={() => handleModalStopWorkClose(null)}

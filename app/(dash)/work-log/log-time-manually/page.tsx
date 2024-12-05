@@ -9,7 +9,7 @@ import { CircleX, X } from 'lucide-react';
 import Spinner from '@/components/common/spinner';
 import { page, track } from '@/providers/analytics.service';
 
-const LogTimeManuallyPage = () => {
+const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
   const { t } = useTranslation();
   const { register, handleSubmit, setValue, watch, reset } = useForm();
   const [saving, setSaving] = useState(false);
@@ -17,6 +17,7 @@ const LogTimeManuallyPage = () => {
   const maxDate = new Date().toISOString();
 
   useEffect(() => {
+
     // Analytics tracking
     
     page('Log Time Manually Page');
@@ -34,6 +35,7 @@ const LogTimeManuallyPage = () => {
     if (response.operation === "success") {
       //Alert.alert(t('Success'), response.message);
       reset(); // Reset the form
+      onClose({ refresh: true }); // Close the modal
     } else if (response.operation === "error") {
       //Alert.alert(t('Error'), response.message);
       alert(response.message);
@@ -64,11 +66,7 @@ const LogTimeManuallyPage = () => {
       setValue('end_time', selectedTime);
     }
   };
-
-  const close = () => {
-    // Close modal logic
-  };
-
+ 
   const openDatePicker = () => {
     // Open date picker logic
     return '2024-01-01';

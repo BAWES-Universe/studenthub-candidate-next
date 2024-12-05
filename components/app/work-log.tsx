@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { MoveRight } from 'lucide-react';
+import { ArrowRight, MoveRight } from 'lucide-react';
 import { secondsToTime } from '@/utils/common';
 import { format } from 'date-fns';
 
@@ -17,7 +17,7 @@ const WorkLog = ({ hour }: { hour: any }) => {
                     <b>{hour.end_time ? secondsToTime(hour.total_time) : t("On-Going")}</b>
                     <span>
                         {format(hour.start_time || '', 'hh:mm a')} 
-                        <MoveRight />
+                        <ArrowRight className='inline'  />
                         {hour.end_time 
                             ? format(hour.start_time || '', 'hh:mm a') 
                             : t("Now")}

@@ -33,13 +33,13 @@ export function Timer({ start, end = null}: { start: string, end?: string | null
   
     return (
       <>
-        <span className={ `text-[${hours == 0? '#f7acac':'#fff2f2'}] text-base font-medium` }>
+        <span className={ `text-[#fff2f2] text-[${hours == 0? '#f7acac':'#fff2f2'}] text-base font-medium` }>
             {hours < 10 ? '0' + hours : hours}:
         </span>
-        <span className={ `text-[${hours != 0 && minutes == 0? '#f7acac':'#fff2f2'}] text-base font-medium` }>
+        <span className={ `text-[#fff2f2] text-[${hours != 0 && minutes == 0? '#f7acac':'#fff2f2'}] text-base font-medium` }>
             {minutes < 10 ? '0' + minutes : minutes}:
         </span>
-        <span className={ `text-[${hours != 0 && minutes != 0 && rSeconds == 0? '#f7acac':'#fff2f2'}] text-base font-medium` }>
+        <span className={ `text-[#fff2f2] text-[${hours != 0 && minutes != 0 && rSeconds == 0? '#f7acac':'#fff2f2'}] text-base font-medium` }>
             {rSeconds < 10 ? '0' + rSeconds : rSeconds}
         </span>
       </>
