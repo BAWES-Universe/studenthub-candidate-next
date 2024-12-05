@@ -12,10 +12,20 @@ export function toDate(date: string | null | undefined) {
 }
 
 // Helper function to convert seconds to time format
-export const secondsToTime = (seconds: number) => {
-  const hours = Math.floor(seconds / 3600);
+export const secondsToTime = (value: number) => {
+  /*const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+  return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;*/
+
+  const hours = Math.floor(value / 3600);
+  const minutes = Math.floor((value % 3600) / 60);
+  const seconds = value % 60;
+
+  const hoursString = hours.toString().padStart(2, '0');
+  const minutesString = minutes.toString().padStart(2, '0');
+  const secondsString = seconds.toString().padStart(2, '0');
+
+  return `${hoursString}:${minutesString}:${secondsString}`;
 };
 
 /**

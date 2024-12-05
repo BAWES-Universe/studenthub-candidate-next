@@ -66,7 +66,7 @@ export function FormInput({
           <FormLabel 
             htmlFor={id}
             dir={inputDir}
-            className={`absolute z-10 bg-white px-[24px] transition-all duration-200
+            className={`absolute z-2 bg-white px-[24px] transition-all duration-200
               top-1/2 -translate-y-1/2 scale-100
               text-[color:var(--Neutral-70,#7D7D8D)] text-base font-normal leading-6
               

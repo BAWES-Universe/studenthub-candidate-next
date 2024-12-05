@@ -1,5 +1,6 @@
 "use client"
 // app/(dash)/log-time-manually/page.tsx
+//import { IonDatetime } from '@ionic/react';
 
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
@@ -8,13 +9,61 @@ import { addWorkingHour } from '@/providers/logged-in/candidate-working-hour.ser
 import { CircleX, X } from 'lucide-react';
 import Spinner from '@/components/common/spinner';
 import { page, track } from '@/providers/analytics.service';
+import { Backdrop } from '@/components/common/backdrop';
+import { FormInput } from '@/components/ui/form-input';
+import {
+  Form,
+  FormField
+} from "@/components/ui/form"
+import { z } from "zod"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormTextarea } from '@/components/ui/form-textarea';
+import { FormTimeInput } from '@/components/ui/form-time';
+import { FormDateInput } from '@/components/ui/form-date';
+import { format } from 'date-fns';
 
+
+const timeComparisonValidator = (data: any) => {
+  const { start_time, end_time } = data;
+  if (start_time && end_time && start_time >= end_time) {
+    return false;
+  }
+  return true;
+};
+ 
+const formSchema = z.object({
+  start_time: z.string({
+    required_error: 'Please add start time.'
+  }),
+  end_time: z.string({
+    required_error: 'Please add end time.'
+  }),
+  note: z.string({
+    required_error: 'Please add notes.'
+  }),
+  date: z.date({
+    required_error: 'Please add date.'
+  }).max(new Date(), {
+    message: "Can not add future dates.",
+  })
+ // dateFormatted: z.string({
+   // required_error: 'Please add date.'
+  //})
+});/*.refine(data => timeComparisonValidator(data), {
+  message: "Start time should be less than end time.",
+});*/
+  
 const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
   const { t } = useTranslation();
   const { register, handleSubmit, setValue, watch, reset } = useForm();
   const [saving, setSaving] = useState(false);
-  const minDate = '1980-01-01';
-  const maxDate = new Date().toISOString();
+  const [startDate, setStartDate] = useState<Date | null>(null);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+    },
+  })
 
   useEffect(() => {
 
@@ -27,9 +76,19 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
     }
   }, []);
 
-  const onSubmit = async (data: any) => {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    console.log(values)
+
+
     setSaving(true);
-    const response = await addWorkingHour(data);
+
+    const params = {
+      ...values, 
+      date : values.date.toISOString()// format(values.date, "yyyy-m-d")
+    }
+    console.log(params)
+    const response = await addWorkingHour(params);
     setSaving(false);
 
     if (response.operation === "success") {
@@ -41,98 +100,77 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
       alert(response.message);
     }
   };
-
-  const selectDate = async () => {
-    // Logic to open DatePickerComponent and set the selected date
-    const selectedDate = await openDatePicker(); // Implement this function
-    if (selectedDate) {
-      setValue('date', selectedDate);
-      setValue('dateFormatted', selectedDate); // Assuming you have a formatted version
-    }
-  };
-
-  const selectStartTime = async () => {
-    // Logic to open TimePickerComponent and set the selected start time
-    const selectedTime = await openTimePicker(); // Implement this function
-    if (selectedTime) {
-      setValue('start_time', selectedTime);
-    }
-  };
-
-  const selectEndTime = async () => {
-    // Logic to open TimePickerComponent and set the selected end time
-    const selectedTime = await openTimePicker(); // Implement this function
-    if (selectedTime) {
-      setValue('end_time', selectedTime);
-    }
-  };
  
-  const openDatePicker = () => {
-    // Open date picker logic
-    return '2024-01-01';
-  };
-
-  const openTimePicker = () => {
-    // Open time picker logic
-    return '10:00';
-  };
-
   return (
-    <div className="p-6 bg-white">
-      <h5 className="text-lg font-bold mb-4">{t("Log Time")}</h5>
-      <button className="btn-close" onClick={() => {/* Close modal logic */}}>
-        <X className="text-gray-600 text-xl" />
-      </button>
+    <div className='inset-0 flex items-center justify-center'>
+      <Backdrop onClick={() => onClose()}></Backdrop>
+ 
+      <div className="fixed 
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium">{t("Check-in")}</label>
-            <input
-              type="time"
-              {...register('start_time', { required: true })}
-              className="border rounded p-2 w-full"
-              onClick={selectStartTime}
-            /> 
-          </div>
-          <div>
-            <label className="block text-sm font-medium">{t("Check-out")}</label>
-            <input
-              type="time"
-              {...register('end_time', { required: true })}
-              className="border rounded p-2 w-full"
-              onClick={selectEndTime}
-            />
-          </div>
+        xs:bottom-[0] xs:w-full xs:left-0
+
+        sm:top-[calc(50%-222px)] sm:left-[calc(50%-244px)] sm:w-[488px] sm:rounded-[30px]
+
+        h-[480px] bg-white xs:rounded-tl-[30px] xs:rounded-tr-[30px]">
+ 
+        <div className='p-6 border-b border-[color:var(--Neutral-40,#E2E2E6)]'>
+          <h5 className=" text-[#22223d] text-xl font-bold leading-7">
+            {t("Log Time")}
+
+            <button onClick={() => onClose()} className='bg-[#f5f5f7] rounded-full w-10 h-10 p-2 items-center text-center float-end'>
+              <X className="h-6 w-6 fill-[#7d7d8d] text-[#7d7d8d]" aria-hidden="true" />
+            </button>
+          </h5>
         </div>
+        <div className='p-6'>
+         
+          <Form {...form} >
+            <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} 
+              className="space-y-4 max-w-[560px] m-auto">
+      
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <FormInput
+                    name="start_time"
+                    label="Check-in"
+                    form={form as any}
+                    type="time"
+                  />
+               
+                <FormTimeInput
+                    name="end_time"
+                    label="Check-out"
+                    form={form as any}
+                  /> 
+              </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium">{t("Notes")}</label>
-          <textarea
-            {...register('note', { required: true })}
-            className="border rounded p-2 w-full"
-          />
+              <FormTextarea
+                name="note"
+                label="Notes"
+                form={form as any}
+              />
+ 
+              <FormDateInput
+              name='date'
+              label='Select date'
+              form={form as any}
+              onChange={(date: any) => {
+                console.log(date)
+              }}
+              />
+               
+{/**|| !form.formState.isValid || !form.formState.isDirty */}
+              <button
+                type="submit"
+                className="disabled:opacity-70 text-[color:var(--Neutral-0,#FFF)] text-base font-semibold leading-6 w-full h-14 shrink-0 [background:var(--Primary-Main,#4C70F2)] rounded-xl"
+                disabled={saving }
+              >
+                {saving ? <Spinner /> : t("Submit Time")}
+              </button>
+            </form>
+          </Form>
+ 
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium">{t("Select Date")}</label>
-          <input
-            type="date"
-            readOnly
-            {...register('dateFormatted', { required: true })}
-            className="border rounded p-2 w-full"
-            onClick={selectDate}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="btn-submit w-full"
-          disabled={saving}
-        >
-          {saving ? <Spinner /> : t("Submit Time")}
-        </button>
-      </form>
+      </div>    
     </div>
   );
 };

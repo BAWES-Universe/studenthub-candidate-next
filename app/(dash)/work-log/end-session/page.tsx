@@ -65,7 +65,7 @@ const EndSessionPage = ({ onClose }: { onClose: any }) => {
           <div className='clearfix'></div>
         </div>  
       </div>
-      </div>
+    </div>
   );
 };
 
