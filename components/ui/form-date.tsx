@@ -13,6 +13,8 @@ import { UseFormReturn } from 'react-hook-form'
 import { format } from 'date-fns'
 import DatePicker from 'react-datepicker';
 import './assets/css/datepicker.css'; // Import the default styles
+import { Button } from './button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 
 interface FormInputProps {
@@ -44,6 +46,16 @@ export function FormDateInput({
         
         <FormItem className="relative">
           <div className="relative">
+
+          <div className='absolute end-4 top-[22px]'>
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="6.89258" width="14" height="14" rx="4" stroke="#7D7D8D" stroke-width="2"/>
+            <path d="M19 11.8926L5 11.8926" stroke="#7D7D8D" stroke-width="2"/>
+            <rect x="8" y="3.89258" width="2" height="6" rx="1" fill="#7D7D8D"/>
+            <rect x="14" y="3.89258" width="2" height="6" rx="1" fill="#7D7D8D"/>
+            </svg>           
+          </div>
+
             <FormControl>             
                   <DatePicker
                     selected={field.value}
@@ -55,6 +67,7 @@ export function FormDateInput({
                     }}
                     dateFormat="MMMM d, yyyy"
                     className={ `
+                      cursor-pointer
                       flex border bg-transparent text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                  
                       peer h-[72px] py-[16px] px-[24px]  w-full 
@@ -70,13 +83,13 @@ export function FormDateInput({
                     popperClassName="z-10" // Ensure the datepicker is above other elements
                     renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
                       <div className="flex justify-between items-center p-2">
-                        <button onClick={decreaseMonth} className="text-gray-500 hover:text-gray-700">
-                          {'<'}
-                        </button>
+                        <Button type='button' variant="ghost" onClick={decreaseMonth} className="text-gray-500 hover:text-gray-700">
+                          <ChevronLeft></ChevronLeft>
+                        </Button>
                         <span className="font-bold">{format(date, 'MMMM yyyy')}</span>
-                        <button onClick={increaseMonth} className="text-gray-500 hover:text-gray-700">
-                          {'>'}
-                        </button>
+                        <Button type='button' variant="ghost" onClick={increaseMonth} className="text-gray-500 hover:text-gray-700">
+                          <ChevronRight></ChevronRight>
+                        </Button>
                       </div>
                     )}
                   />

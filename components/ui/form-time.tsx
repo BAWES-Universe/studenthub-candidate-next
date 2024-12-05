@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
-
+import CircularTimePicker from '@/components/ui/circular-time-picker';
 
 interface FormInputProps {
   name: string,
@@ -23,6 +23,8 @@ interface FormInputProps {
   autoComplete?: string
 }
 
+//todo: show CircularTimePicker on click on icon + mask input to accept only time 
+
 export function FormTimeInput({
   name,
   label,
@@ -30,7 +32,7 @@ export function FormTimeInput({
   helper,
   inputDir = "ltr",
   onFocus,
-  autoComplete = "on"
+  autoComplete = "off"
 }: FormInputProps) {
   const id = useId()
 
@@ -41,25 +43,34 @@ export function FormTimeInput({
       render={({ field, fieldState }) => (
         <FormItem className="relative">
           <div className="relative">
+
+        <div className='absolute end-4 top-[22px]'>
+          <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4.89258" width="16" height="16" rx="8" stroke="#7D7D8D" stroke-width="2"/>
+            <path d="M11 9.89258V12.2351C11 12.5581 11.156 12.8611 11.4188 13.0488L14 14.8926" stroke="#7D7D8D" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+
           <FormControl>
             <Input
                 dir={inputDir}
                 {...field}
                 id={id}
                 type="time"
-                placeholder=" "  // Empty space needed for peer styling
+                placeholder="HH:MM AM/PM"  // Empty space needed for peer styling
                 onFocus={onFocus}
-                onClick={(e) => (e.target as HTMLInputElement).showPicker()} // Show time picker on click
                 autoComplete={autoComplete}
                 className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
                     border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
                     placeholder-transparent focus:ring-1
+                     placeholder-white
                     focus:pt-[32px]
                     [&:not(:placeholder-shown)]:pt-[32px]
                     ${fieldState.error 
                         ? 'border-destructive focus:border-destructive focus:ring-destructive' 
                         : 'focus:border-primary focus:ring-primary'}`}
             />
+           
           </FormControl>
           <FormLabel 
             htmlFor={id}

@@ -10,7 +10,6 @@ import { CircleX, X } from 'lucide-react';
 import Spinner from '@/components/common/spinner';
 import { page, track } from '@/providers/analytics.service';
 import { Backdrop } from '@/components/common/backdrop';
-import { FormInput } from '@/components/ui/form-input';
 import {
   Form,
   FormField
@@ -20,7 +19,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormTextarea } from '@/components/ui/form-textarea';
 import { FormTimeInput } from '@/components/ui/form-time';
 import { FormDateInput } from '@/components/ui/form-date';
-import { format } from 'date-fns';
 
 
 const timeComparisonValidator = (data: any) => {
@@ -62,6 +60,7 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      end_time: "00:00 AM"
     },
   })
 
@@ -77,17 +76,14 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
   }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-
-    console.log(values)
-
-
+ 
     setSaving(true);
 
     const params = {
       ...values, 
       date : values.date.toISOString()// format(values.date, "yyyy-m-d")
     }
-    console.log(params)
+ 
     const response = await addWorkingHour(params);
     setSaving(false);
 
@@ -124,16 +120,16 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
         </div>
         <div className='p-6'>
          
+      
           <Form {...form} >
             <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} 
               className="space-y-4 max-w-[560px] m-auto">
       
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <FormInput
+                <FormTimeInput
                     name="start_time"
                     label="Check-in"
                     form={form as any}
-                    type="time"
                   />
                
                 <FormTimeInput
