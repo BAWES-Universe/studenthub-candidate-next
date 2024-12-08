@@ -53,7 +53,7 @@ const RequestViewPage = () => {
     };
 
     return (
-        <div className="max-w-screen-lg mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-4">
             <div className="flex justify-between items-center">
                 <button onClick={dismiss} className="btn-close">
                     <img src="assets/images/ic_cancel.svg" alt="Close" />

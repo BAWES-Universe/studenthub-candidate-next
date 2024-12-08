@@ -64,7 +64,7 @@ const WalletBalanceListPage = () => {
     const positive = (value: number) => Math.abs(value);
 
     return (
-        <div className="max-w-screen-lg mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-4"> 
             { /*<header className="flex items-center justify-between">
                 <button onClick={() => history.goBack()} className="btn-close">
                     <img src="assets/images/icon-back.svg" alt="Back" />

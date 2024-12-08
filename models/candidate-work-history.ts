@@ -11,7 +11,7 @@ export class CandidateWorkHistory {
     company_id?: number; 
     parent_company_id?: number; 
     staff_id?: number; 
-    start_date?: string;
+    start_date!: string;
     end_date?: string;
     candidate_hourly_rate?: number; 
     company_hourly_rate?: number;

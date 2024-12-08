@@ -84,7 +84,7 @@ const CandidateAssignmentPage = () => {
     //meta tags?  {history ? history.store.store_name : history.company.company_name}
 
     return (
-        <div className="max-w-screen-lg mx-auto">
+        <div className="max-w-4xl mx-auto p-4">
              
             <div className="flex space-x-4 p-4">
                 <button onClick={() => setSegment("logs")} className={`p-2 ${segment === "logs" ? "bg-blue-500 text-white" : "bg-gray-200"}`}>

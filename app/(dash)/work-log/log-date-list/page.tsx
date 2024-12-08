@@ -72,6 +72,7 @@ const LogDateListPage = () => {
   };
 
   return (
+    <div className="max-w-4xl mx-auto p-4"> 
     <div className="flex flex-col h-full">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-2">
@@ -114,6 +115,7 @@ const LogDateListPage = () => {
 
         </div>
       </div>
+    </div>
     </div>
   );
 };

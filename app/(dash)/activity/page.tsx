@@ -84,7 +84,7 @@ const ActivityPage = () => {
     await axios.post(`/api/notifications/mark-read/${notification.cn_uuid}`);
   };
 
-  return (
+  return ( 
     <div className="max-w-screen-lg mx-auto">
       <main ref={contentRef} className="p-4">
         {loading && <div className="loader">Loading...</div>}

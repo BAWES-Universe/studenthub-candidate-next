@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { profile } from '@/providers/logged-in/account.service';
 //import { workHistory } from '@/providers/logged-in/candidate.service';
 import AccountStatus from '@/components/app/account-status';
-import { useAppSelector } from '@/store/store';
+import { useAppDispatch, useAppSelector } from '@/store/store';
 import { CandidateWorkHistory } from '@/models/candidate-work-history';
 import { listWorkHistory } from '@/providers/logged-in/candidate.service';
 import { page, track } from '@/providers/analytics.service';
@@ -14,9 +14,11 @@ import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { setUser } from '@/store/slices/userSlice';
+ 
 
 const DashboardPage = () => {
-    const [candidate, setCandidate] = useState(null);
+    
     const [loadingProfile, setLoadingProfile] = useState(false);
     const [workHistory, setWorkHistory] = useState([]);
     const [updating, setUpdating] = useState(false);
@@ -25,9 +27,12 @@ const DashboardPage = () => {
     const { user } = useAppSelector(state => state.user);
 
     const { t} = useTranslation();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
+        if (!user)
         loadProfile();
+
         loadWorkHistoryData();
         //setInvitationSubscription();
 
@@ -43,7 +48,10 @@ const DashboardPage = () => {
         setLoadingProfile(true);
         try {
             const data = await profile();
-            setCandidate(data);
+            dispatch(setUser({
+                user: data
+            }));
+
         } catch (error) {
             console.error(error);
         } finally {
@@ -74,7 +82,7 @@ const DashboardPage = () => {
         <div className="max-w-4xl mx-auto p-4">
              
             {loadingProfile && <div className="progress-bar">Loading...</div>}
-            {candidate && (
+            {user && (
                 <div>
                     {/* Student Account Status */}
                     <AccountStatus />

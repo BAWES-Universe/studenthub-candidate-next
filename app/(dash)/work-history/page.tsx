@@ -51,7 +51,7 @@ const WorkHistoryPage = () => {
     };
 
     return (
-        <div className="max-w-screen-lg mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-4">
             {downloading && <div className="progress-bar">Downloading...</div>}
             <button onClick={dismiss} className="btn-close">
                 <img src="assets/images/ic_cancel.svg" alt="Close" />

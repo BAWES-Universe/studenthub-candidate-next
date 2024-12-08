@@ -98,6 +98,7 @@ const ChatListPage = () => {
     };
 
     return (
+        <div className="max-w-4xl mx-auto p-4"> 
         <div className={`flex flex-col h-full text-start`}>
             <header className="bg-white shadow">
                 <h1 className="text-xl font-bold p-4">{t("Chats")}</h1>
@@ -133,6 +134,7 @@ const ChatListPage = () => {
 
                 </div>
             </div>
+        </div>
         </div>
     );
 };

@@ -28,7 +28,7 @@ const _candidateEndpoint = '/candidates';
    * download candidate appreciation certificate
    * @param workHistoryID
    */
-  export async function downloadCertificate(workHistoryID: string): Promise<any> {
+  export async function downloadCertificate(workHistoryID: number | string): Promise<any> {
     let url = `${_candidateEndpoint}/appreciation-certificate/${workHistoryID}`;
     await pdfget(url, 'appreciation-certification-' + workHistoryID + '.pdf');
   } 
