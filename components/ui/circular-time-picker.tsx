@@ -32,11 +32,11 @@ const CircularTimePicker: React.FC<{ onChange: (time: string) => void, onClose: 
   };
  
   return (
-    <div className="z-10 absolute bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-76">
+    <div className="xs:top-[0px] sm:top-[65px] absolute z-10 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-76">
         <div className="text-xl text-center mb-4">
-        <Button className={ `me-2 text-[#4c6ff2] ${mode== 'hour'? ' bg-gray-200' : ''}` } variant="ghost" onClick={() => setMode("hour")}> {hour} </Button>:
-        <Button className={ `mx-2 text-[#4c6ff2] ${mode== 'minutes'? ' bg-gray-200' : ''}` } variant="ghost" onClick={() => setMode("minutes")}>{minute < 10 ? `0${minute}` : minute} </Button>
-        <Button  variant="ghost" onClick={() => toggleAMPM()}>
+        <Button type='button' className={ `me-2 text-[#4c6ff2] ${mode== 'hour'? ' bg-gray-200' : ''}` } variant="ghost" onClick={() => setMode("hour")}> {hour} </Button>:
+        <Button type='button' className={ `mx-2 text-[#4c6ff2] ${mode== 'minutes'? ' bg-gray-200' : ''}` } variant="ghost" onClick={() => setMode("minutes")}>{minute < 10 ? `0${minute}` : minute} </Button>
+        <Button type='button' variant="ghost" onClick={() => toggleAMPM()}>
             <span className={ isAM? 'text-[#4c6ff2]' : 'text-gray-300' }>AM</span>/
             <span className={ !isAM? 'text-[#4c6ff2]' : 'text-gray-300' }>PM</span>
         </Button>
@@ -107,13 +107,13 @@ const CircularTimePicker: React.FC<{ onChange: (time: string) => void, onClose: 
         </button>
         </div>*/}
         <div className="flex justify-between">
-        <Button variant="ghost"
+        <Button variant="ghost" type='button'
             onClick={onClose}
             className="px-4 py-2"
         >
             Cancel
         </Button>
-        <Button
+        <Button type='button'
             onClick={onClose}
             className="px-4 py-2"
         >

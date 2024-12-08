@@ -1,6 +1,6 @@
 'use client'
 
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { Input } from "@/components/ui/input"
 import {
   FormControl,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
 import CircularTimePicker from '@/components/ui/circular-time-picker';
+import { Timer } from '../common/timer'
 
 interface FormInputProps {
   name: string,
@@ -36,28 +37,43 @@ export function FormTimeInput({
 }: FormInputProps) {
   const id = useId()
 
+  const [isTimerOpen, setIsTimerOpen] = useState<boolean>(false);
+
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field, fieldState }) => (
         <FormItem className="relative">
-          <div className="relative">
+          <div className="relative tappable cursor-pointer" onClick={() => setIsTimerOpen(true)}>
 
-        <div className='absolute end-4 top-[22px]'>
-          <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="4.89258" width="16" height="16" rx="8" stroke="#7D7D8D" stroke-width="2"/>
-            <path d="M11 9.89258V12.2351C11 12.5581 11.156 12.8611 11.4188 13.0488L14 14.8926" stroke="#7D7D8D" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
+          <div className='absolute end-4 top-[22px]'>
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4.89258" width="16" height="16" rx="8" stroke="#7D7D8D" stroke-width="2"/>
+              <path d="M11 9.89258V12.2351C11 12.5581 11.156 12.8611 11.4188 13.0488L14 14.8926" stroke="#7D7D8D" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
 
           <FormControl>
             <Input
                 dir={inputDir}
                 {...field}
                 id={id}
-                type="time"
-                placeholder="HH:MM AM/PM"  // Empty space needed for peer styling
+               // type='time'
+               readOnly
+                /*onInput={(e) => {
+                  const input = e.target as HTMLInputElement;
+                  let value = input.value.toUpperCase();
+                  value = value.replace(/[^0-9APM:]/g, '');
+                  if (value.length === 2 || value.length === 5) {
+                    value += ':';
+                  }
+                  if (value.length === 8) {
+                    value = value.slice(0, 8);
+                  }
+                  input.value = value;
+                }}*/
+                placeholder="HH:MM PM"  // Empty space needed for peer styling
                 onFocus={onFocus}
                 autoComplete={autoComplete}
                 className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
@@ -100,6 +116,12 @@ export function FormTimeInput({
             {label}
           </FormLabel>
           </div>
+
+          { isTimerOpen && <CircularTimePicker onClose={() => setIsTimerOpen(false)} onChange={(value: string) => {
+            form.setValue(name, value);
+            form.trigger(name);
+          }} /> }
+
           <FormDescription dir="ltr" className='mt-[8px]'>
             { helper }
           </FormDescription>
