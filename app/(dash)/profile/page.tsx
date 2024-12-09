@@ -4,6 +4,7 @@ import { CertificateComponent } from '@/components/app/profile/certificate';
 import { Education } from '@/components/app/profile/education';
 import { Experience } from '@/components/app/profile/experience';
 import { Name } from '@/components/app/profile/name';
+import { PersonalDdetail } from '@/components/app/profile/personal-detail';
 import { Segments } from '@/components/app/profile/segments';
 import { WorkHistoryComponent } from '@/components/app/profile/work-history';
 import { Badge } from '@/components/ui/badge';
@@ -83,8 +84,8 @@ const ProfilePage = () => {
     };
 
     return (
-        <>
-            {loading && <div>Loading...</div>}
+        <div className='bg-[#f7f8fa]'>
+            {loading && <div className='max-w-4xl mx-auto p-6'>Loading...</div>}
             {user && (
                 <>
                     <div className=' bg-white'>
@@ -98,6 +99,32 @@ const ProfilePage = () => {
 
                         {segment === 'work-details' && (
                             <>
+
+                                {/** todo: have resume + video here */}
+                                <div className="h-14 justify-start items-start gap-4 inline-flex">
+                                    <div className="p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
+                                        <div className="justify-start items-center gap-1 inline-flex">
+                                            <div className="w-6 h-6 relative">
+                                                <div className="w-6 h-6 left-0 top-0 absolute opacity-0 bg-white" />
+                                                <div className="w-[13px] h-4 left-[6px] top-[3px] absolute">
+                                                    <div className="w-1 h-[5px] left-[4.50px] top-[8px] absolute">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">CV / Portfolio</div>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
+                                        <div className="justify-start items-center gap-1 inline-flex">
+                                            <div className="w-6 h-6 relative">
+                                                <div className="w-6 h-6 left-0 top-0 absolute opacity-0 bg-white" />
+                                                <div className="w-[18px] h-[18px] left-[3px] top-[3px] absolute">
+                                                </div>
+                                            </div>
+                                            <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">Intro Video</div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {user.certificates && user.certificates.length > 0 && <>
                                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
@@ -152,17 +179,15 @@ const ProfilePage = () => {
                         )}
 
                         {segment === 'personal-details' && (
-                            <div>
-                                <h2>Personal Details</h2>
-                                <p>Personal details go here</p>
-                            </div>
+                            <PersonalDdetail />
                         )}
    
+                        <div className='clearfix'></div>
                     </div>
                     
                 </>
             )}
-        </>
+        </div>
     );
 };
 

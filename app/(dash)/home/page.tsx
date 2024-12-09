@@ -140,7 +140,7 @@ const DashboardPage = () => {
                     )}
 
                     {/* Bank Details Card */}
-                    {user?.bank_account_needed && (
+                    {user?.bank_account_needed == 1 && (
                         <Card className="p-0 mb-4">
                              <CardHeader>
                             <CardTitle className='font-bold' dangerouslySetInnerHTML={{ __html: t('urgent_bank_detail') }}></CardTitle>

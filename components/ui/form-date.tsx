@@ -45,7 +45,7 @@ export function FormDateInput({
       render={({ field, fieldState }) => (
         
         <FormItem className="relative">
-          <div className="relative">
+          <div className="relative ">
 
             <div className='absolute end-4 top-[22px]'>
               <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,6 +68,7 @@ export function FormDateInput({
                     dateFormat="MMMM d, yyyy"
                     className={ `
                       cursor-pointer
+                      bg-white
                       flex border bg-transparent text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
                  
                       peer h-[72px] py-[16px] px-[24px]  w-full 

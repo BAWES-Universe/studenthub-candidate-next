@@ -2,10 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 
-export const useAge = () => {
-  const { t } = useTranslation();
+export const calculateAge = (value: string) => {
+    const { t } = useTranslation();
 
-  const calculateAge = (value: string) => {
     let d = value ? new Date(value.replace(/-/g, '/') + ' GMT+03:00') : new Date();
     let now = new Date();
 
@@ -22,10 +21,7 @@ export const useAge = () => {
     } else { // (days > 545)
       return t('txt_years_old', { value: years }); // Translation for "X years old"
     }
-  };
-
-  return { calculateAge };
-};
+}; 
 
 /**
    * Convert To Bold

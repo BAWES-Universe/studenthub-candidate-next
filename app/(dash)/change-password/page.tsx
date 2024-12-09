@@ -1,6 +1,6 @@
 "use client"
 
-import { OnboardProgress } from "@/components/on-board/progress";
+//import { OnboardProgress } from "@/components/on-board/progress";
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -10,7 +10,7 @@ import {
   Form
 } from "@/components/ui/form"
 import { FormInput } from "@/components/ui/form-input";
-import OnboardFooter from "@/components/on-board/layout/footer";
+//import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
 import { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ import { updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setUser } from "@/store/slices/userSlice";
+//import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
 
 
@@ -73,7 +73,7 @@ export default function PreferredTime() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        {/*<OnboardProgress></OnboardProgress>*/}
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             Change Password
@@ -101,7 +101,7 @@ export default function PreferredTime() {
           </form>
         </Form>
 
-        <OnboardFooter></OnboardFooter>
+        {/*<OnboardFooter></OnboardFooter>*/}
     </>
   );
 }

@@ -56,6 +56,8 @@ export class Candidate {
     totalInterviewScheduled?: number;
     pendingField?: any[];
     isWorking?: CandidateWorkingHour;
+    candidate_created_at!: string; 
+    candidate_updated_at?: string;
 
     civilExpired?: any;
     

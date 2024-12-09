@@ -2,10 +2,11 @@ import { setLanguage } from "@/store/slices/appSlice";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import i18n from "@/app/18n";
 
 export default function OnboardHeader() {
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const changeLanguage = () => {

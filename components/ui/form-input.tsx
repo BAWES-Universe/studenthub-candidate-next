@@ -41,8 +41,8 @@ export function FormInput({
       control={form.control}
       name={name}
       render={({ field, fieldState }) => (
-        <FormItem className="relative">
-          <div className="relative">
+        <FormItem className="relative ">
+          <div className="relative ">
           <FormControl>
              
             <Input
@@ -53,7 +53,7 @@ export function FormInput({
               placeholder=" "  // Empty space needed for peer styling
               onFocus={onFocus}
               autoComplete={autoComplete}
-              className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
+              className={`bg-white peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
                 border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
                 placeholder-transparent focus:ring-1
                 focus:pt-[32px]
