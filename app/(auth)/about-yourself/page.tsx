@@ -20,6 +20,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { FormTextarea } from "@/components/ui/form-textarea";
+import { page, track } from "@/providers/analytics.service";
 
 
 const formSchema = z.object({
@@ -44,6 +45,15 @@ export default function AboutYourself() {
       candidate_intro: user?.candidate_intro || "",
     },
   })
+
+  useEffect(() => {
+
+    page('About Yourself Page');
+
+    return () => {
+      track('page_exit', { page: 'About Yourself Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

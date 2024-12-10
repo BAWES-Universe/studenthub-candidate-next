@@ -1,8 +1,20 @@
 import OnboardFooter from "@/components/on-board/layout/footer";
 import { Button } from "@/components/ui/button";
+import { page, track } from "@/providers/analytics.service";
 import Link from "next/dist/client/link";
+import { useEffect } from "react";
 
 export default function EducationComplete() {
+
+    useEffect(() => {
+
+        page('Education Complete Page');
+
+        return () => {
+            track('page_exit', { page: 'Education Complete Page' });
+        }
+    }, []);
+
     return (
         <div className="flex  min-h-screen flex-col items-center  text-center px-4 p-[16px]">
 

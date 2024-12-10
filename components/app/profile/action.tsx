@@ -44,7 +44,9 @@ export function CandidateAction() {
                     <div className="w-6 h-6 relative">
                         <Globe />
                     </div>
-                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-semibold font-['Cairo'] leading-tight">عربي</div>
+                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                      { i18n.language == "ar"?"English": "عربي" }  
+                    </div>
                 </div>
             </div>
 

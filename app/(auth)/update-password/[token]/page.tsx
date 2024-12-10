@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setIsProfileCompleted, setUser } from "@/store/slices/userSlice";
 import { resetPasswordRequest, updatePassword } from "@/providers/auth.service";
 import { setCredentials } from "@/store/slices/authSlice";
+import { page, track } from "@/providers/analytics.service";
 
 
 declare let grecaptcha: any;
@@ -50,6 +51,15 @@ export default function UpdatePasswordPage() {
         password: "",
     },
   })
+
+  useEffect(() => {
+
+    page('Update Password Page');
+
+    return () => {
+        track('page_exit', { page: 'Update Password Page' });
+    }
+  }, []);
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {

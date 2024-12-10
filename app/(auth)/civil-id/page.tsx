@@ -22,6 +22,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
+import { page, track } from "@/providers/analytics.service";
 
 
 const formSchema = z.object({
@@ -53,6 +54,15 @@ export default function PreferredTime() {
   const router = useRouter();
 
   const params = useSearchParams();
+
+  useEffect(() => {
+
+    page('Civil ID Page');
+
+    return () => {
+      track('page_exit', { page: 'Civil ID Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

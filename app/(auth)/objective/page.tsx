@@ -21,6 +21,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { FormTextarea } from "@/components/ui/form-textarea";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
     objective: z.string({
@@ -42,6 +43,15 @@ export default function Objective() {
       objective: user?.candidate_objective || "",
     },
   })
+
+  useEffect(() => {
+
+    page('Objective Page');
+
+    return () => {
+        track('page_exit', { page: 'Objective Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

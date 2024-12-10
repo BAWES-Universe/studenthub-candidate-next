@@ -28,6 +28,10 @@ const appSlice = createSlice({
     setLanguage: (state, action: PayloadAction<{ language: string }>) => {
       state.language = action.payload.language;
       //i18n.changeLanguage(action.payload.language);
+
+      document.getElementsByTagName('html')[0].setAttribute('dir', 
+        (action.payload.language == 'ar') ? 'rtl' : 'ltr');
+
     },
     setTempBucket: (state, action: PayloadAction<{ temp_bucket: string }>) => {
       state.temp_bucket = action.payload.temp_bucket;

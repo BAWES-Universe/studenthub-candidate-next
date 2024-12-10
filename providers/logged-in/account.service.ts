@@ -186,7 +186,7 @@ import axios from "@/providers/AxiosService";
    * @param latitude 
    * @param longitude 
    */
-  export async function areaByLocation(latitude: number, longitude: number, area = null): Promise<any> {
+  export async function getAreaByLocation(latitude: number, longitude: number, area = null): Promise<any> {
     let url = `${_accountEndpoint}` + '/area-by-location?latitude=' + latitude + '&longitude=' + longitude;
 
     if(area)

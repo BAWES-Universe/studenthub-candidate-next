@@ -11,6 +11,7 @@ import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
 
 
  
@@ -26,8 +27,15 @@ export default function DriverLicence() {
   const params = useSearchParams();
 
   useEffect(() => {
+
+    page('Driver Licence Page');
+
     console.log('no haveLicence', haveLicence);
     setHaveLicence(user?.candidate_driving_license || 0);
+
+    return () => {
+      track('page_exit', { page: 'Driver Licence Page' });
+    }
   }, []);
 
   useEffect(() => {

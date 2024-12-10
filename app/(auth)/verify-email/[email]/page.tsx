@@ -15,13 +15,14 @@ import {
 import { Input } from "@/components/ui/input"
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
 import { resendVerificationEmail, verifyEmail } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
 import { useAppDispatch } from "@/store/store";
 import { setCredentials, setUnVerifiedToken } from "@/store/slices/authSlice";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
  
 const formSchema = z.object({
   c1: z.string({
@@ -66,6 +67,15 @@ export default function VerifyEmailPage() {
       c4: "",
     },
   })
+
+  useEffect(() => {
+
+    page('Verify Email Page');
+
+    return () => {
+        track('page_exit', { page: 'Verify Email Page' });
+    }
+  }, []);
 
   function resendCode() {
     window.grecaptcha.ready(() => {

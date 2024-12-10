@@ -19,6 +19,7 @@ import { profile, updateBirthDate } from "@/providers/logged-in/account.service"
 import { useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/store/store";
 import { useSearchParams, useRouter } from "next/navigation";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
   candidate_birth_date: z.date().min(new Date(new Date().setFullYear(new Date().getFullYear() - 25)), {
@@ -41,6 +42,15 @@ export default function Name() {
       candidate_birth_date: new Date(user?.candidate_birth_date || ""),
     },
   })
+
+  useEffect(() => {
+
+    page('DOB Page');
+
+    return () => {
+        track('page_exit', { page: 'DOB Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

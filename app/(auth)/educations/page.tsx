@@ -28,6 +28,7 @@ import MajorInput from "@/components/on-board/major-input";
 import PagedUniversityInput from "@/components/on-board/paged-university-input";
 import PagedMajorInput from "@/components/on-board/paged-major";
 import PagedDegreeInput from "@/components/on-board/paged-degree-input";
+import { page, track } from "@/providers/analytics.service";
 
 
 const formSchema = z.object({
@@ -61,6 +62,15 @@ export default function Educations() {
       candidateEducations: user?.candidateEducations || []
     },
   })
+
+  useEffect(() => {
+
+    page('Education Page');
+
+    return () => {
+      track('page_exit', { page: 'Education Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

@@ -15,7 +15,7 @@ const PaymentDetailPage = () => {
   
     const params = useParams();
 
-    const id = params.id as any;
+    const id = params?.id as any;
 
     useEffect(() => {
         loadData();

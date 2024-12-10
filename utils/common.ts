@@ -1,4 +1,4 @@
-import { RootState, useAppSelector } from "@/store/store";
+import { RootState, store, useAppSelector } from "@/store/store";
 //import { Filesystem, Directory } from '@capacitor/filesystem';
 
 /**
@@ -33,10 +33,12 @@ export const secondsToTime = (value: number) => {
  * @param enContent
  * @param arContent
  */
-export function langContent(enContent: string, arContent: string) {
+export function langContent(enContent: string = "", arContent: string = "") {
 
-  const { language } = useAppSelector((state: RootState) => state.app);
+  const state = store.getState(); // Get the state directly from the store
 
+  const { language } = state.app;  
+   
   if (language == 'ar' && arContent) {
     return arContent;
   }

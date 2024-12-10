@@ -11,6 +11,7 @@ import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
  
  
 export default function Name() {
@@ -44,6 +45,12 @@ export default function Name() {
   
   useEffect(() => {
     setGender(user?.candidate_gender || 0);
+  
+    page('Gender Page');
+
+    return () => {
+        track('page_exit', { page: 'Gender Page' });
+    }
   }, []);
 
   function onSubmit() {

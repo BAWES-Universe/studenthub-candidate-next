@@ -1,11 +1,19 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
+import { useAppSelector } from "@/store/store";
 import Link from "next/link";
+import { redirect } from "next/navigation";
  
 //import Rocket from '../../public/'; // Adjust the path as necessary
 
 export function Hero() {
 
+  const { isAuthenticated } = useAppSelector(state => state.auth) as { isAuthenticated: boolean };
 
+  if (isAuthenticated) {
+    redirect('/home');
+  }
   
   return (
 

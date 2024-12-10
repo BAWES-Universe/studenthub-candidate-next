@@ -20,6 +20,7 @@ import { errorMessage } from "@/utils/common";
 import { setUnVerifiedToken } from "@/store/slices/authSlice";
 import { profile } from "@/providers/logged-in/account.service";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
   email: z.string().email('Please enter valid email address')
@@ -43,6 +44,15 @@ export default function Email() {
       email: user?.candidate_new_email || user?.candidate_email || "",
     },
   })
+
+  useEffect(() => {
+
+    page('Email Page');
+
+    return () => {
+        track('page_exit', { page: 'Email Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

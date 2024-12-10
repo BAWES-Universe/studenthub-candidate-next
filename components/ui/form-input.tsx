@@ -21,6 +21,7 @@ interface FormInputProps {
   helper?: string,
   inputDir?: string,
   onFocus?: () => void,
+  onChange?: () => void,
   autoComplete?: string
 }
 
@@ -32,6 +33,7 @@ export function FormInput({
   helper,
   inputDir = "ltr",
   onFocus,
+  onChange,
   autoComplete = "on"
 }: FormInputProps) {
   const id = useId()
@@ -52,6 +54,8 @@ export function FormInput({
               type={type}
               placeholder=" "  // Empty space needed for peer styling
               onFocus={onFocus}
+              onKeyUp={onChange}
+             // onChange={onChange}
               autoComplete={autoComplete}
               className={`bg-white peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
                 border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]

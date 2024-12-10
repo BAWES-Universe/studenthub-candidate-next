@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { saveExperience } from "@/providers/logged-in/candidate-experience.service";
 import { useTranslation } from "react-i18next";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
   experiences: z.array(z.object({
@@ -75,6 +76,12 @@ export default function Experiences() {
   
     form.setValue('experiences', formattedExperiences);
     form.trigger();
+   
+    page('Experience Page');
+
+    return () => {
+        track('page_exit', { page: 'Experience Page' });
+    }
   }, []);
 
   useEffect(() => {

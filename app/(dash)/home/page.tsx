@@ -36,10 +36,10 @@ const DashboardPage = () => {
         loadWorkHistoryData();
         //setInvitationSubscription();
 
-     //   page('Home Page');
+        page('Home Page');
 
         return () => {
-       //     track('page_exit', { page: 'Home Page' });
+            track('page_exit', { page: 'Home Page' });
         }
   
     }, []);

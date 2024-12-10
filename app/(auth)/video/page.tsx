@@ -22,6 +22,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
     video: z.string({
@@ -52,6 +53,15 @@ export default function Video() {
       resume: user?.candidate_resume, 
     },
   })
+
+  useEffect(() => {
+
+    page('Video Page');
+
+    return () => {
+        track('page_exit', { page: 'Video Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

@@ -76,7 +76,7 @@ const InvitationDetailPage = () => {
     };
 
     const onFeedbackClose = (refresh: boolean) => {
-        console.log("onfeec", refresh);
+        
         if (refresh)
             loadInvitationDetail();
 

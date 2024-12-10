@@ -21,6 +21,7 @@ import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
   phone: z.string()
@@ -39,6 +40,15 @@ export default function Email() {
       phone: user?.candidate_phone || "",
     },
   })
+
+  useEffect(() => {
+
+    page('Phone Number Page');
+
+    return () => {
+        track('page_exit', { page: 'Phone Number Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

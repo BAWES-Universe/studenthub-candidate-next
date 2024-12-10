@@ -18,6 +18,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { CandidateSkill } from "@/models/candidate.skill";
+import { page, track } from "@/providers/analytics.service";
 
 
 const formSchema = z.object({
@@ -42,6 +43,15 @@ export default function Skills() {
       skills: [],
     },
   })
+
+  useEffect(() => {
+
+    page('Skills Page');
+
+    return () => {
+        track('page_exit', { page: 'Skills Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

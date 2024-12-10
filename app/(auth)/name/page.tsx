@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import { profile } from "@/providers/logged-in/account.service";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
   name_en: z.string().min(2, {
@@ -46,6 +47,16 @@ export default function Name() {
       name_ar: user?.candidate_name_ar || "",
     },
   })
+
+
+  useEffect(() => {
+
+    page('Name Page');
+
+    return () => {
+        track('page_exit', { page: 'Name Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user && isAuthenticated) {

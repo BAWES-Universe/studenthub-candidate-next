@@ -26,7 +26,7 @@ i18n
   },
   debug: true, // Enable debug mode for development
 
-  lng: "ar", // default language
+  lng:  "ar", // default language
   fallbackLng: "en",
    
   interpolation: {

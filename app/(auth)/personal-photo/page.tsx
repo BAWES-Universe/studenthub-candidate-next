@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 import { Candidate } from "@/models/candidate";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
     candidate_personal_photo: z.string({
@@ -50,6 +51,15 @@ export default function PersonalPhoto() {
            user?.candidate_personal_photo || "",
     },
   })
+
+  useEffect(() => {
+
+    page('Personal Photo Page');
+
+    return () => {
+        track('page_exit', { page: 'Personal Photo Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

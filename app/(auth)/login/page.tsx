@@ -15,10 +15,11 @@ import SubmitButton from "@/components/ui/submit-button";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { basicAuth } from "@/providers/auth.service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import Link from "next/link";
+import { page, track } from "@/providers/analytics.service";
  
 
 const formSchema = z.object({
@@ -43,6 +44,15 @@ export default function Email() {
       password: "",
     },
   })
+
+  useEffect(() => {
+
+    page('Login Page');
+
+    return () => {
+        track('page_exit', { page: 'Login Page' });
+    }
+  }, []);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
 

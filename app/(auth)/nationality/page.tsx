@@ -24,6 +24,7 @@ import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
 
 const formSchema = z.object({
   // nationality: z.string().email('Please enter valid nationality'),
@@ -53,6 +54,16 @@ export default function Nationality() {
       // nationality: any
     },
   })
+
+
+  useEffect(() => {
+
+    page('Nationality Page');
+
+    return () => {
+        track('page_exit', { page: 'Nationality Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

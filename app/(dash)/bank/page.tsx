@@ -67,7 +67,7 @@ const UpdateBankPage = () => {
   
   useEffect(() => {
     // Analytics tracking
-    console.log('Update Bank Page');
+     
     // Set focus on the beneficiary name input after component mounts
     /*setTimeout(() => {
       if (benefNameRef.current) {

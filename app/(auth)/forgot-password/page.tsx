@@ -20,6 +20,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { resetPasswordRequest } from "@/providers/auth.service";
+import { page, track } from "@/providers/analytics.service";
 
 
 declare let grecaptcha: any;
@@ -43,6 +44,15 @@ export default function PreferredTime() {
         email: "",
     },
   })
+
+  useEffect(() => {
+
+    page('Forgot Password Page');
+
+    return () => {
+        track('page_exit', { page: 'Forgot Password Page' });
+    }
+  }, []);
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {

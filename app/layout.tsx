@@ -10,10 +10,11 @@ import Script from 'next/script';
 const inter = Inter({ subsets: ['latin'] });
 import NextTopLoader from 'nextjs-toploader'
 import { setCanGoForward } from "@/store/slices/appSlice";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { publicRoutes } from "@/_middleware";
 import { setMixpanel } from "@/providers/analytics.service";
+import i18n from "./18n";
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
   description: 'Join StudentHub to start your educational journey with the best resources and support.',
@@ -32,30 +33,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const router = useRouter();
+ // const router = useRouter();
   
   const state = store.getState(); // Get the state directly from the store
 
   const { isAuthenticated } = state.auth;  
+  const { language } = state.app;
 
   useEffect(() => {
     setMixpanel();
   }, []);
 
-  useEffect(() => {
+  //useEffect(() => {
      
     if (!isAuthenticated && !publicRoutes.includes(window?.location.pathname)) {
-      router.push('/login');
+      return redirect('/login');
     } else if (isAuthenticated && ["/", ""].includes(window?.location.pathname)) {
-      router.push('/home');
+      return redirect('/home');
     }
     
-  }, [isAuthenticated, router]);
+  i18n.changeLanguage(language);
+  
+  //}, [isAuthenticated, router]);
 
   return (
     <Provider store={store}>
       
-    <html lang="en">
+    <html lang="en" dir={ i18n.language == "ar"? "rtl": "ltr" }>
       
       <body className={ `${inter.className}` }>
         <NextTopLoader showSpinner={false} />
@@ -69,17 +73,17 @@ export default function RootLayout({
             console.log('google places loaded');
          }}
         />
-
+{/*
       <Script
           src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js" // Replace with your script URL
-          strategy="lazyOnload" // Load the script after the page has loaded
+          strategy="lazyOnload" 
           onLoad={() => {
             console.log('google places loaded');
          }}
         />
 
       <Script strategy="lazyOnload" src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
-{/*
+
       <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-Q2JP5Y7ZNF"></Script>
 
       <Script strategy="afterInteractive"

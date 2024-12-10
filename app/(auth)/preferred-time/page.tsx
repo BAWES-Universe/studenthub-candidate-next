@@ -20,6 +20,7 @@ import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
 
 
 const formSchema = z.object({
@@ -42,6 +43,15 @@ export default function PreferredTime() {
       preferred_time: user?.candidate_preferred_time || "",
     },
   })
+
+  useEffect(() => {
+
+    page('Preferred Time Page');
+
+    return () => {
+        track('page_exit', { page: 'Preferred Time Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {

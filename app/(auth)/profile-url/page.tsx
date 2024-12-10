@@ -19,6 +19,7 @@ import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { page, track } from "@/providers/analytics.service";
 
 
 const formSchema = z.object({
@@ -42,6 +43,15 @@ export default function PreferredTime() {
       profile_url: user?.profile_url || "",
     },
   })
+
+  useEffect(() => {
+
+    page('Profile URL Page');
+
+    return () => {
+        track('page_exit', { page: 'Profile URL Page' });
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {
