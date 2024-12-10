@@ -21,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useEffect, useState } from "react";
 import { profile, updateNationality, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 
@@ -39,7 +39,7 @@ export default function Nationality() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const params = useSearchParams();
   let [country, setCountry] = React.useState({
     country_id: 2,
     country_nationality_name_en: "Kuwaiti"
@@ -88,6 +88,9 @@ export default function Nationality() {
           } }));
         }
 
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
         router.push('/personal-info-complete');
       } else {
         alert(errorMessage(res.message));
@@ -105,7 +108,7 @@ export default function Nationality() {
 
   return (
     <>
-      <OnboardProgress></OnboardProgress>
+      { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         Tell us more about your nationality

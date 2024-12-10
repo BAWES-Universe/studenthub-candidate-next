@@ -8,7 +8,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { profile, updateDrivingLicense, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 
@@ -22,6 +22,8 @@ export default function DriverLicence() {
   const [haveLicence, setHaveLicence] = useState<number | undefined>(user?.candidate_driving_license || undefined);
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const params = useSearchParams();
 
   useEffect(() => {
     console.log('no haveLicence', haveLicence);
@@ -53,7 +55,10 @@ export default function DriverLicence() {
     setLoading(true);
     updateDrivingLicense(haveLicence).then((res: any) => {
         if (res.operation == 'success') {
-          router.push('/personal-photo');
+          if (params && params.get('from-profile'))
+            router.push('/profile');
+          else
+            router.push('/personal-photo');
         } else {
           alert(errorMessage(res.message));
         }
@@ -64,7 +69,7 @@ export default function DriverLicence() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             Do you have a driver’s license?

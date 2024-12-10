@@ -18,7 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useEffect, useState } from "react";
 import { deleteResume, deleteVideo, profile, updatePhoneDetail, updateResume, updateVideo } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
@@ -43,7 +43,7 @@ export default function Video() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const sparams = useSearchParams();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,6 +73,9 @@ export default function Video() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    if (sparams && sparams.get('from-profile'))
+      router.push('/profile');
+    else
     router.push('/civil-id');
   } 
 
@@ -113,7 +116,7 @@ export default function Video() {
 
   return (
     <div>
-        <OnboardProgress />
+        { !sparams?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">

@@ -5,49 +5,94 @@ import { updateObjective } from "@/providers/logged-in/account.service";
 import { useAppSelector } from "@/store/store";
 import { calculateAge } from "@/utils/app";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 export function PersonalDdetail()   {
 
     const { user } = useAppSelector(state => state.user) as { user: Candidate };
     const { t, i18n } = useTranslation();
+    const router = useRouter()
 
     const updateBioClicked = async () => { 
-        
+        router.push('/about-yourself?from-profile=1', {
+            scroll: true
+        });
     };
 
     const updateObjectiveClicked = async () => { 
-        
+        router.push('/objective?from-profile=1', {
+            scroll: true
+        });
     };
 
     const updatePhoneClicked = async () => { 
+        router.push('/phone-number?from-profile=1', {
+            scroll: true
+        });
     };
 
     const updateEmailClicked = async () => {
+        router.push('/email?from-profile=1', {
+            scroll: true
+        });
     };
 
     const updatePreferredTimeClicked = async () => {
+        router.push('/preferred-time?from-profile=1', {
+            scroll: true
+        });
     };
 
     const updateCivilIdBackClicked = async () => {
+        router.push('/civil-id?from-profile=1', {
+            scroll: true
+        });
     };
     const updateCivilIdFrontClicked = async () => {
+        router.push('/civil-id?from-profile=1', {
+            scroll: true
+        });
     };
     const profilePageClicked = async () => {
+        router.push('/profile-url?from-profile=1', {
+            scroll: true
+        });
     };
     const updateDateOfBirthClicked = async () => {
+        router.push('/dob?from-profile=1', {
+            scroll: true
+        });
     };
     const updateDrivingLicenseClicked = async () => {
+        router.push('/driver-license?from-profile=1', {
+            scroll: true
+        });
     };
     const updateCandidateIdClicked = async () => {
+        router.push('/civil-id?from-profile=1', {
+            scroll: true
+        });
     };
     const updateGenderClicked = async () => {
+        router.push('/gender?from-profile=1', {
+            scroll: true
+        });
     };
     const updateKuwaitiNationalStatusClicked = async () => {
+        router.push('/nationality?from-profile=1', {
+            scroll: true
+        });
     };
     const updateNationalityClicked = async () => {
+        router.push('/nationality?from-profile=1', {
+            scroll: true
+        });
     };
     const updateAreaClicked = async () => {
+        router.push('/area?from-profile=1', {
+            scroll: true
+        });
     };
 
     const area = (area: Area, country: Country) => {
@@ -63,25 +108,25 @@ export function PersonalDdetail()   {
     return (
         <div className="flex-col justify-start items-start gap-8 inline-flex">
 
-        <div className="flex-col justify-start items-start gap-2 flex" onClick={updateBioClicked}>
+        <div className="flex-col justify-start items-start gap-2 flex cursor-pointer" onClick={updateBioClicked}>
             <div className="text-[#22223d] text-lg font-semibold leading-7">Bio</div>
             <div className="text-[#4b4b61] text-base font-normal leading-normal">
                 { user.candidate_intro?user.candidate_intro: "Write a short brief to introduce yourself"}
             </div>
         </div>
         
-        <div className="flex-col justify-start items-start gap-2 flex" onClick={updateObjectiveClicked}>
+        <div className="flex-col justify-start items-start gap-2 flex cursor-pointer" onClick={updateObjectiveClicked}>
             <div className="text-[#22223d] text-lg font-semibold leading-7">Objective</div>
             <div className="text-[#4b4b61] text-base font-normal leading-normal">
                 { user.candidate_objective? user.candidate_objective: "Tell us more about yourself. What makes you special?"}
             </div>
         </div>
 
-        <div className="flex-col justify-start items-start gap-4 flex">
+        <div className="flex-col justify-start items-start gap-4 flex ">
             <div className="text-[#22223d] text-lg font-semibold leading-7">Contact Information</div>
             <div className="flex-col justify-start items-start gap-4 flex">
 
-                <div className="self-stretch justify-start items-start gap-4 inline-flex" onClick={updatePhoneClicked}>
+                <div className="self-stretch justify-start items-start gap-4 inline-flex cursor-pointer" onClick={updatePhoneClicked}>
                     <div className="h-6 justify-start items-center gap-2 flex">
                         <div className="w-6 h-6 relative">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +139,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
 
-                <div className="self-stretch justify-start items-start gap-4 inline-flex" onClick={updateEmailClicked}>
+                <div className="self-stretch justify-start items-start gap-4 inline-flex cursor-pointer" onClick={updateEmailClicked}>
                     <div className="grow shrink basis-0 h-6 justify-start items-center gap-2 flex">
                         <div className="w-6 h-6 relative">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +153,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
                 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updatePreferredTimeClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updatePreferredTimeClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8.12972 4H5.68421C4.75405 4 4 4.75405 4 5.68421C4 13.5906 10.4094 20 18.3158 20C19.246 20 20 19.246 20 18.3158V15.8703C20 15.1433 19.5574 14.4896 18.8825 14.2197L16.5397 13.2825C15.9334 13.04 15.2429 13.1494 14.7413 13.5674L14.1361 14.0718C13.4297 14.6604 12.3911 14.6133 11.7409 13.9631L10.0369 12.2591C9.38671 11.6089 9.33959 10.5703 9.92822 9.86391L10.4326 9.25869C10.8506 8.75706 10.96 8.06662 10.7175 7.46034L9.78034 5.11753C9.51037 4.44258 8.85666 4 8.12972 4Z" stroke="#23233D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -121,11 +166,11 @@ export function PersonalDdetail()   {
 
             </div>
         </div>
-        <div className="self-stretch flex-col justify-start items-start gap-4 flex">
+        <div className="self-stretch flex-col justify-start items-start gap-4 flex cursor-pointer">
             <div className="text-[#22223d] text-lg font-semibold leading-7">General Information</div>
             <div className="self-stretch  flex-col justify-start items-start gap-4 flex">
 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updateAreaClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateAreaClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 8.00269C10.8954 8.00269 9.99998 8.89794 9.99998 10.0023C9.99998 11.1066 10.8954 12.0019 12 12.0019C13.1045 12.0019 14 11.1066 14 10.0023C14 8.89794 13.1045 8.00269 12 8.00269Z" fill="#23233D"/>
@@ -138,7 +183,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updateNationalityClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateNationalityClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z" stroke="#23233D" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -158,7 +203,7 @@ export function PersonalDdetail()   {
                 { user.country && user.nationality &&
                 user.country.country_nationality_name_en == 'Kuwaiti' &&
                 user.nationality.country_nationality_name_en != 'Kuwaiti' && 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updateKuwaitiNationalStatusClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateKuwaitiNationalStatusClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12.5" cy="7.5" r="3.5" stroke="#23233D" stroke-width="2"/>
@@ -174,7 +219,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div> }
                 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updateGenderClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateGenderClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12.5" cy="7.5" r="3.5" stroke="#23233D" stroke-width="2"/>
@@ -189,7 +234,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
         
-                <div className="self-stretch justify-start items-start gap-4 inline-flex" onClick={updateCandidateIdClicked}>
+                <div className="self-stretch justify-start items-start gap-4 inline-flex cursor-pointer" onClick={updateCandidateIdClicked}>
                     <div className="grow shrink basis-0 h-10 justify-start items-start gap-2 flex">
                         <div className="w-6 h-6 relative">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,7 +254,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updateDrivingLicenseClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateDrivingLicenseClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M19.5207 15.6601C22.4878 15.3564 19.7067 9.69163 18.9656 8.14862L10.4523 8.14842C9.91556 8.41443 9.46117 8.7806 9.03727 9.2375C7.70774 10.6771 7.90895 11.5503 6.05789 12.0198C4.58491 12.3954 2.09344 11.5409 2.11493 15.666H3.32249C3.90488 12.7522 7.87538 12.7522 8.45792 15.666L14.385 15.6662C14.9676 12.7554 18.9321 12.7526 19.5207 15.6601ZM3.32269 16.8149H1.57525C1.27937 16.8149 1.03248 16.5772 1.01724 16.2735C0.873981 13.6225 1.59964 11.4567 4.09111 11.0686C4.42661 11.0185 6.20738 11.1154 6.77459 10.4113C7.25648 9.6602 7.71689 8.99976 8.22923 8.44907C8.62563 8.01719 9.80588 7 10.3334 7H19.3129C19.5173 7 19.7154 7.11578 19.813 7.3193C20.9261 9.60408 24.2775 16.6333 19.5202 16.8179C18.9318 19.7286 14.9673 19.7254 14.3848 16.8147L8.45765 16.8145C7.87526 19.7282 3.90523 19.7287 3.32269 16.8149ZM6.94847 15.0811C5.5397 13.5787 3.41712 15.8885 4.83219 17.4003C6.24411 18.9026 8.36354 16.5928 6.94847 15.0811ZM18.011 15.0811C16.5991 13.5787 14.4766 15.8885 15.8947 17.4003C17.3035 18.9026 19.4259 16.5928 18.011 15.0811Z" fill="#23233D" stroke="#23233D" stroke-width="0.6"/>
@@ -222,7 +267,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
             
-                <div className="justify-start items-center gap-2 inline-flex" onClick={updateDateOfBirthClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateDateOfBirthClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="5" y="6" width="14" height="14" rx="4" stroke="#23233D" stroke-width="2"/>
@@ -237,7 +282,7 @@ export function PersonalDdetail()   {
                     </div>
                 </div>
 
-                <div className="justify-start items-center gap-2 inline-flex" onClick={profilePageClicked}>
+                <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={profilePageClicked}>
                     <div className="w-6 h-6 relative">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z" stroke="#23233D" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -266,14 +311,14 @@ export function PersonalDdetail()   {
                 </div> }
 
                 <div className="justify-start items-start gap-8">
-                    <div className="w-full justify-start items-start gap-4 mt-4" onClick={updateCivilIdFrontClicked}>
+                    <div className="w-full justify-start items-start gap-4 mt-4 cursor-pointer" onClick={updateCivilIdFrontClicked}>
                         <div className="text-[#22223d] text-lg font-semibold mb-4 leading-7">ID Photo Front</div>
                         <div className="min-h-[161px] bg-white rounded-2xl">
                             { user.candidate_civil_photo_back && <img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'photos/' + user.candidate_civil_photo_back } 
                                 className="w-full h-full object-cover rounded-2xl" /> }
                         </div>    
                     </div>
-                    <div className="w-full justify-start items-start gap-4 mt-4" onClick={updateCivilIdBackClicked}>
+                    <div className="w-full justify-start items-start gap-4 mt-4 cursor-pointer" onClick={updateCivilIdBackClicked}>
                         <div className="text-[#22223d] text-lg font-semibold leading-7 mb-4">ID Photo Back</div>
                         <div className="min-h-[161px] bg-white rounded-2xl">
                             { user.candidate_civil_photo_front && <img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'photos/' + user.candidate_civil_photo_front } 

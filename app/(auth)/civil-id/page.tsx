@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { profile, removeCivilPhotoBack, removeCivilPhotoFront, updateCivilIdAndExpiryDate, updateCivilPhotoBack, updateCivilPhotoFront, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
@@ -51,6 +51,8 @@ export default function PreferredTime() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const params = useSearchParams();
 
   useEffect(() => {
     if (!user) {
@@ -108,7 +110,10 @@ export default function PreferredTime() {
           } }));
         }
 
-        router.push('/preferred-time');
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/preferred-time');
       } else {
         alert(errorMessage(res.message));
       }
@@ -116,6 +121,9 @@ export default function PreferredTime() {
       setLoading(false);
     });
 
+    if (params && params.get('from-profile'))
+      router.push('/profile');
+    else
     router.push('/preferred-time');
   } 
 
@@ -193,13 +201,17 @@ export default function PreferredTime() {
       dispatch(setUser({ user: user! }));
 
     //if got both values 
+    
+    if (params && params.get('from-profile'))
+      router.push('/profile');
+    else
       router.push('/preferred-time');
     }
   }
 
   return (
     <> 
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">

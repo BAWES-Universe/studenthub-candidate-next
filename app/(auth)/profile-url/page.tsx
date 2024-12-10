@@ -16,7 +16,7 @@ import SubmitButton from "@/components/ui/submit-button";
 import { useEffect, useState } from "react";
 import { profile, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 
@@ -33,6 +33,7 @@ export default function PreferredTime() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const params = useSearchParams();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,6 +72,9 @@ export default function PreferredTime() {
           } }));
         }
 
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
         router.push('/complete');
       } else {
         alert(errorMessage(res.message));
@@ -82,7 +86,7 @@ export default function PreferredTime() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             Profile Url

@@ -16,7 +16,7 @@ import SubmitButton from "@/components/ui/submit-button";
 import { useEffect, useState } from "react";
 import { profile, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useParams, useRouter } from "next/navigation";
+import { useSearchParams, useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setIsProfileCompleted, setUser } from "@/store/slices/userSlice";
 import { resetPasswordRequest, updatePassword } from "@/providers/auth.service";
@@ -39,8 +39,10 @@ export default function UpdatePasswordPage() {
 
   const params = useParams();
 
-  const token: string = params.token as string;
+  const token: string = params?.token as string;
  
+  const sparams = useSearchParams();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,7 +85,7 @@ export default function UpdatePasswordPage() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !sparams?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         Type your new password

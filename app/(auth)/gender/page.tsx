@@ -8,7 +8,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { profile, updateGender } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
  
@@ -24,7 +24,8 @@ export default function Name() {
   const [gender, setGender] = useState<number>(user?.candidate_gender || 0);
   const [loading, setLoading] = useState(false);
  
-   
+  const params = useSearchParams();
+
   useEffect(() => {
       
     if (!user) {
@@ -56,6 +57,9 @@ export default function Name() {
             candidate_gender: gender
           } }));
 
+          if (params && params.get('from-profile'))
+            router.push('/profile');
+          else
           router.push('/nationality');
         } else {
           alert(errorMessage(res.message));
@@ -66,7 +70,7 @@ export default function Name() {
   
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             What is your gender?

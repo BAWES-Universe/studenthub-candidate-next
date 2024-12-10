@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { profile, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { saveEducation, updateEducation } from "@/providers/logged-in/candidate-education.service";
@@ -52,7 +52,7 @@ export default function Educations() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const params = useSearchParams();
   let formattedEducations: any[] = [];
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -117,7 +117,10 @@ export default function Educations() {
           } }));
         }
 
-        router.push('/skills');
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/skills');
       } else {
         alert(errorMessage(res.message));
       }
@@ -128,7 +131,7 @@ export default function Educations() {
 
   return (
     <div className="mb-[100px]">
-      <OnboardProgress />
+      { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         Where did you study?

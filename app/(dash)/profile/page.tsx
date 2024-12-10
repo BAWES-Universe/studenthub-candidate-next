@@ -7,9 +7,7 @@ import { Name } from '@/components/app/profile/name';
 import { PersonalDdetail } from '@/components/app/profile/personal-detail';
 import { Segments } from '@/components/app/profile/segments';
 import { WorkHistoryComponent } from '@/components/app/profile/work-history';
-import { Badge } from '@/components/ui/badge';
-// app/(dash)/profile/ProfilePage.jsx
-
+ 
 import { Candidate } from '@/models/candidate';
 import { CandidateEducation } from '@/models/candidate-education';
 import { CandidateWorkHistory } from '@/models/candidate-work-history';
@@ -23,6 +21,7 @@ import { setUser } from '@/store/slices/userSlice';
 import { useAppDispatch } from '@/store/store';
 import { useAppSelector } from '@/store/store';
 import { Ribbon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const ProfilePage = () => { 
@@ -33,6 +32,8 @@ const ProfilePage = () => {
     const [currentAssignments, setCurrentAssignments] = useState<CandidateWorkHistory[]>([]);   
     const { user } = useAppSelector(state => state.user) as { user: Candidate };
     const dispatch = useAppDispatch();
+
+    const router = useRouter();
 
     useEffect(() => {
         page('Profile Page');
@@ -70,18 +71,36 @@ const ProfilePage = () => {
             setCurrentAssignments(response.filter((e: CandidateWorkHistory) => e.end_date == null));
         });
     }
-
-    const updatePhoto = async () => {
-        // Logic to update photo
+ 
+    const updateSkillClicked = async () => {
+        router.push('/skills?from-profile=1', {
+            scroll: true
+        });
     };
 
-    const updateSkills = async () => {
-        // Logic to update skills
+    const updateEducationClicked = async () => {
+        router.push('/educations?from-profile=1', {
+            scroll: true
+        });
     };
 
-    const updateExperiences = async () => {
-        // Logic to update experiences
+    const updateExperienceClicked = async () => {
+        router.push('/experience?from-profile=1', {
+            scroll: true
+        });
     };
+    
+    const updateCVClicked = async () => {
+        router.push('/video?from-profile=1', {
+            scroll: true
+        });
+    };
+    
+    const updateVideoClicked  = async () => { 
+        router.push('/video?from-profile=1', {
+            scroll: true
+        });
+    }
 
     return (
         <div className='bg-[#f7f8fa]'>
@@ -102,7 +121,8 @@ const ProfilePage = () => {
 
                                 {/** todo: have resume + video here */}
                                 <div className="h-14 justify-start items-start gap-4 inline-flex">
-                                    <div className="p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
+
+                                    <div onClick={updateCVClicked} className="cursor-pointer p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
                                         <div className="justify-start items-center gap-1 inline-flex">
                                             <div className="w-6 h-6 relative">
                                                 <div className="w-6 h-6 left-0 top-0 absolute opacity-0 bg-white" />
@@ -114,7 +134,8 @@ const ProfilePage = () => {
                                             <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">CV / Portfolio</div>
                                         </div>
                                     </div>
-                                    <div className="p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
+
+                                    <div onClick={updateVideoClicked} className="cursor-pointer p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
                                         <div className="justify-start items-center gap-1 inline-flex">
                                             <div className="w-6 h-6 relative">
                                                 <div className="w-6 h-6 left-0 top-0 absolute opacity-0 bg-white" />
@@ -153,28 +174,34 @@ const ProfilePage = () => {
                                     ))}
                                 </>}
 
-                                <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                    <img className='w-6 h-6 inline me-2' src="/assets/images/icon-suitcase.svg" /> Experiences
-                                </h5>
-                                { user.candidateExperiences?.map((experience: CandidateExperience) => (
-                                    <Experience key={experience.candidate_experience_id} experience={experience} />
-                                ))}
+                                <div className='cursor-pointer' onClick={updateExperienceClicked}>   
+                                    <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-suitcase.svg" /> Experiences
+                                    </h5>
+                                    { user.candidateExperiences?.map((experience: CandidateExperience) => (
+                                        <Experience key={experience.candidate_experience_id} experience={experience} />
+                                    ))}
+                                </div>     
 
-                                <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                    <img className='w-6 h-6 inline me-2' src="/assets/images/icon-puzzle.svg" /> Skills
-                                </h5>
-                                { user.candidateSkills?.map((candidateSkill: CandidateSkill) => (
-                                    <span className='inline justify-center items-center gap-2.5 [background:var(--Neutral-0,#FFF)] px-3 py-1.5 rounded-lg
-                                        text-[color:var(--Neutral-90,#4B4B61)] me-2 mb-2 text-sm font-medium leading-5' 
-                                        key={candidateSkill.candidate_skill_id}>{candidateSkill.skill}</span>
-                                ))}
+                                <div className='cursor-pointer' onClick={updateSkillClicked}> 
+                                    <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-puzzle.svg" /> Skills
+                                    </h5>
+                                    { user.candidateSkills?.map((candidateSkill: CandidateSkill) => (
+                                        <span className='inline justify-center items-center gap-2.5 [background:var(--Neutral-0,#FFF)] px-3 py-1.5 rounded-lg
+                                            text-[color:var(--Neutral-90,#4B4B61)] me-2 mb-2 text-sm font-medium leading-5' 
+                                            key={candidateSkill.candidate_skill_id}>{candidateSkill.skill}</span>
+                                    ))}
+                                </div>
 
+                                <div className='cursor-pointer' onClick={updateEducationClicked}>
                                 <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 mb-4 mt-6'>
                                     <Ribbon className='w-6 h-6 inline' /> Educations
                                 </h5>
                                 { user.candidateEducations?.map((candidateEducation: CandidateEducation) => (
                                     <Education key={candidateEducation.education_uuid} education={candidateEducation}></Education>
                                 ))}
+                                </div>
                             </>
                         )}
 

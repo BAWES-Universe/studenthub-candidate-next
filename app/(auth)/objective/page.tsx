@@ -17,9 +17,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { profile, updateObjective, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { FormTextarea } from "@/components/ui/form-textarea";
 
 const formSchema = z.object({
     objective: z.string({
@@ -33,7 +34,7 @@ export default function Objective() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const params = useSearchParams();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,6 +72,9 @@ export default function Objective() {
           } }));
         }
 
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
         router.push('/video');
       } else {
         alert(errorMessage(res.message));
@@ -82,7 +86,7 @@ export default function Objective() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
           What’s your objective?
@@ -95,7 +99,8 @@ export default function Objective() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
-            <Textarea
+            <FormTextarea
+              label=""
               name="objective"
               placeholder="Small brief about yourself"
               form={form as any}

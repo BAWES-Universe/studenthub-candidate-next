@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useSearchParams, useParams, useRouter } from "next/navigation";
 import { resendVerificationEmail, verifyEmail } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
 import { useAppDispatch } from "@/store/store";
@@ -52,8 +52,9 @@ export default function VerifyEmailPage() {
   const dispatch = useAppDispatch();
 
   const params = useParams();
+  const sparams = useSearchParams();
 
-  const email: string = decodeURIComponent(params.email as string); // Access the dynamic parameter
+  const email: string = decodeURIComponent(params?.email as string); // Access the dynamic parameter
  
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -122,7 +123,9 @@ export default function VerifyEmailPage() {
 
         if (res.isProfileCompleted) {
           router.push('/');
-        } else {
+        } else if (sparams && sparams.get('from-profile'))
+          router.push('/profile');
+        else {
           router.push('/phone-number');
         }
 
@@ -180,7 +183,7 @@ export default function VerifyEmailPage() {
   
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !sparams?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
             We’ve sent you a code on your email

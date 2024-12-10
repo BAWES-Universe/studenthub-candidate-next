@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { profile, updateExperiences, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { saveExperience } from "@/providers/logged-in/candidate-experience.service";
@@ -43,7 +43,7 @@ export default function Experiences() {
   const router = useRouter();
 
   const { t } = useTranslation();
-
+  const params = useSearchParams();
   let formattedExperiences: any[] = [];
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -106,7 +106,10 @@ export default function Experiences() {
           } }));
         }
 
-        router.push('/education-complete');
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/education-complete');
       } else {
         alert(errorMessage(res.message));
       }
@@ -117,7 +120,7 @@ export default function Experiences() {
 
   return (
     <div className="mb-[100px]">
-      <OnboardProgress />
+      { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         { t("Do you have any work experience?")}

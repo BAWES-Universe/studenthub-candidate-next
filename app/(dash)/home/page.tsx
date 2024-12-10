@@ -132,7 +132,8 @@ const DashboardPage = () => {
                             </CardHeader>
                             <CardContent>    
                                 <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">You won’t be able to receive payments until we have your valid civil ID.</p>
-                                <Button variant={'outline'} className="btn-civil-detail" onClick={() => router.push('/civil-id')}>
+                                <Button variant={'outline'} className="btn-civil-detail" onClick={
+                                    () => router.push('/civil-id?from-profile=1')}>
                                     Upload Civil ID
                                 </Button>
                             </CardContent>
@@ -164,7 +165,8 @@ const DashboardPage = () => {
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
                             While optional, an intro video makes your profile stand out to employers. It shows that you have the confidence required for the job and gives them the first impression they need to see you as something more than just a paper CV.
                             </p>
-                            <Button variant={'outline'} className="btn-video-recording" onClick={() => router.push('/video')}>
+                            <Button variant={'outline'} className="btn-video-recording" 
+                                onClick={() => router.push('/video?from-profile=1')}>
                                 I’d like to start recording
                             </Button>
                         </CardContent>

@@ -15,7 +15,7 @@ import SubmitButton from "@/components/ui/submit-button";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
-import { useRouter } from 'next/navigation'; 
+import { useSearchParams, useRouter } from 'next/navigation'; 
 import { profile } from "@/providers/logged-in/account.service";
 
 const formSchema = z.object({
@@ -36,6 +36,7 @@ export default function Name() {
   const router = useRouter()
 
   const [loading, setLoading] = useState(false);
+  const params = useSearchParams();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,6 +55,7 @@ export default function Name() {
       profile().then(res => {
         dispatch(setUser({ user: res }));
         form.setValue('name_en', res.candidate_name || "");
+
         form.setValue('name_ar', res.candidate_name_ar || "");
       }).finally(() => {
         setLoading(false);
@@ -72,12 +74,15 @@ export default function Name() {
       }
     }));
 
-    router.push("/email");
+    if (params && params.get('from-profile'))
+      router.push('/profile');
+    else
+      router.push("/email");
   } 
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             What’s your name, hero?

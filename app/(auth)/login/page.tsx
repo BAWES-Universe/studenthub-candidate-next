@@ -17,7 +17,7 @@ import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { basicAuth } from "@/providers/auth.service";
 import { useState } from "react";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
-import { useRouter } from 'next/navigation'; 
+import { useSearchParams, useRouter } from 'next/navigation'; 
 import Link from "next/link";
  
 
@@ -33,6 +33,8 @@ export default function Email() {
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState(false);
+
+  const params = useSearchParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,7 +72,7 @@ export default function Email() {
 
   return (
     <div className="bg-[#fff]">
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
           What is your email address?

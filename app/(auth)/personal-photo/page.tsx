@@ -15,7 +15,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { profile, updatePhoneDetail, updateProfilePhoto } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
@@ -40,7 +40,7 @@ export default function PersonalPhoto() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const params = useSearchParams();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -87,6 +87,9 @@ export default function PersonalPhoto() {
           } }));
         }
 
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
         router.push('/about-yourself');
       } else {
         alert(errorMessage(res.message));
@@ -105,7 +108,7 @@ export default function PersonalPhoto() {
   
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
             Show us what you look like

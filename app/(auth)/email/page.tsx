@@ -14,7 +14,7 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { useEffect, useState } from "react";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createAccount } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
 import { setUnVerifiedToken } from "@/store/slices/authSlice";
@@ -35,7 +35,7 @@ export default function Email() {
   const router = useRouter()
   
   const { user } = useAppSelector((state: RootState) => state.user);
-
+  const params = useSearchParams();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -120,7 +120,7 @@ export default function Email() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
           What is your email address?

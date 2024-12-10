@@ -18,7 +18,7 @@ interface FormInputProps {
   name: string,
   label: string,
   form: UseFormReturn,
-  type?: string,
+  placeholder?: string,
   helper?: string,
   inputDir?: string,
   onFocus?: () => void,
@@ -29,8 +29,8 @@ export function FormTextarea({
   name,
   label,
   form,
-  type = "text",
   helper,
+  placeholder = " ",
   inputDir = "ltr",
   onFocus,
   autoComplete = "on"
@@ -50,7 +50,7 @@ export function FormTextarea({
               dir={inputDir}
               {...field}
               id={id} 
-              placeholder=" "  // Empty space needed for peer styling
+              placeholder={ placeholder || " " }  // Empty space needed for peer styling
               onFocus={onFocus}
               autoComplete={autoComplete}
               className={`bg-white peer h-[92px] py-[16px] px-[24px] border-gray-300 w-full 

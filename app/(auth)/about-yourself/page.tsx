@@ -16,9 +16,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { profile, updateIntro, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
+import { FormTextarea } from "@/components/ui/form-textarea";
 
 
 const formSchema = z.object({
@@ -29,6 +30,8 @@ const formSchema = z.object({
 
 export default function AboutYourself() {
 
+  const params = useSearchParams();
+  
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
@@ -49,6 +52,7 @@ export default function AboutYourself() {
       profile().then(res => {
         dispatch(setUser({ user: res }));
         form.setValue('candidate_intro', res.candidate_intro || "");
+        form.trigger('candidate_intro');
       }).finally(() => {
         setLoading(false);
       });
@@ -58,6 +62,8 @@ export default function AboutYourself() {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     
+    console.log("values", values);
+
     setLoading(true);
 
     updateIntro(values.candidate_intro).then(res => {
@@ -70,7 +76,11 @@ export default function AboutYourself() {
           } }));
         }
 
-        router.push('/objective');
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/objective');
+
       } else {
         alert(errorMessage(res.message));
       }
@@ -81,7 +91,7 @@ export default function AboutYourself() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
             Tell us about yourself
@@ -94,7 +104,8 @@ export default function AboutYourself() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
-            <Textarea
+            <FormTextarea
+              label=""
               name="candidate_intro"
               placeholder="Small brief about yourself"
               form={form as any}

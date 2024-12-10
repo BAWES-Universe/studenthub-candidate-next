@@ -18,7 +18,7 @@ import { errorMessage } from "@/utils/common";
 import { profile, updateBirthDate } from "@/providers/logged-in/account.service";
 import { useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/store/store";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const formSchema = z.object({
   candidate_birth_date: z.date().min(new Date(new Date().setFullYear(new Date().getFullYear() - 25)), {
@@ -33,7 +33,7 @@ export default function Name() {
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
-   
+  const params = useSearchParams();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,7 +73,10 @@ export default function Name() {
           } }));
         }
 
-        router.push('/gender');
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/gender');
       } else {
         alert(errorMessage(res.message));
       }
@@ -84,7 +87,7 @@ export default function Name() {
 
   return (
     <>
-        <OnboardProgress></OnboardProgress>
+        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             When were you born?

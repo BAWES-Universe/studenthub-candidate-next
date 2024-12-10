@@ -8,21 +8,35 @@ import {
     PopoverTrigger,
   } from "@/components/ui/popover"
 import { CandidateAction } from "./action";
+import { useRouter } from 'next/navigation';
 
 export function Name() {
 
     const { user } = useAppSelector(state => state.user) as { user: Candidate };
+    const router = useRouter();
+
+    const updateNameClicked = async () => {
+        router.push('/name?from-profile=1', {
+            scroll: true
+        });
+    };
+
+    const updatePhotoClicked = async () => {
+        router.push('/personal-photo?from-profile=1', {
+            scroll: true
+        });
+    };
 
     return (
         <div className="w-full h-20 justify-start items-center gap-4 inline-flex mt-4">
-            { user.candidate_personal_photo && <img className="w-20 h-20 relative rounded-[44px]" src={process.env.NEXT_PUBLIC_CLOUDINARY_URL + 'candidate-photo/' + 
+            { user.candidate_personal_photo && <img className="w-20 h-20 relative rounded-[44px] cursor-pointer" onClick={updatePhotoClicked} src={process.env.NEXT_PUBLIC_CLOUDINARY_URL + 'candidate-photo/' + 
                 user.candidate_personal_photo} /> }
             { !user.candidate_personal_photo && <img src="/assets/images/avatar.jpg" /> }
 
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
                 <div className="w-full justify-start items-center gap-6 inline-flex">
                     <div className="grow shrink basis-0 text-[#22223d] text-2xl font-bold leading-loose">
-                        {user.candidate_name}
+                        <span className="cursor-pointer" onClick={updateNameClicked}>{user.candidate_name}</span>
 
                         <Popover>
                             <PopoverTrigger asChild>
@@ -38,8 +52,8 @@ export function Name() {
                     </div>
                 </div>
                 <div className="justify-start items-center gap-6 inline-flex">
-                    <div className="grow shrink basis-0 text-[#22223d] text-base font-bold leading-normal">
-                        {user.candidate_name_ar}
+                    <div className="grow shrink basis-0 text-[#22223d] text-base font-bold leading-normal cursor-pointer" onClick={updateNameClicked}>
+                        {user.candidate_name_ar} 
                     </div>
                 </div>
             </div>
