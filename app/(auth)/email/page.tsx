@@ -18,7 +18,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { createAccount } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
 import { setUnVerifiedToken } from "@/store/slices/authSlice";
-import { profile } from "@/providers/logged-in/account.service";
+import { profile, updateEmail } from "@/providers/logged-in/account.service";
 import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
 
@@ -91,7 +91,12 @@ export default function Email() {
   }
 
   function onValidCaptcha(values: any) {
-    createAccount(values).then(res => {
+
+    const fromProfile = params?.get('from-profile');
+
+    const action = fromProfile ? updateEmail(values.email): createAccount(values);
+
+    action.then(res => {
 
       if (res.operation == 'success') {
 
@@ -99,7 +104,7 @@ export default function Email() {
           token: res.unVerifiedToken
         }));
       
-        router.push('/verify-email/' + values.email);
+        router.push('/verify-email/' + values.email + '?from-profile=' + fromProfile);
 
       } else if (res.operation === 'error') {
 

@@ -21,7 +21,7 @@ import { resendVerificationEmail, verifyEmail } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
 import { useAppDispatch } from "@/store/store";
 import { setCredentials, setUnVerifiedToken } from "@/store/slices/authSlice";
-import { setIsProfileCompleted } from "@/store/slices/userSlice";
+import { setIsProfileCompleted, setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
  
 const formSchema = z.object({
@@ -129,6 +129,13 @@ export default function VerifyEmailPage() {
 
         dispatch(setIsProfileCompleted({ 
           isProfileCompleted: res.isProfileCompleted
+        }));
+
+        dispatch(setUser({
+          user: {
+            ...res.user,
+            candidate_email: res.email 
+          }
         }));
 
         if (res.isProfileCompleted) {
