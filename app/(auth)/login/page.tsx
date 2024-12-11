@@ -20,7 +20,7 @@ import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import Link from "next/link";
 import { page, track } from "@/providers/analytics.service";
- 
+
 
 const formSchema = z.object({
   email: z.string().email('Please enter valid email address'),
@@ -112,6 +112,7 @@ export default function Email() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
+
     </div>
   );
 }

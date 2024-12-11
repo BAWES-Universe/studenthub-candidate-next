@@ -26,6 +26,7 @@ import { getPlacePredictions, placeDetail } from "@/providers/logged-in/google-m
 import { FormSelect } from "@/components/ui/form-select";
 import { Country } from "@/models/country";
 import { Area } from "@/models/area";
+import Script from "next/script";
 
 
 const formSchema = z.object({
@@ -398,6 +399,14 @@ export default function AreaPage() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
+
+        <Script
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSM8o4WSIIRn-sNhn-PvO2s0ovZuLDAaw&libraries=places" // Replace with your script URL
+          strategy="lazyOnload" // Load the script after the page has loaded
+          onLoad={() => {
+            console.log('google places loaded');
+         }}
+        />
     </>
   );
 

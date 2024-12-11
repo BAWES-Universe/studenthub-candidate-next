@@ -1,9 +1,17 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import Spinner from "../common/spinner";
+import { useEffect, useState } from "react";
+import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
+import { useGoogleIdTokenForAuth } from "@/providers/auth.service";
+import { setCredentials } from "@/store/slices/authSlice";
+import { setIsProfileCompleted } from "@/store/slices/userSlice";
+import { useTranslation } from "react-i18next";
+import Script from "next/dist/client/script";
  
 //import Rocket from '../../public/'; // Adjust the path as necessary
 
@@ -14,7 +22,65 @@ export function Hero() {
   if (isAuthenticated) {
     redirect('/home');
   }
-  
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
+  const { t } = useTranslation();
+
+  const loginByGoogle = () => {
+    setGoogleLoginLoading(true);
+
+    GoogleAuth.signIn().then(async googleUser => {
+
+      console.log(googleUser);
+
+      if (googleUser && googleUser.authentication && googleUser.authentication.idToken) {
+        const res = await useGoogleIdTokenForAuth(googleUser.authentication.idToken);
+
+        console.log(res);
+
+        if (res.operation == 'success') {
+          // After successful login
+          dispatch(setCredentials({
+            token: res.token
+          }));
+
+          dispatch(setIsProfileCompleted({ 
+            isProfileCompleted: res.isProfileCompleted
+          }));
+    
+          //todo: set language based on saved preference?
+          //language_pref
+
+          router.push('/home');
+
+        } else {
+          alert(res.message);
+        }
+      } else {
+        alert('Error getting login by Google');
+      }
+    }).catch(async err => {
+ 
+      if (err = 'popup_closed_by_user') {
+        alert(err);
+        return false;
+      }
+
+      alert('Error getting login by Google');
+    }).finally(() => {
+      setGoogleLoginLoading(false);
+    });
+  }
+
+  useEffect(() => {
+    GoogleAuth.initialize({
+      clientId: '123188361193-od1ehqo4c35cle8mtplqetoenussu650.apps.googleusercontent.com',
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: true,
+    });
+  }, []);
+
   return (
 
     <div className="flex  min-h-screen flex-col items-center  text-center px-4 p-[16px]">
@@ -28,12 +94,25 @@ export function Hero() {
         Let&apos;s get you working!
       </h1>
       
+      <Button variant="outline" size="lg" disabled={googleLoginLoading} onClick={loginByGoogle} 
+          className=" sm:w-[300px] h-[56px] mt-8">
+          { googleLoginLoading && <Spinner />}
+          { !googleLoginLoading && <>
+              <img src='/assets/images/google.svg' />{t("Log in with Google")}</> 
+          }
+        </Button>
+        
       <div className="xs:flex sm:block xs:bottom-[76px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
+        
         <Link href="/name">
         <Button size="lg" className=" sm:w-[300px] h-[56px]">
           Let&apos;s do it!
         </Button>
         </Link>
+        
+
+
+        
         <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
       </div>
 
@@ -51,6 +130,14 @@ export function Hero() {
           </Link>
         </p>
       </div>
+
+      <Script
+          src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js" // Replace with your script URL
+          strategy="lazyOnload" 
+          onLoad={() => {
+            console.log('google places loaded');
+         }}
+        />
     </div>
   );
 }

@@ -66,24 +66,11 @@ export default function RootLayout({
 
         {children} 
 
-        <Script strategy="lazyOnload" src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
+        <Script strategy="lazyOnload" 
+          src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
 
-        <Script
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSM8o4WSIIRn-sNhn-PvO2s0ovZuLDAaw&libraries=places" // Replace with your script URL
-          strategy="lazyOnload" // Load the script after the page has loaded
-          onLoad={() => {
-            console.log('google places loaded');
-         }}
-        />
+
 {/*
-      <Script
-          src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js" // Replace with your script URL
-          strategy="lazyOnload" 
-          onLoad={() => {
-            console.log('google places loaded');
-         }}
-        />
-
       <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-Q2JP5Y7ZNF"></Script>
 
       <Script strategy="afterInteractive"
