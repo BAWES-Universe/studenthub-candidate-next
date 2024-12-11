@@ -47,7 +47,7 @@ export function FormDateInput({
         <FormItem className="relative">
           <div className="relative ">
 
-            <div className='absolute end-4 top-[22px]'>
+            <div className='absolute end-4 top-[22px] z-10'>
               <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="5" y="6.89258" width="14" height="14" rx="4" stroke="#7D7D8D" stroke-width="2"/>
               <path d="M19 11.8926L5 11.8926" stroke="#7D7D8D" stroke-width="2"/>

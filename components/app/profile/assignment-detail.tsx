@@ -6,7 +6,7 @@ export function AssignmentDetail({ history }: { history: CandidateWorkHistory })
 
     const { t } = useTranslation();
 
-    return (<div className="w-full p-6 flex-col justify-start items-start gap-6 inline-flex">
+    return (<div className="w-full flex-col justify-start items-start gap-6 inline-flex">
         <div className="text-[#22223d] text-lg font-semibold leading-7">Assignment Details</div>
 
         <div className="self-stretch h-12 flex-col justify-start items-start gap-4 flex">

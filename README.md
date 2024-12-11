@@ -41,13 +41,4 @@ https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
 
-## pages to fix
- 
-experience 
-education 
-personal photo 
-video/ cv 
-civil id 
-dob need new field 
-
-need adjustment 
+https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev

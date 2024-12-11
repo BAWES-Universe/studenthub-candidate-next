@@ -18,10 +18,7 @@ import Script from "next/dist/client/script";
 export function Hero() {
 
   const { isAuthenticated } = useAppSelector(state => state.auth) as { isAuthenticated: boolean };
-
-  if (isAuthenticated) {
-    redirect('/home');
-  }
+  
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
@@ -41,14 +38,15 @@ export function Hero() {
 
         if (res.operation == 'success') {
           // After successful login
-          dispatch(setCredentials({
-            token: res.token
-          }));
 
           dispatch(setIsProfileCompleted({ 
             isProfileCompleted: res.isProfileCompleted
           }));
     
+          dispatch(setCredentials({
+            token: res.token
+          }));
+
           //todo: set language based on saved preference?
           //language_pref
 
@@ -74,11 +72,18 @@ export function Hero() {
   }
 
   useEffect(() => {
+   
+    // Redirect if authenticated
+    if (isAuthenticated) {
+      return redirect('/home');
+    }
+
     GoogleAuth.initialize({
       clientId: '123188361193-od1ehqo4c35cle8mtplqetoenussu650.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
       grantOfflineAccess: true,
     });
+
   }, []);
 
   return (
@@ -94,7 +99,7 @@ export function Hero() {
         Let&apos;s get you working!
       </h1>
       
-      <Button variant="outline" size="lg" disabled={googleLoginLoading} onClick={loginByGoogle} 
+      <Button variant="outline" size="lg" disabled={googleLoginLoading} onClick={() => loginByGoogle()} 
           className=" sm:w-[300px] h-[56px] mt-8">
           { googleLoginLoading && <Spinner />}
           { !googleLoginLoading && <>
@@ -109,10 +114,7 @@ export function Hero() {
           Let&apos;s do it!
         </Button>
         </Link>
-        
-
-
-        
+                
         <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
       </div>
 

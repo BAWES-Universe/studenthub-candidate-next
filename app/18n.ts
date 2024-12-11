@@ -2,7 +2,13 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-xhr-backend';
+import { store } from "@/store/store";
  
+
+const state = store.getState(); // Get the state directly from the store
+  
+const { language } = state.app;
+
 i18n
 .use(Backend)
 .use(initReactI18next) // passes i18n down to react-i18next
@@ -24,9 +30,9 @@ i18n
    backend: {
     loadPath: '/locales/{{lng}}/translation.json', // Path to translation files
   },
-  debug: true, // Enable debug mode for development
+  debug: false, // Enable debug mode for development
 
-  lng:  "ar", // default language
+  lng:  language? language: "ar", // default language
   fallbackLng: "en",
    
   interpolation: {

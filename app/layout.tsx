@@ -38,11 +38,6 @@ export default function RootLayout({
   const state = store.getState(); // Get the state directly from the store
 
   const { isAuthenticated } = state.auth;  
-  const { language } = state.app;
-
-  useEffect(() => {
-    setMixpanel();
-  }, []);
 
   //useEffect(() => {
      
@@ -51,10 +46,16 @@ export default function RootLayout({
     } else if (isAuthenticated && ["/", ""].includes(window?.location.pathname)) {
       return redirect('/home');
     }
-    
-  i18n.changeLanguage(language);
-  
+
   //}, [isAuthenticated, router]);
+
+  useEffect(() => {
+    console.log("language", i18n.language)
+    
+    //i18n.changeLanguage(language);
+
+    setMixpanel();
+  }, []);
 
   return (
     <Provider store={store}>

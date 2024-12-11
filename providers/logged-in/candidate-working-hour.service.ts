@@ -8,10 +8,11 @@ const _workingHourEndpoint = '/candidate-working-hours';
    * Return working dates
    * @returns {Observable<any>}
    */
-export async function listWorkingDates(page: number, params = '&expand=company,dateListByCandidate'): Promise<any> {
-  const url = _workingHourEndpoint + '/date?page=' + page + params;
+export async function listWorkingDates(page: number, params = '&expand=store,store.company'): Promise<any> {
+  const url = _workingHourEndpoint + `/working-dates?page=${page}&expand=${params}`;
+  //const url = _workingHourEndpoint + '/date?page=' + page + params;
   const response = await axios.get(url);
-  return response.data;
+  return response;
 }
 
 /**

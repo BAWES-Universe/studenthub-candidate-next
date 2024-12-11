@@ -35,6 +35,11 @@ const ProfilePage = () => {
 
     const router = useRouter();
 
+    const segments = [
+        { key: 'work-details', value: 'Work Details' },
+        { key: 'personal-details', value: 'Personal Details' }
+    ];
+
     useEffect(() => {
         page('Profile Page');
 
@@ -110,7 +115,7 @@ const ProfilePage = () => {
                     <div className=' bg-white'>
                         <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05)">
                             <Name />
-                            <Segments onChange={(segment) => setSegment(segment)} segment={segment} />
+                            <Segments segments={segments} onChange={(segment) => setSegment(segment)} segment={segment} />
                         </div>    
                     </div>
                     
@@ -124,25 +129,32 @@ const ProfilePage = () => {
 
                                     <div onClick={updateCVClicked} className="cursor-pointer p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
                                         <div className="justify-start items-center gap-1 inline-flex">
-                                            <div className="w-6 h-6 relative">
-                                                <div className="w-6 h-6 left-0 top-0 absolute opacity-0 bg-white" />
-                                                <div className="w-[13px] h-4 left-[6px] top-[3px] absolute">
-                                                    <div className="w-1 h-[5px] left-[4.50px] top-[8px] absolute">
-                                                    </div>
-                                                </div>
+                                            <div className="w-6 h-6 relative me-1">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.5 11L12.5 15.9999" stroke="#23233D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M14.5 14.3335L12.5 16.0001L10.5 14.3335" stroke="#23233D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M18.0714 19H6.92857C6.41574 19 6 18.602 6 18.1111L6 3.88889C6 3.39797 6.41574 3 6.92857 3L13.9514 3C14.2101 3 14.457 3.10328 14.6328 3.28497L18.7528 7.54441C18.9117 7.70872 19 7.9244 19 8.14833L19 18.1111C19 18.602 18.5843 19 18.0714 19Z" stroke="#23233D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M19 8H13.9444C13.4842 8 13.1111 7.6269 13.1111 7.16667L13.1111 3" stroke="#23233D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+
                                             </div>
-                                            <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">CV / Portfolio</div>
+                                            <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">
+                                                CV / Portfolio
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div onClick={updateVideoClicked} className="cursor-pointer p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex">
                                         <div className="justify-start items-center gap-1 inline-flex">
-                                            <div className="w-6 h-6 relative">
-                                                <div className="w-6 h-6 left-0 top-0 absolute opacity-0 bg-white" />
-                                                <div className="w-[18px] h-[18px] left-[3px] top-[3px] absolute">
-                                                </div>
+                                            <div className="w-6 h-6 relative me-1">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#23233D" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <path d="M14.9104 12.4287C15.2341 12.2345 15.2341 11.7655 14.9104 11.5713L10.7572 9.07935C10.424 8.87939 10 9.11945 10 9.5081V14.4919C10 14.8806 10.424 15.1206 10.7572 14.9207L14.9104 12.4287Z" stroke="#23233D" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
                                             </div>
-                                            <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">Intro Video</div>
+                                            <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">
+                                                Intro Video
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

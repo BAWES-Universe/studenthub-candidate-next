@@ -1,93 +1,68 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { secondsToTime } from '@/utils/common';
-import { format } from 'date-fns';
-import { CandidateWorkingDate } from '@/models/candidate-working-date';
+import { CandidateWorkingDate } from "@/models/candidate-working-date";
+import { secondsToTime } from "@/utils/common";
+import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
-const WorkLogDay = ({ candidateWorkingDate }: { candidateWorkingDate: CandidateWorkingDate}) => {
-  const { t } = useTranslation();
+export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingDate: CandidateWorkingDate}) {
 
-  return (
-    <div className="mb-4 p-4 rounded-lg bg-white shadow-md">
-      <div className="cursor-pointer" onClick={() => {/* handle navigation */}}>
-        <span className="text-gray-600 text-sm font-medium">{t("Total Time")}</span>
+    const {t } = useTranslation();
+    
+    return (
 
-        <ul className="flex gap-2 mt-2">
-          {candidateWorkingDate.total_pending > 0 && (
-            <li className="bg-orange-200 text-orange-800 px-2 py-1 rounded">{candidateWorkingDate.total_pending}</li>
-          )}
-          {candidateWorkingDate.total_approved > 0 && (
-            <li className="bg-green-200 text-green-800 px-2 py-1 rounded">{candidateWorkingDate.total_approved}</li>
-          )}
-          {candidateWorkingDate.total_rejected > 0 && (
-            <li className="bg-red-200 text-red-800 px-2 py-1 rounded">{candidateWorkingDate.total_rejected}</li>
-          )}
-        </ul>
+        <div className="w-full h-[92px] p-4 bg-white rounded-lg shadow flex-col justify-center items-start gap-2 inline-flex mb-6">
+            <div className="self-stretch h-[60px] flex-col justify-start items-start gap-2 flex">
+                <div className="self-stretch justify-start items-start gap-2 inline-flex">
+                    <div className="grow shrink basis-0 text-[#0f0f2c] text-lg font-medium leading-7">
+                    {format(candidateWorkingDate.date || '', 'eee, d MMM')}
+                    </div>
 
-        <h4 className="text-gray-900 text-lg font-semibold mt-4">
-          {candidateWorkingDate.total_time ? 
-            secondsToTime(candidateWorkingDate.total_time) : 
-            "00:00"}
-        </h4>
+                    { candidateWorkingDate.end_time && <div className="h-6 px-1.5 py-0.5 bg-[#f5f5f7] rounded-md justify-start items-center gap-2.5 inline-flex">
+                        {candidateWorkingDate.total_pending > 0 && <div className="justify-start items-center gap-1 flex">
+                            <div className="w-3.5 h-3.5 bg-[#f2994a] rounded-full"></div>
+                            <div className="text-[#22223d] text-xs font-medium leading-none">
+                                {candidateWorkingDate.total_pending}
+                            </div>
+                        </div> }
 
-        <div className="border-t border-gray-300 mt-4 pt-4">
-          <div className="flex justify-between">
-            <div className="flex items-center">
-              <b className="text-gray-900 font-semibold mr-1">{t("Start Time:")}</b>
-              <span>
-                {candidateWorkingDate.start_time ? 
-                  format(candidateWorkingDate.start_time || '', 'hh:mm a') : 
-                  "00:00"}
-              </span>
+                        {candidateWorkingDate.total_approved > 0 && <div className="justify-start items-center gap-1 flex">
+                            <div className="w-3.5 h-3.5 bg-[#28b563] rounded-full"></div>
+                            <div className="text-[#22223d] text-xs font-medium leading-none">
+                                {candidateWorkingDate.total_approved}
+                            </div>
+                        </div> }
+
+                        {candidateWorkingDate.total_rejected > 0 && <div className="justify-start items-center gap-1 flex">
+                            <div className="w-3.5 h-3.5 bg-[#eb5757] rounded-full"></div>
+                            <div className="text-[#22223d] text-xs font-medium leading-none">
+                                {candidateWorkingDate.total_rejected}
+                            </div>
+                        </div> }
+
+                    </div> }
+
+                    { !candidateWorkingDate.end_time && <div className="h-6 px-1.5 py-0.5 bg-[#f5f5f7] rounded-md justify-start items-center gap-2.5 inline-flex">
+                        <div className="justify-start items-center gap-1 flex">
+                            <div className="w-3.5 h-3.5 bg-[#4c6ff2] rounded-full"></div>
+                            <div className="text-[#22223d] text-xs font-medium leading-none">Working</div>
+                        </div>
+                    </div> }
+                </div>
+                <div className="self-stretch justify-start items-start gap-1 inline-flex">
+                    <div className="grow shrink basis-0 text-[#22223d] text-base font-medium leading-normal">
+                    {candidateWorkingDate.end_time ? 
+                                secondsToTime(candidateWorkingDate.total_time || 0) : t("On-Going")}
+                    </div>
+                    <div className="justify-end items-center gap-2 flex">
+                        <div className="text-[#4b4b61] text-sm font-normal leading-tight">{format(candidateWorkingDate.start_time || '', 'hh:mm a')}</div>
+                        <div className="w-6 h-6 relative">
+                            <span className="mx-2">→</span>
+                        </div>
+                        <div className="text-[#4b4b61] text-sm font-normal leading-tight">
+                            {candidateWorkingDate.end_time ? format(candidateWorkingDate.end_time, 'hh:mm a') : t("Now")}
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div className="flex items-center">
-              <b className="text-gray-900 font-semibold mr-1">{t("End Time:")}</b>
-              <span>
-                {candidateWorkingDate.end_time ? 
-                  format(candidateWorkingDate.end_time || '', 'hh:mm a')  : 
-                  "00:00"}
-              </span>
-            </div>
-          </div>
         </div>
-
-        <ul className="flex gap-2 mt-3">
-          {candidateWorkingDate.total_pending > 0 && (
-            <li className="bg-orange-200 text-orange-800 px-2 py-1 rounded">
-              {candidateWorkingDate.total_pending} {t("Pending")}
-            </li>
-          )}
-          {candidateWorkingDate.total_approved > 0 && (
-            <li className="bg-green-200 text-green-800 px-2 py-1 rounded">
-              {candidateWorkingDate.total_approved} {t("Approved")}
-            </li>
-          )}
-          {candidateWorkingDate.total_rejected > 0 && (
-            <li className="bg-red-200 text-red-800 px-2 py-1 rounded">
-              {candidateWorkingDate.total_rejected} {t("Rejected")}
-            </li>
-          )}
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-// PropTypes for type checking
-WorkLogDay.propTypes = {
-  candidateWorkingDate: PropTypes.shape({
-    candidate_id: PropTypes.string,
-    date: PropTypes.string,
-    store_id: PropTypes.string,
-    total_pending: PropTypes.number,
-    total_approved: PropTypes.number,
-    total_rejected: PropTypes.number,
-    total_time: PropTypes.number,
-    start_time: PropTypes.string,
-    end_time: PropTypes.string,
-  }).isRequired,
-};
-
-export default WorkLogDay;
+    );
+}

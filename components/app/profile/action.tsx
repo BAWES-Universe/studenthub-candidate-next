@@ -13,7 +13,7 @@ export function CandidateAction() {
 
     const logoutClicked = () => {   
         dispatch(logout());
-        router.push("/login");    
+        router.push("/");    
     }
 
     const changeLanguageClicked = () => {

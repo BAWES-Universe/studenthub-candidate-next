@@ -11,6 +11,7 @@ export default function OnboardNav() {
     const [canGoBack, setCanGoBack] = useState(false);
     //const [canGoForward, setCanGoForward] = useState(false);
     const { canGoForward } = useSelector((state: StoreState) => state.app);
+    
     useEffect(() => {
        // console.log("state", window.history, window.history.state.idx, window.history.state.length)
         if (typeof window !== 'undefined' && window.history && window.history.length > 1) {

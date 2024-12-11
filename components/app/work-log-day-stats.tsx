@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-export function CandidateAction() {
+export function WorkLogDayStats() {
     const { t } = useTranslation();
     
     return (

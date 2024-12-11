@@ -1,12 +1,14 @@
 import { CandidateWorkHistory } from "@/models/candidate-work-history";
 import { ChevronRight, ChevronRightCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 export function Assignment({ history }: { history: CandidateWorkHistory }) {
     const { t } = useTranslation();
- 
+    const router = useRouter();
+
     return (
-        <div className="w-full p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex mb-4">
+        <div onClick={() => router.push('/assignment/' + history.id)} className="cursor-pointer w-full p-4 bg-white rounded-lg shadow flex-col justify-start items-start gap-2.5 inline-flex mb-4">
             <div className="self-stretch justify-start items-center gap-3 inline-flex">
                 <div className="grow shrink basis-0 h-12 justify-start items-start gap-3 flex">
                     { history.company.company_logo && <div className="w-12 h-12 relative">

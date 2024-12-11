@@ -37,8 +37,7 @@ export function convertToBold(value: string) {
         value.forEach((o: any) => {
     
           const group = format(parseISO(o[attribute]), 'MMMM, yyyy'); 
-    
-          console.log(group);
+     
     
           groups[group] = groups[group] ?
              groups[group] : { 
@@ -50,7 +49,6 @@ export function convertToBold(value: string) {
         });
     
         return Object.keys(groups).map(key => groups[key]);
-       
   }
 
   export function secondsToTime(value: number ): string {
