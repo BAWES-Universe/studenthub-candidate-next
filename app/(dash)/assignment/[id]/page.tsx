@@ -29,6 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { DateRange } from 'react-day-picker';
 
+
 const CandidateAssignmentPage = () => {
     const { id } = useParams() as { id: string };
     const { t } = useTranslation();
@@ -210,7 +211,7 @@ const CandidateAssignmentPage = () => {
                             numberOfMonths={2}
                         />
                         </PopoverContent>
-                    </Popover>
+                     </Popover>
 
                         <Form {...form} >
                         <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)}>

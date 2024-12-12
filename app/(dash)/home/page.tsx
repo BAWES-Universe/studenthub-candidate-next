@@ -180,7 +180,7 @@ const DashboardPage = () => {
                             <CardTitle className='font-bold'>Working logs</CardTitle>
                         </CardHeader>
                         <CardContent> 
-                            <Button variant={'outline'} onClick={() => router.push('/log-date-list')} className="btn-video-recording">Click here to view your working logs</Button>
+                            <Button variant={'outline'} onClick={() => router.push('/work-log/log-date-list')} className="btn-video-recording">Click here to view your working logs</Button>
                         </CardContent>
                         </Card>
                     )}
