@@ -1,5 +1,4 @@
-import axios from "axios";
-
+import axios from "../AxiosService";
 const _invitationEndpoint = '/invitations';
 
 

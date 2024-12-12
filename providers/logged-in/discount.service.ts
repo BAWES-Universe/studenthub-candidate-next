@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../AxiosService";
 
 const _discountEndpoint = "/discounts";
  
@@ -9,7 +9,7 @@ const _discountEndpoint = "/discounts";
   export async function listDiscounts(page: number, urlParams: string = ""): Promise<any> {
     let url = _discountEndpoint + '?expand=company,store,category&page=' + page + urlParams;
     const response = await axios.get(url);
-    return response.data;
+    return response;
   }
   
   /**

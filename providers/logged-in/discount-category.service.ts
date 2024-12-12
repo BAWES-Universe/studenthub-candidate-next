@@ -1,6 +1,4 @@
-import { Observable } from "@reduxjs/toolkit";
-
-import axios from "axios";
+import axios from "../AxiosService";
 
 const _discountEndpoint = "/discount-categories";
 
@@ -11,7 +9,7 @@ const _discountEndpoint = "/discount-categories";
 export async function listDiscountCategories(page: number): Promise<any> {
   let url = _discountEndpoint + '?expand=&page=' + page;
   const response = await axios.get(url);
-  return response.data;
+  return response;
 }
 
 /**
