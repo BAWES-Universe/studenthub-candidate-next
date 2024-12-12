@@ -1,15 +1,17 @@
 import { CandidateWorkingDate } from "@/models/candidate-working-date";
 import { secondsToTime } from "@/utils/common";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingDate: CandidateWorkingDate}) {
 
     const {t } = useTranslation();
-    
+    const router = useRouter();
+
     return (
 
-        <div className="w-full h-[92px] p-4 bg-white rounded-lg shadow flex-col justify-center items-start gap-2 inline-flex mb-6">
+        <div onClick={() => router.push('/work-log/log-hour-list/' + candidateWorkingDate.date)} className="cursor-pointer w-full h-[92px] p-4 bg-white rounded-lg shadow flex-col justify-center items-start gap-2 inline-flex mb-6">
             <div className="self-stretch h-[60px] flex-col justify-start items-start gap-2 flex">
                 <div className="self-stretch justify-start items-start gap-2 inline-flex">
                     <div className="grow shrink basis-0 text-[#0f0f2c] text-lg font-medium leading-7">

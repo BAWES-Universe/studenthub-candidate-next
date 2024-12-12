@@ -31,7 +31,7 @@ export async function addWorkingHour(model: CandidateWorkingHour): Promise<any> 
  * @param date
  */
 export async function workingDateDetail(date: string): Promise<any> {
-  const url = `${_workingHourEndpoint}/date/${date}?expand=company,dateListByCandidate`;
+  const url = `${_workingHourEndpoint}/date-detail/${date}`;
   const response = await axios.get(url);
   return response.data;
 }
