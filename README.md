@@ -1,44 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudentHub
 
-## Getting Started
+A Next.js-based platform for student job management and recruitment.
 
-First, run the development server:
+## Implemented Features
+
+### Authentication & Profile
+- Multi-step registration flow with comprehensive profile building
+- Login with email/password
+- Profile management including:
+  - Personal information
+  - Education history
+  - Work experience
+  - Skills assessment
+  - Document uploads (Civil ID, Driver's License)
+  - Profile photo and video introduction
+
+### Dashboard
+- Activity tracking
+- Assignment management
+- Banking information
+- Chat system
+- Company interactions
+- Interview scheduling
+- Payment processing
+- Wallet management
+- Work history and logging
+
+### Additional Features
+- Internationalization support (i18next)
+- Error tracking (Sentry)
+- Analytics integration (Mixpanel)
+- Form validation (Zod)
+- UI Components (shadcn/ui)
+
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Documentation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Detailed documentation can be found in the `/docs` directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Features Documentation](./docs/features/README.md)
+- [Architecture Overview](./docs/architecture/README.md)
+- [API Documentation](./docs/api/README.md)
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-# validation 
-
-https://www.npmjs.com/package/zod#basic-usage
-
-# todo 
-
-https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev
+- Next.js 15.0.3
+- TypeScript
+- Redux Toolkit
+- TailwindCSS
+- shadcn/ui
+- Zod
+- i18next
+- Sentry
+- Mixpanel
