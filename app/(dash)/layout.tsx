@@ -10,11 +10,15 @@ import Header from "@/components/app/layout/header";
 };*/
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { startChat } from "@/providers/logged-in/chat.service";
 import { errorMessage } from "@/utils/common";
 import { useRouter } from "next/navigation";
 import { LoaderCircle, MessagesSquare } from "lucide-react";
+import { StoreState, useAppDispatch, useAppSelector } from "@/store/store";
+import { countInvitations } from "@/providers/logged-in/invitation.service";
+import { requestUpdated$ } from "@/providers/event.service";
+import { setPendingInvitations } from "@/store/slices/appSlice";
 
 export default function RootLayout({
   children,
@@ -23,9 +27,16 @@ export default function RootLayout({
 }>) {
   
   const [startingChat, setStartingChat] = useState(false);
-  const [alerts, setAlerts] = useState<number | null>(null);
+   
+  const { totalUnreadMessages} = useAppSelector((state: StoreState) => state.app);
+
   const router = useRouter();
 
+  const dispatch = useAppDispatch();
+
+  const { isAuthenticated } = useAppSelector((state: StoreState) => state.auth);
+  const { pendingInvitations } = useAppSelector((state: StoreState) => state.app);
+  
   const startChatClicked = () => {
     setStartingChat(true);
  
@@ -41,7 +52,41 @@ export default function RootLayout({
       }
     });
   };
- 
+
+  useEffect(() => {
+    loadInvitations();
+
+    const invitationInterval = setInterval(() => {
+      if (isAuthenticated && navigator.onLine) {
+        loadInvitations();
+      }
+    }, 1000 * 30); // every 30 second 
+
+    return () => {
+      clearInterval(invitationInterval);
+    };
+  }, []);
+
+  /**
+   * load invitations for request
+   */
+  function loadInvitations() {
+
+    countInvitations().then((count: any) => {
+      const total = parseInt(count);
+
+      if (pendingInvitations != total) {
+        requestUpdated$.next({});
+      }
+
+      console.log(total, count);
+
+      dispatch(setPendingInvitations({
+        pendingInvitations: 10
+      }));
+    });
+  }
+
   return (
     <div className="bg-[#f7f8fa] min-h-screen xs:pb-20 sm:pb-0">
 
@@ -51,7 +96,7 @@ export default function RootLayout({
         {children}
       </div>
       
-      <div className="fixed bottom-4 right-4" id="btn-chat">
+      <div className="fixed right-4 xs:bottom-16 sm:bottom-4" id="btn-chat">
         <Button className="btn-fab rounded-full p-4 w-10 h-10" onClick={startChatClicked}>
           {!startingChat ? (
             <MessagesSquare className="w-6" />
@@ -59,7 +104,7 @@ export default function RootLayout({
             <LoaderCircle className="w-6 animate-spin" />
           )}
         </Button>
-        {alerts && <Badge color="warning">{alerts}</Badge>}
+        {totalUnreadMessages >0 && <Badge variant={"destructive"} className="absolute end-[-5px] top-[-5px] rounded-full" color="warning">{totalUnreadMessages}</Badge>}
       </div>
     </div>
   );

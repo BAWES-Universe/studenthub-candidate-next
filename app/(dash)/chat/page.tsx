@@ -8,6 +8,7 @@ import { Chat } from '@/models/chat';
 import { page, track } from '@/providers/analytics.service';
 import { alertCount$ } from '@/providers/event.service';
 import { listChats } from '@/providers/logged-in/chat.service';
+import { StoreState, useAppSelector } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,14 +25,12 @@ const ChatListPage = () => {
         total_pages: 1,
     });
     
-    const [totalUnreadCount, setTotalUnreadCount] = useState(0);
-    const contentRef = useRef(null);
+    const { totalUnreadMessages} = useAppSelector((state: StoreState) => state.app);
 
     useEffect(() => {
         loadChatData();
         const subscription = alertCount$.subscribe((data: any) => {
-            if (data && data.total !== totalUnreadCount) {
-                setTotalUnreadCount(data.total);
+            if (data && data.total !== totalUnreadMessages) {
                 loadChatData();
             }
             updateChatData(data);

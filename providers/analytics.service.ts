@@ -4,6 +4,7 @@ import mixpanel from 'mixpanel-browser';
 declare global {
   interface Window {
     analytics: any;
+    gtag: any;
   }
 }
 
@@ -14,7 +15,7 @@ export function setMixpanel() {
   }
 
   if (process.env.NEXT_PUBLIC_MIXPANEL_KEY)
-    mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY);
+    mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY+ "");
 }
 
 /**
@@ -76,6 +77,12 @@ export function page(name: string) {
   // track the elapsed time between a page viewed and page exit
   //call time_event with page_viewed event
   mixpanel.time_event("page_exit");
+
+  window.gtag('event', 'page_view', {
+    //page_title: title,
+    page_path: location.pathname,
+    page_location: location.href
+  })
 }
 
 /**

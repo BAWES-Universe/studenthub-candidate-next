@@ -6,7 +6,7 @@ export default function NoItems({ image, message, title = null }: { image: strin
     return (
         <div className="inline-flex flex-col justify-center items-center w-full">
             { image && <img src={image} alt="No items" className="mt-auto" /> }
-            <div className="flex flex-col items-start gap-2">
+            <div className="flex flex-col items-center gap-2">
                 { title && <h5 className=" text-[color:var(--Neutral-80,#68687A)] text-center text-base font-semibold leading-6">
                         {t(title)}
                     </h5>

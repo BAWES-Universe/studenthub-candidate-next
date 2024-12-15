@@ -8,7 +8,11 @@ interface AppState {
   utm_uuid: string;
   currentLocation: any;
   showOneSignalPrompt: boolean,
-  canGoForward: boolean
+  oneSignalStatus: boolean,
+  canGoForward: boolean,
+  totalUnreadActity: number,
+  totalUnreadMessages: number,
+  pendingInvitations: number
 }
 
 const initialState: AppState = {
@@ -18,7 +22,11 @@ const initialState: AppState = {
   utm_uuid: "",
   currentLocation: null,
   showOneSignalPrompt: true,
-  canGoForward: false
+  oneSignalStatus: false,
+  canGoForward: false,
+  totalUnreadActity: 0,
+  totalUnreadMessages: 0,
+  pendingInvitations: 0
 };
 
 const appSlice = createSlice({
@@ -42,15 +50,28 @@ const appSlice = createSlice({
     setCurrentLocation: (state, action: PayloadAction<{ currentLocation: any }>) => {
       state.currentLocation = action.payload.currentLocation;
     },
+    setOneSignalStatus: (state, action: PayloadAction<{ oneSignalStatus: boolean }>) => {
+      state.oneSignalStatus = action.payload.oneSignalStatus;
+    },
     setShowOneSignalPrompt: (state, action: PayloadAction<{ showOneSignalPrompt: boolean }>) => {
       state.showOneSignalPrompt = action.payload.showOneSignalPrompt;
     },
     setCanGoForward: (state, action: PayloadAction<{ canGoForward: boolean }>) => {
       state.canGoForward = action.payload.canGoForward;
     },
+    setTotalUnreadActity: (state, action: PayloadAction<{ totalUnreadActity: number }>) => {
+      state.totalUnreadActity = action.payload.totalUnreadActity;
+    },
+    setTotalUnreadMessages: (state, action: PayloadAction<{ totalUnreadMessages: number }>) => {
+      state.totalUnreadMessages = action.payload.totalUnreadMessages;
+    },
+    setPendingInvitations: (state, action: PayloadAction<{ pendingInvitations: number }>) => {
+      state.pendingInvitations = action.payload.pendingInvitations;
+    }
   },
 });
 
 export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, 
-  setShowOneSignalPrompt, setCanGoForward } = appSlice.actions;
+  setShowOneSignalPrompt, setCanGoForward, setTotalUnreadActity, setTotalUnreadMessages, 
+  setOneSignalStatus, setPendingInvitations } = appSlice.actions;
 export default appSlice.reducer;

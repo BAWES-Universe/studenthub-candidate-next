@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+import { StoreState, useAppSelector } from "@/store/store";
 import { House } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,9 +17,9 @@ export default function Navigation() {
         router.push(path)
         setPath(path)
     }
-
-    //
-
+    
+    const { pendingInvitations } = useAppSelector((state: StoreState) => state.app);
+    
     return (
         <div className="xs:fixed sm:relative bottom-0  w-full xs:h-[78px] sm:h-[57px] pt-2 pb-4 bg-white shadow block ">
 
@@ -36,16 +38,23 @@ export default function Navigation() {
                         </div>
                     </div>
 
-                    <div onClick={() => open("/invitation")} className="cursor-pointer grow shrink basis-0 xs:flex-col sm:flex-row justify-center items-center gap-0.5 inline-flex">
+                    <div onClick={() => open("/invitation")} className="relative cursor-pointer grow shrink basis-0 xs:flex-col sm:flex-row justify-center items-center gap-0.5 inline-flex">
                         <svg className={`rounded-[10px] ${path == "/invitation" ? 'bg-[#f4f6ff]' : ''}`} width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="8" y="11" width="20" height="14" rx="2" stroke={path == "/invitation" ? '#4C70F2' : '#7d7d8d'} strokeWidth="2" />
                             <path d="M10.3246 11H25.6754C26.6178 11 27.037 12.1843 26.3046 12.7772L18.6292 18.9906C18.2623 19.2877 17.7377 19.2877 17.3708 18.9906L9.69542 12.7772C8.96296 12.1843 9.38223 11 10.3246 11Z"
                                 stroke={path == "/invitation" ? '#4C70F2' : '#7d7d8d'} strokeWidth="2" />
                         </svg>
 
-                        <div className={`sm:mt-3 sm:ms-2 self-stretch text-center ${path == "/invitation" ? 'text-[#4c6ff2]' : 'text-[#7d7d8d]'} text-xs font-semibold leading-none`}>
+
+                        
+
+                        <div className={`relative sm:mt-3 sm:ms-2 self-stretch text-center ${path == "/invitation" ? 'text-[#4c6ff2]' : 'text-[#7d7d8d]'} text-xs font-semibold leading-none`}>
                             {t('Invitations')}
+
                         </div>
+                        {pendingInvitations > 0 && <Badge variant={"destructive"} className="rounded-full xs:absolute sm:relative top-0 end-0" color="warning">
+                                {pendingInvitations}
+                                </Badge>}
                     </div>
 
                     <div onClick={() => open("/work-log/track-work")} className="cursor-pointer grow shrink basis-0 xs:flex-col sm:flex-row justify-center items-center gap-0.5 inline-flex">

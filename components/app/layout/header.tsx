@@ -2,14 +2,18 @@ import { useRouter } from "next/navigation";
 import Navigation from "./navigation";
 import { useEffect } from "react";
 import { useState } from "react";
-import { StoreState } from "@/store/store";
-import { useSelector } from "react-redux";
-import { ChevronLeft } from "lucide-react";
+import { StoreState, useAppSelector } from "@/store/store";
+ 
+import { Bell, ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function Header() {
     const router = useRouter();
     const [canGoBack, setCanGoBack] = useState(false);
     
+    const { totalUnreadActity } = useAppSelector((state: StoreState) => state.app);
+
     useEffect(() => {
        // console.log("state", window.history, window.history.state.idx, window.history.state.length)
         if (typeof window !== 'undefined' && window.history && window.history.length > 1) {
@@ -25,6 +29,14 @@ export default function Header() {
             <div className="py-7 xs:hidden sm:block">
                 <img src="/assets/icons/logo.svg" className="w-[167px] mx-auto " />
             </div>
+
+            <Button onClick={() => router.push('/activity')} variant="ghost" 
+                className="xs:hidden sm:block fixed top-6 end-4">  
+                <Bell className="size-10" />
+                {totalUnreadActity > 0 && <Badge variant={"destructive"} className="absolute end-[-5px] top-[-5px] rounded-full"  
+                    color="warning">{totalUnreadActity}</Badge>}
+            </Button>
+
             <Navigation></Navigation>
 
             { canGoBack && 
