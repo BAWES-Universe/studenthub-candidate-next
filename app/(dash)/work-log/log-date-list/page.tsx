@@ -44,9 +44,9 @@ const LogDateListPage = () => {
 
   const formSchema = z.object({
       start_date: z.date({
-      required_error: 'Please add date.'
+        required_error: 'Please add date.'
       }).max(new Date(), {
-      message: "Can not add future dates.",
+        message: "Can not add future dates.",
       }),
       end_date: z.date({
           required_error: 'Please add date.'

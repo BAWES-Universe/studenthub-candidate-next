@@ -68,60 +68,64 @@ export function convertToBold(value: string) {
         return val.split(params)[0];
 }
 
-export const useTimeAgo = (value: string) => {
-  const { t } = useTranslation();
+export const useTimeAgo = (value: string, t: any) => {
+  //const { t } = useTranslation();
   const [timeAgo, setTimeAgo] = useState('');
   
   const d = value ? new Date(value.replace(/-/g, '/') + ' GMT+03:00') : new Date();
   const utcTimeNow = new Date();
   const seconds = Math.round(Math.abs((utcTimeNow.getTime() - d.getTime()) / 1000));
 
-  useEffect(() => {
-    const updateTimeAgo = () => {
+  const updateTimeAgo = () => {
       
-      if (Number.isNaN(seconds)) {
-        setTimeAgo('');
-        return;
-      }
+    console.log("updateTimeAgo", value);
+    if (Number.isNaN(seconds)) {
+      setTimeAgo('');
+      return;
+    }
 
-      let newTimeAgo = '';
-      if (seconds <= 45) {
-        newTimeAgo = t('a few seconds ago');
-      } else if (seconds <= 90) {
-        newTimeAgo = t('a minute ago');
-      } else if (seconds <= 2700) { // 45 minutes
-        const minutes = Math.round(seconds / 60);
-        newTimeAgo = t('txt_minutes_ago', { value: minutes });
-      } else if (seconds <= 5400) { // 90 minutes
-        newTimeAgo = t('an hour ago');
-      } else if (seconds <= 79200) { // 22 hours
-        const hours = Math.round(seconds / 3600);
-        newTimeAgo = t('txt_hours_ago', { value: hours });
-      } else if (seconds <= 129600) { // 36 hours
-        newTimeAgo = t('a day ago');
-      } else if (seconds <= 2160000) { // 25 days
-        const days = Math.round(seconds / 86400);
-        newTimeAgo = t('txt_days_ago', { value: days });
-      } else if (seconds <= 3888000) { // 45 days
-        newTimeAgo = t('a month ago');
-      } else if (seconds <= 29894400) { // 345 days
-        const months = Math.round(seconds / 2592000);
-        newTimeAgo = t('txt_months_ago', { value: months });
-      } else if (seconds <= 48624000) { // 545 days
-        newTimeAgo = t('a year ago');
-      } else {
-        const years = Math.round(seconds / 31536000);
-        newTimeAgo = t('txt_years_ago', { value: years });
-      }
+    let newTimeAgo = '';
+    if (seconds <= 45) {
+      newTimeAgo = t('a few seconds ago');
+    } else if (seconds <= 90) {
+      newTimeAgo = t('a minute ago');
+      newTimeAgo = seconds+ '';
+    } else if (seconds <= 2700) { // 45 minutes
+      const minutes = Math.round(seconds / 60);
+      newTimeAgo = t('txt_minutes_ago', { value: minutes });
+      
+    } else if (seconds <= 5400) { // 90 minutes
+      newTimeAgo = t('an hour ago');
+    } else if (seconds <= 79200) { // 22 hours
+      const hours = Math.round(seconds / 3600);
+      newTimeAgo = t('txt_hours_ago', { value: hours });
+    } else if (seconds <= 129600) { // 36 hours
+      newTimeAgo = t('a day ago');
+    } else if (seconds <= 2160000) { // 25 days
+      const days = Math.round(seconds / 86400);
+      newTimeAgo = t('txt_days_ago', { value: days });
+    } else if (seconds <= 3888000) { // 45 days
+      newTimeAgo = t('a month ago');
+    } else if (seconds <= 29894400) { // 345 days
+      const months = Math.round(seconds / 2592000);
+      newTimeAgo = t('txt_months_ago', { value: months });
+    } else if (seconds <= 48624000) { // 545 days
+      newTimeAgo = t('a year ago');
+    } else {
+      const years = Math.round(seconds / 31536000);
+      newTimeAgo = t('txt_years_ago', { value: years });
+    }
 
-      setTimeAgo(newTimeAgo);
-    };
+    setTimeAgo(newTimeAgo);
+  };
 
+  useEffect(() => {
+    
     updateTimeAgo(); // Initial call
     const interval = setInterval(updateTimeAgo, getSecondsUntilUpdate(seconds) * 1000);
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [value, t]);
+  }, [value]);//t
 
   const getSecondsUntilUpdate = (seconds: number) => {
     const min = 60;
@@ -141,8 +145,7 @@ export const useTimeAgo = (value: string) => {
   return timeAgo;
 };
  
- 
-export const timeSpent = (value: number) => {
+ export const timeSpent = (value: number) => {
     if (!value) {
       return '0 seconds';
     }

@@ -4,7 +4,7 @@ export default function NoItems({ image, message, title = null }: { image: strin
     const { t } = useTranslation();
 
     return (
-        <div className="inline-flex flex-col justify-center items-center">
+        <div className="inline-flex flex-col justify-center items-center w-full">
             { image && <img src={image} alt="No items" className="mt-auto" /> }
             <div className="flex flex-col items-start gap-2">
                 { title && <h5 className=" text-[color:var(--Neutral-80,#68687A)] text-center text-base font-semibold leading-6">

@@ -70,7 +70,7 @@ export async function startChat(): Promise<any> {
   return response.data;
 }
 
-export async function postMessage(chat_uuid: string, message: string): Promise<any> {
+export async function postChatMessage(chat_uuid: string, message: string): Promise<any> {
   let url = _chatEndpoint + '/send-message'
   const response = await axios.post(url, {
     chat_uuid,

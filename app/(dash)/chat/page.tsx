@@ -1,6 +1,8 @@
 "use client"
+import { ChatComponent } from '@/components/app/chat';
 // app/(dash)/chat/ChatListPage.tsx
 
+import NoItems from '@/components/common/no-items';
 import Pager from '@/components/common/pager';
 import { Chat } from '@/models/chat';
 import { page, track } from '@/providers/analytics.service';
@@ -92,50 +94,40 @@ const ChatListPage = () => {
     
     const onLogoError = (chat: Chat) => {
         if (chat.company) {
-            chat.company.company_logo = null;
-            setChats([...chats]);
+       //     chat.company.company_logo = null;
+       //     setChats([...chats]);
         }
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4"> 
-        <div className={`flex flex-col h-full text-start`}>
-            <header className="bg-white shadow">
-                <h1 className="text-xl font-bold p-4">{t("Chats")}</h1>
-            </header>
-            <div className="flex-1 overflow-y-auto p-4">
-                <div className="flex flex-col">
-                    {loading && <div>Loading...</div>}
-                    {chats.length === 0 && !loading && <p>{t("You have no active chats")}</p>}
-                    {chats.map((chat: Chat) => (
-                        <div key={chat.chat_uuid} className="bg-white shadow-md rounded-lg p-4 mb-2 cursor-pointer" onClick={() => handleChatDetail(chat)}>
-                            <div className="flex items-center">
-                                <div className="w-12 h-12 mr-4">
-                                    <img src={chat.company?.company_logo ? process.env.NEXT_PUBLIC_CLOUDINARY_URL + chat.company.company_logo : 'assets/images/building.svg'} 
-                                        alt="Logo" className="w-full h-full rounded-full" onError={() => onLogoError(chat)} />
-                                </div>
-                                <div className="flex-1">
-                                    <span className="font-semibold">{chat.contact?.contact_name || chat.staff?.staff_name}</span>
-                                    <p>{chat.recentMessage?.message}</p>
-                                    <span className="text-gray-500 text-sm">{chat.created_at && new Date(chat.created_at).toLocaleString()}</span>
-                                    {chat.candidateUnreadCount && chat.candidateUnreadCount > 0 && (
-                                        <span className="bg-red-500 text-white rounded-full px-2 text-xs">
-                                            {chat.candidateUnreadCount < 9 ? chat.candidateUnreadCount : '9+'}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+        <>
+            <div className=' bg-white'>
+                <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
-                    <Pager pagination={pagination} loadPage={loadPage} />
-         
-                    {/* <Pager pagination={pagination} loadPage={loadChatData} /> */}
-
-                </div>
+                    <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
+                    {t("Chats")}
+                    </h5>
+ 
+                </div>    
             </div>
-        </div>
-        </div>
+            
+            <div className="max-w-4xl mx-auto p-6">
+
+                {chats.length === 0 && !loading && <NoItems image="assets/icons/no-invitation.svg" 
+                        title={ 'You have no active chats' }
+                        message={ '' } /> }
+
+                {loading && <div>Loading...</div>}
+
+                {chats.map((chat: Chat) => (
+                    <ChatComponent chat={chat} key={chat.chat_uuid} onLogoError={() => onLogoError(chat)} 
+                        onClick={() => handleChatDetail(chat)} />
+                ))}
+
+                <Pager pagination={pagination} loadPage={loadPage} />
+        
+            </div> 
+        </>
     );
 };
 

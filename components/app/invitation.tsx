@@ -13,6 +13,8 @@ const Invitation = ({ model }: { model: any }) => {
     const { t, i18n } = useTranslation();
     const router = useRouter();
 
+    const timeAgo = useTimeAgo(model.invitation_created_at, t);
+
     const invitationDetail = () => {
         router.push(`/invitation/${model.invitation_uuid}`);
     };
@@ -50,7 +52,7 @@ const Invitation = ({ model }: { model: any }) => {
                         {model.company[i18n.language === 'en' ? 'company_common_name_en' : 
                             'company_common_name_ar'] || model.company.company_name}
                     </p>
-                    <small className="text-gray-500">{ useTimeAgo(model.invitation_created_at) }</small>
+                    <small className="text-gray-500">{ timeAgo }</small>
 
                     <div className="badge my-3">
                         {model.request.request_position_type === 1 && 

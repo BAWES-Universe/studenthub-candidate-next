@@ -137,6 +137,8 @@ export function blobToBase64(blob: Blob) {
         return 'other';
     }
   } 
+
+  
 /*
 export async function fileWrite(blob: Blob, filename: string) {
     try {

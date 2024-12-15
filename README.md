@@ -40,5 +40,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
+- location page in profile builder pages 
+ 
 
 https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev

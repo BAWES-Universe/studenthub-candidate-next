@@ -4,12 +4,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { alertUpdate$ } from '@/providers/event.service';
-import { viewChat, getMessages, getNewMessages } from '@/providers/logged-in/chat.service';
+import { viewChat, getMessages, getNewMessages, postChatMessage } from '@/providers/logged-in/chat.service';
 import { Chat } from '@/models/chat';
 import { ChatMessage } from '@/models/chat-message';
 import { useTranslation } from 'react-i18next';
 import { page, track } from '@/providers/analytics.service';
 import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { ChatMessageComponent } from '@/components/app/chat-message';
 
 const ChatViewPage = () => {
     const { id } = useParams() as { id: string };
@@ -27,7 +29,14 @@ const ChatViewPage = () => {
     const panelRef = useRef(null);
     const { t } = useTranslation();
 
+
     useEffect(() => {
+
+        const btnChat = document.getElementById('btn-chat');
+        if (btnChat) {
+            btnChat.classList.add('hidden');
+        }
+
         loadChat();
         loadMessages();
         const subscription = alertUpdate$.subscribe(() => {
@@ -39,6 +48,9 @@ const ChatViewPage = () => {
         return () => {
             track('page_exit', { page: 'Chat Page' });
             subscription.unsubscribe();
+            if (btnChat) {
+                btnChat.classList.remove('hidden');
+            }
         };
     }, []);
 
@@ -50,12 +62,14 @@ const ChatViewPage = () => {
     const loadMessages = async () => {
         setLoading(true);
         const response = await getMessages(id);
-        setMessages(response.reverse());
-        processMessageList();
+        console.log(response, response.data.reverse());
+
+        setMessages(response.data.reverse());
+        processMessageList(response.data.reverse());
         setLoading(false);
     };
 
-    const processMessageList = () => {
+    const processMessageList = (messages: ChatMessage[]) => {
         const groupedMessages = messages.reduce((acc: any, message: any) => {
             const date = format(message.created_at, 'MMMM d, yyyy');
             if (!acc[date]) {
@@ -64,6 +78,8 @@ const ChatViewPage = () => {
             acc[date].messages.push(message);
             return acc;
         }, {});
+
+        console.log(groupedMessages);
 
         setMessageGroups(Object.values(groupedMessages));
     };
@@ -74,7 +90,7 @@ const ChatViewPage = () => {
         const newMessages = await getNewMessages(id, latestMessageIndex);
         if (newMessages.length > 0) {
             setMessages([...messages, ...newMessages]);
-            processMessageList();
+            processMessageList([...messages, ...newMessages]);
             setHaveUnreadMessage(true);
         }
     };
@@ -82,7 +98,7 @@ const ChatViewPage = () => {
     const sendMessage = async () => {
         if (!txtMessage) return;
         setSendingMessage(true);
-        await postMessage(id, txtMessage);
+        await postChatMessage(id, txtMessage);
         setTxtMessage('');
         setSendingMessage(false);
         loadMessages();
@@ -98,32 +114,40 @@ const ChatViewPage = () => {
     //<span className="skeleton-text">Loading...</span>}
 
     return (
-        <div className="max-w-4xl mx-auto p-4 flex flex-col h-full">
+        <>
+            <div className=' bg-white'>
+                <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
+
+                    <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
+                        { chat && <>
+                            { chat.staff && chat.staff.staff_name }
+                            { chat.contact && chat.contact.contact_name }
+
+                            { chat.store && <>
+                                <br />
+                                <small>{chat.store.store_name}</small>
+                            </>} 
+                        </>}     
+                    </h5>
+
+                </div>    
+            </div>
             
-            <div ref={contentRef} className="flex-1 overflow-y-auto p-4">
-                {loading ? (
+            <div className="max-w-4xl mx-auto p-6">
+ 
+                {loading && (
                     <div className="text-center"><span className="skeleton-text">Loading messages...</span></div>
-                ) : (
-                    messageGroups.map((group: any) => (
+                )} 
+                
+                { chat && messageGroups.map((group: any) => (
                         <div key={group.date}>
                             <div className="date text-center my-2">{group.date}</div>
                             {group.messages.map((message: any) => (
-                                <div key={message.message_index} className={`message ${message.from === 'candidate' ? 'sent' : 'received'}`}>
-                                    <div className="author">
-                                        {message.from === 'candidate' ? 'You' : message.from === 'contact' ? 
-                                        chat?.contact?.contact_name : chat?.staff?.staff_name}
-                                    </div>
-                                    <div className="chat-content">
-                                        <p className="message-text">{message.message}</p>
-                                        <span className="message-created_at">
-                                            {format(message.created_at || '', 'hh:mm a')}
-                                        </span>
-                                    </div>
-                                </div>
+                                <ChatMessageComponent message={message} chat={chat} />
                             ))}
                         </div>
                     ))
-                )}
+                }
                 {haveUnreadMessage && (
                     <button className="alert-new-message" onClick={() => { setHaveUnreadMessage(false); scrollToBottom(); }}>
                         New message
@@ -131,8 +155,8 @@ const ChatViewPage = () => {
                 )}
             </div>
 
-            <footer className="bg-white p-4">
-                <div className="flex">
+            <footer className="bg-white p-4 fixed bottom-0 w-full">
+                <div className="flex max-w-4xl mx-auto">
                     <input
                         type="text"
                         value={txtMessage}
@@ -140,12 +164,12 @@ const ChatViewPage = () => {
                         placeholder={t('Type message here')}
                         className="txt-message"
                     />
-                    <button className="btn-send" onClick={sendMessage} disabled={sendingMessage}>
+                    <Button className="btn-send" onClick={sendMessage} disabled={sendingMessage}>
                         {sendingMessage ? <span>Sending...</span> : <span>Send</span>}
-                    </button>
+                    </Button>
                 </div>
             </footer>
-        </div>
+        </>
     );
 };
 
