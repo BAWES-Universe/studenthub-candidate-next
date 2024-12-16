@@ -5,12 +5,14 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { CandidateNotification } from '@/models/candidate-notification';
 import { toDate } from '@/utils/common';
+import { format } from 'date-fns';
 
 const InvitationNotification = ({ candidateNotification, onClick }: { candidateNotification: CandidateNotification, onClick: any }) => {
     const { t, i18n } = useTranslation();
+    const [isNew, setIsNew] = React.useState(candidateNotification.is_new);
 
     return (
-        <div onClick={onClick} className="card p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative">
+        <div onClick={() => onClick() && setIsNew(false)} className={ `${isNew? 'cursor-pointer': ''} card p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative` }>
             <h5 className="text-gray-900 font-semibold text-lg leading-7 m-0">
                 {t("New Part-Time Invitation")}
             </h5>
@@ -27,11 +29,10 @@ const InvitationNotification = ({ candidateNotification, onClick }: { candidateN
             </p>
             <p className="txt-time text-right text-gray-500 text-xs leading-4 m-0">
                 { candidateNotification.created_at ? 
-                    toDate(candidateNotification.created_at)
-                        ?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''   
+                    format(candidateNotification.created_at, 'MMM d') : ''   
                 }
             </p>
-            {candidateNotification.is_new && (
+            {isNew && (
                 <span className="unread w-3.5 h-3.5 bg-blue-500 absolute top-3 right-4 rounded-full"></span>
             )}
         </div>

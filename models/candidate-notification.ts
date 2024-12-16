@@ -19,7 +19,7 @@ const CN_TYPE_TRANSFER_PAID = 6;
 const CN_TYPE_TRANSFER_UNPAID = 7;
 
 export class CandidateNotification {
-    cn_uuid?:  string;
+    cn_uuid!:  string;
     candidate_id?: number;
     type?: number;
     candidate_work_history_id?: number;

@@ -113,7 +113,7 @@ const DateDropdown = ({ min, max, placeholder, pickerFormat, position }:
                 </select>
             )}
             <select className="native-select" onChange={onYearChange}>
-                <option value="" disabled selected>{placeholder || 'YYYY'}</option>
+                <option value="" disabled selected>{placeholder || 'yyyy'}</option>
                 {years.map((row) => (
                     <option key={row.year} value={row.year}>
                         {row.year}

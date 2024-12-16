@@ -3,12 +3,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
+import { format } from 'date-fns';
 
 const Unassigned = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
+    const [isNew, setIsNew] = React.useState(candidateNotification.is_new);
 
     return (
-        <div onClick={onClick} className={`ion-card rounded-lg shadow-md bg-white relative`}>
+        <div onClick={() => onClick() && setIsNew(false)} className={ `${isNew? 'cursor-pointer': ''} ion-card rounded-lg shadow-md bg-white relative`}>
             <div className="ion-card-content p-4 flex flex-col">
                 {candidateNotification.store && (
                     <h5 className="text-gray-900 font-semibold text-lg">
@@ -17,7 +19,8 @@ const Unassigned = ({ candidateNotification, onClick }: { candidateNotification:
                 )}
                 <p className="txt-meta text-gray-500 text-sm">
                     {t("txt_unassigned_on", {
-                        on: new Date(candidateNotification.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+                        on: format(candidateNotification.created_at, 'MMM d, yyyy')
+                        //new Date(candidateNotification.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
                     })}
                 </p>
                 {candidateNotification.store && (
@@ -29,9 +32,10 @@ const Unassigned = ({ candidateNotification, onClick }: { candidateNotification:
                     {t("Reason stated")}: {candidateNotification.message}
                 </p>
                 <p className="txt-time text-right text-gray-500 text-xs">
-                    {new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    {format(candidateNotification.created_at, 'MMM d')}
+                    {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
                 </p>
-                {candidateNotification.is_new && (
+                {isNew && (
                     <span className="unread w-3.5 h-3.5 bg-blue-500 absolute top-3 right-4 rounded-full"></span>
                 )}
             </div>

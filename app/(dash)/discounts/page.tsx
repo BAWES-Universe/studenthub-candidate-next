@@ -57,8 +57,8 @@ const DiscountsPage = () => {
         setLoading(false);
 
         setPagination({
-            current_page: parseInt(response.headers['X-Pagination-Current-Page']),
-            total_pages: parseInt(response.headers['X-Pagination-Page-Count']),
+            current_page: parseInt(response.headers['x-pagination-current-page']),
+            total_pages: parseInt(response.headers['x-pagination-page-count']),
         });
 
         setDiscounts(response.data);

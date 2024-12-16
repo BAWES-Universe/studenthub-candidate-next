@@ -119,7 +119,7 @@ export default function RootLayout({
       alertSubscribe();
     }
     
-    _includeOneSignalJs();
+   // _includeOneSignalJs();
 
     error404$.subscribe(data => {
       router.push('/not-found');
@@ -161,7 +161,7 @@ export default function RootLayout({
         });
       });
 
-      oneSignalActionBasedOnStatus();
+     // oneSignalActionBasedOnStatus();
 
       _updateAlert();
 

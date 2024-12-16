@@ -106,6 +106,7 @@ export default function RootLayout({
         </Button>
         {totalUnreadMessages >0 && <Badge variant={"destructive"} className="absolute end-[-5px] top-[-5px] rounded-full" color="warning">{totalUnreadMessages}</Badge>}
       </div>
+      
     </div>
   );
 }

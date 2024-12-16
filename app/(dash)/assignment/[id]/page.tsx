@@ -127,8 +127,8 @@ const CandidateAssignmentPage = () => {
             setCandidateWorkingDates(groupBy(res.data, 'date'));
 
             setPagination({
-                current_page: parseInt(res.headers['X-Pagination-Current-Page']),
-                total_pages: parseInt(res.headers['X-Pagination-Page-Count']),
+                current_page: parseInt(res.headers['x-pagination-current-page']),
+                total_pages: parseInt(res.headers['x-pagination-page-count']),
             });
         }).finally(() => {
             setLoading(false);

@@ -5,27 +5,27 @@ import { format } from 'date-fns';
 
 const WorkSessionApproved = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
   const { t } = useTranslation();
+  const [isNew, setIsNew] = React.useState(candidateNotification.is_new);
 
   return (
-    <div onClick={onClick} className={`p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative 
-    ${candidateNotification.is_new ? 'border-l-4 border-blue-500' : ''}`}>
+    <div onClick={() => onClick() && setIsNew(false)} className={`p-3 flex flex-col gap-1 rounded-lg bg-white shadow-md relative ${isNew? 'cursor-pointer': ''}`}>
       <h5 className="text-gray-900 font-semibold text-lg leading-7 m-0">
         {t("Work Session Approved")}
       </h5>
       
-      <p className="text-gray-600 text-sm leading-4 my-0">
+      { candidateNotification.candidateWorkingHour && <p className="text-gray-600 text-sm leading-4 my-0">
         {t("txt_session_approved", {
-          start_time: format(candidateNotification.candidateWorkingHour.start_time || '', 'hh:mm a'),
-          end_time: format(candidateNotification.candidateWorkingHour.end_time || '', 'hh:mm a'),
-          date: format(candidateNotification.candidateWorkingHour.date || '', 'MMMM d, yyyy'),
+          start_time: format(candidateNotification.candidateWorkingHour.start_time, 'hh:mm a'),
+          end_time: format(candidateNotification.candidateWorkingHour.end_time, 'hh:mm a'),
+          date: format(candidateNotification.candidateWorkingHour.date, 'MMMM d, yyyy'),
         })}
-      </p>
+      </p> }
 
       <p className="text-gray-500 text-xs text-right my-0">
-        {format(candidateNotification.created_at || '', 'MMMM d, yyyy')}
+        {format(candidateNotification.created_at || '', 'MMM d')}
       </p>
 
-      {candidateNotification.is_new && (
+      {isNew && (
         <span className="w-3.5 h-3.5 bg-blue-600 rounded-full absolute top-3 right-4"></span>
       )}
     </div>

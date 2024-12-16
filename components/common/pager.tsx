@@ -19,7 +19,9 @@ export default function Pager({ pagination, loadPage }: IPagerProps) {
                     onClick={() => loadPage(pagination.current_page - 1)} />
             </PaginationItem>
 
-            {Array.from({ length: Math.min(pagination.total_pages, 2) }, (_, i) => i + 1).map((page) => (
+            {/**Math.min(, 2) */}
+
+            {Array.from({ length: pagination.total_pages }, (_, i) => i + 1).map((page) => (
                 <PaginationItem key={page}>
                     <PaginationLink 
                         className="cursor-pointer"
@@ -31,11 +33,11 @@ export default function Pager({ pagination, loadPage }: IPagerProps) {
                 </PaginationItem>
             ))}
             
-            {
+            {/*
                 pagination.total_pages > 2 && (
                     <PaginationEllipsis />
                 )
-            }
+            */}
 
             <PaginationItem>
                 <PaginationNext 

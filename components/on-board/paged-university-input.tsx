@@ -65,8 +65,8 @@ export default function PagedUniversityInput({ selectedUniversity, onSelect, nam
             setUniversityList(res.data);
 
             setPagination({
-                current_page: parseInt(res.headers.get('X-Pagination-Current-Page') || '1'),
-                total_pages: parseInt(res.headers.get('X-Pagination-Page-Count') || '1'),
+                current_page: parseInt(res.headers.get('x-pagination-current-page') || '1'),
+                total_pages: parseInt(res.headers.get('x-pagination-page-count') || '1'),
             });
 
         }).finally(() => {

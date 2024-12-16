@@ -53,8 +53,8 @@ const InterviewListPage = () => {
         setInterviews(response.data);
 
         setPagination({
-            current_page: parseInt(response.headers.get('X-Pagination-Current-Page')),
-            total_pages: parseInt(response.headers.get('X-Pagination-Page-Count'))
+            current_page: parseInt(response.headers.get('x-pagination-current-page')),
+            total_pages: parseInt(response.headers.get('x-pagination-page-count'))
         });
 
         setLoading(false);

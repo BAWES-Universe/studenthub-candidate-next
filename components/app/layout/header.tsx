@@ -26,16 +26,18 @@ export default function Header() {
     
     return (
         <>
-            <div className="py-7 xs:hidden sm:block">
-                <img src="/assets/icons/logo.svg" className="w-[167px] mx-auto " />
-            </div>
+            <div className="max-w-4xl mx-auto relative">
+                <div className="py-7 xs:hidden sm:block">
+                    <img src="/assets/icons/logo.svg" className="w-[167px] mx-auto " />
+                </div>
 
-            <Button onClick={() => router.push('/activity')} variant="ghost" 
-                className="xs:hidden sm:block fixed top-6 end-4">  
-                <Bell className="size-10" />
-                {totalUnreadActity > 0 && <Badge variant={"destructive"} className="absolute end-[-5px] top-[-5px] rounded-full"  
-                    color="warning">{totalUnreadActity}</Badge>}
-            </Button>
+                <Button onClick={() => router.push('/activity')} variant="ghost" 
+                    className="xs:hidden sm:block absolute top-6 end-4">  
+                    <Bell className="size-10" />
+                    {totalUnreadActity > 0 && <Badge variant={"destructive"} className="absolute end-[-5px] top-[-5px] rounded-full"  
+                        color="warning">{totalUnreadActity}</Badge>}
+                </Button>
+            </div>
 
             <Navigation></Navigation>
 

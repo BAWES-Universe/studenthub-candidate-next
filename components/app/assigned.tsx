@@ -1,15 +1,17 @@
 // components/App/Assigned.jsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import PropTypes from 'prop-types';
 import { CandidateNotification } from '@/models/candidate-notification';
+import { format } from 'date-fns';
 
 const Assigned = ({ candidateNotification, onClick }: { candidateNotification: CandidateNotification, onClick: any }) => {
     const { t } = useTranslation(); // Translation hook
-
+    const [isNew, setIsNew] = React.useState(candidateNotification.is_new);
+     
     return (
-        <div onClick={onClick} className="rounded-lg shadow-md bg-white flex flex-col p-4">
+        <div onClick={() => onClick() && setIsNew(false)} className={ `${isNew? 'cursor-pointer': ''} rounded-lg shadow-md bg-white flex flex-col p-4 relative`}>
             <div className="flex flex-col">
                 {candidateNotification.store && (
                     <h5 className="text-gray-900 font-semibold text-lg leading-7">
@@ -18,7 +20,8 @@ const Assigned = ({ candidateNotification, onClick }: { candidateNotification: C
                 )}
                 <p className="text-gray-600 text-sm leading-4">
                     {t("txt_assigned_on", { 
-                        on: new Date(candidateNotification.created_at).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) 
+                        on: format(candidateNotification.created_at, 'MMM d')
+                        //new Date(candidateNotification.created_at).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) 
                     })}
                 </p>
                 {candidateNotification.store && (
@@ -26,12 +29,15 @@ const Assigned = ({ candidateNotification, onClick }: { candidateNotification: C
                         {t("txt_assigned_to_work_for", { store: candidateNotification.store.store_name })}
                     </p>
                 )}
-                <p className="text-gray-600 text-sm leading-4">
+                
+                { candidateNotification.staff && <p className="text-gray-600 text-sm leading-4">
                     {t("hired_by", { by: candidateNotification.staff.staff_name })}
-                </p>
+                </p> }
+
                 <p className="text-right">
-                    {new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    <span className={`w-3.5 h-3.5 bg-blue-500 rounded-full absolute top-3 right-4 ${candidateNotification.is_new ? 'block' : 'hidden'}`}></span>
+                    {format(candidateNotification.created_at, 'MMM d')}
+                    {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
+                    <span className={`w-3.5 h-3.5 bg-blue-500 rounded-full absolute top-3 right-4 ${isNew ? 'block' : 'hidden'}`}></span>
                 </p>
             </div>
         </div>
