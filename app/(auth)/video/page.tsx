@@ -86,7 +86,7 @@ export default function Video() {
     if (sparams && sparams.get('from-profile'))
       router.push('/profile');
     else
-    router.push('/civil-id');
+      router.push('/civil-id');
   } 
 
   function onVideoError(){

@@ -1,9 +1,8 @@
-import { logout } from '@/store/slices/authSlice';
 import { store } from '@/store/store'; 
 import axios from 'axios';
-import Router from 'next/navigation';
 //import { map } from 'zod';
 import { saveAs } from 'file-saver';
+import { error404$, error500$, internetOffline$, userLogout$ } from './event.service';
 //import { useRouter } from 'next/navigation'; 
 
 //https://axios-http.com/docs/req_config
@@ -38,10 +37,10 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-/*axios.interceptors.response.use(async (response) => {
+axios.interceptors.response.use(async (response) => {
     return response;
 }, err => handleAxiosError(err));
-*/
+
 export async function handleAxiosError(err: any) {
     
     console.log("axios error:", err);
@@ -51,15 +50,18 @@ export async function handleAxiosError(err: any) {
 
     // Handle Bad Requests
     if (response.status === 400) {
+        error404$.next({});
      //   Router.push('/404');   
     }
 
     // Handle No Internet Connection Error
     if (response.status == 0 || response.status == 504) {
+        internetOffline$.next({});
     //    Router.push('/no-internet');  
     }
     
     if(!navigator.onLine) {
+        internetOffline$.next({});
     //    Router.push('/no-internet');  
     }
 
@@ -67,17 +69,19 @@ export async function handleAxiosError(err: any) {
     if (response.status === 401) { 
         //const dispatch = useAppDispatch();
         //dispatch(logout());
-    //    Router.push('/'); 
+        //    Router.push('/'); 
+        userLogout$.next({});
     }
 
     // Handle internal server error - 500  
     if (response.status === 500) {
-
+        error500$.next({});
     //    Router.push('/500');   
     }
 
     // Handle page not found - 404 error 
     if (response.status === 404) {
+        error404$.next({});
     //    Router.push('/404');   
     }
 
@@ -101,12 +105,10 @@ export async function handleAxiosError(err: any) {
         return empty();
     }*/
 
-    //console.error(JSON.stringify(response));
+    console.error(JSON.stringify(response));
 
     return Promise.reject(err);//errMsg
-
 }
-
 
 /**
    * Requests via PDF GET verb

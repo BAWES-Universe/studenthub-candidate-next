@@ -41,12 +41,21 @@ export default function Header() {
 
             <Navigation></Navigation>
 
+            <div className="max-w-4xl mx-auto relative">
             { canGoBack && 
                 <div className="xs:block sm:hidden px-6 py-4  bg-white">
                     <button onClick={() => router.back()} className="flex w-10 h-10 flex-col items-start gap-2.5 [background:var(--Neutral-20,#F5F5F7)] p-2 rounded-[20px]">
                         <ChevronLeft className="stroke-[#7d7d8d]" />
                     </button>
                 </div> }
+    
+            <Button onClick={() => router.push('/activity')} variant="ghost" 
+                className="sm:hidden absolute top-6 end-4">  
+                <Bell className="size-10" />
+                {totalUnreadActity > 0 && <Badge variant={"destructive"} className="absolute end-[-5px] top-[-5px] rounded-full"  
+                    color="warning">{totalUnreadActity}</Badge>}
+            </Button>    
+            </div>
         </>
     );
 }
