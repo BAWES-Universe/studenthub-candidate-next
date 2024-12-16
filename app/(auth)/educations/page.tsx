@@ -141,7 +141,7 @@ export default function Educations() {
 
   return (
     <div className="mb-[100px]">
-      { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+      { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 25, 0]}></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         Where did you study?

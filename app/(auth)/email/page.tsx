@@ -135,7 +135,7 @@ export default function Email() {
 
   return (
     <>
-        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[22, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
           What is your email address?

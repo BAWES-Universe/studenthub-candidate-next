@@ -96,7 +96,7 @@ export default function Objective() {
 
   return (
     <>
-        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 48]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
           What’s your objective?

@@ -152,7 +152,7 @@ export default function AreaPage() {
         if (params && params.get('from-profile'))
           router.push('/profile');
         else
-            router.push('/complete');
+          router.push('/personal-info-complete');
       } else {
         alert(errorMessage(res.message));
       }
@@ -351,7 +351,7 @@ export default function AreaPage() {
 
   return (
     <>
-        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[88, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-0 text-center text-[40px] font-bold leading-[56px]">
            { t("In which area do you currently live?") }

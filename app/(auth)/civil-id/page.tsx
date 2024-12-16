@@ -221,7 +221,7 @@ export default function PreferredTime() {
 
   return (
     <> 
-        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 72]}></OnboardProgress> }
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">

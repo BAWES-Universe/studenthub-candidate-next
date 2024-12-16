@@ -20,6 +20,7 @@ import { useAppSelector } from "@/store/store";
 import { useAppDispatch } from "@/store/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { page, track } from "@/providers/analytics.service";
+import { FormDateInput } from "@/components/ui/form-date";
 
 const formSchema = z.object({
   candidate_birth_date: z.date().min(new Date(new Date().setFullYear(new Date().getFullYear() - 25)), {
@@ -97,7 +98,7 @@ export default function Name() {
 
   return (
     <>
-        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[55, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             When were you born?
@@ -106,36 +107,15 @@ export default function Name() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
-          <FormInput 
-                  name="candidate_birth_date"
-                  label="candidate_birth_date"
-                  form={form as any}
+            <FormDateInput
+                name='candidate_birth_date'
+                label='Select date'
+                form={form as any}
+                onChange={(date: any) => {
+                  console.log(date)
+                }}
                 />
-          
-            <div className="hidden">
-              <div className="flex-col ms-[16px] me-[16px]">
-                <FormInput 
-                  name="day"
-                  label="Day"
-                  form={form as any}
-                />
-              </div>
-              <div className="flex-col ms-[16px] me-[16px]">
-                <FormInput 
-                  name="month"
-                  label="Month"
-                  form={form as any}
-                />
-              </div>
-              <div className="flex-col ms-[16px] me-[16px]">
-                <FormInput 
-                  name="year"
-                  label="Year"
-                  form={form as any}
-                />
-              </div>
-            </div>
-              
+ 
             <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>

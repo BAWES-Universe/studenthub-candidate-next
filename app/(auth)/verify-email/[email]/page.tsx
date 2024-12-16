@@ -200,7 +200,7 @@ export default function VerifyEmailPage() {
   
   return (
     <>
-        { !sparams?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+        { !sparams?.get('from-profile') && <OnboardProgress arrProgress={[22, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
             We’ve sent you a code on your email

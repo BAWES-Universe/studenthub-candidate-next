@@ -102,7 +102,7 @@ export default function Nationality() {
         if (params && params.get('from-profile'))
           router.push('/profile');
         else
-        router.push('/personal-info-complete');
+          router.push('/area');
       } else {
         alert(errorMessage(res.message));
       }
@@ -119,7 +119,7 @@ export default function Nationality() {
 
   return (
     <>
-      { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+      { !params?.get('from-profile') && <OnboardProgress arrProgress={[77, 0, 0]}></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         Tell us more about your nationality

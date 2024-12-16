@@ -82,7 +82,6 @@ export default function Email() {
 
   return (
     <div className="bg-[#fff]">
-        { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
           What is your email address?

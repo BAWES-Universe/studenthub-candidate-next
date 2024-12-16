@@ -127,7 +127,7 @@ export default function Experiences() {
 
   return (
     <div className="mb-[100px]">
-      { !params?.get('from-profile') && <OnboardProgress></OnboardProgress> }
+      { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 75, 0]}></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
         { t("Do you have any work experience?")}

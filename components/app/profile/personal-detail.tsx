@@ -65,7 +65,7 @@ export function PersonalDdetail()   {
         });
     };
     const updateDrivingLicenseClicked = async () => {
-        router.push('/driver-license?from-profile=1', {
+        router.push('/driver-licence?from-profile=1', {
             scroll: true
         });
     };
@@ -262,7 +262,7 @@ export function PersonalDdetail()   {
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
                         { user.candidate_driving_license == 1 && 'Has Driving License' }
-                        { user.candidate_driving_license == 1 && 'Has No Driving License' }
+                        { user.candidate_driving_license == 2 && 'Has No Driving License' }
                         { !user.candidate_driving_license && 'Driving License (not set)' }
                     </div>
                 </div>
