@@ -7,8 +7,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function Navigation() {
-
-    const [path, setPath] = useState<string>(window?.location.pathname || "/home");
+//todo: replace with next/router
+// typeof window !== undefined? window.location.pathname : 
+    const [path, setPath] = useState<string>("/home");
 
     const { t } = useTranslation();
     const router = useRouter();

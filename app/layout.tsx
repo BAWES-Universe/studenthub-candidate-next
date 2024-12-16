@@ -18,7 +18,7 @@ const inter = Inter({ subsets: ['latin'] });
 import NextTopLoader from 'nextjs-toploader'
 import { setCampaignId, setCanGoForward, setOneSignalStatus, setPendingInvitations, setShowOneSignalPrompt, setTotalUnreadActity, setTotalUnreadMessages } from "@/store/slices/appSlice";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { publicRoutes } from "@/_middleware";
 import { identify, setMixpanel, track } from "@/providers/analytics.service";
 import i18n from "./18n";
@@ -58,12 +58,13 @@ export default function RootLayout({
   const { oneSignalStatus } = state.app;
 
   //useEffect(() => {
-     
+  if (typeof window !== 'undefined') {  
     if (!isAuthenticated && !publicRoutes.includes(window?.location.pathname)) {
       return redirect('/login');
     } else if (isAuthenticated && ["/", ""].includes(window?.location.pathname)) {
       return redirect('/home');
     }
+  }
 
   //}, [isAuthenticated, router]);
 
@@ -504,8 +505,10 @@ export default function RootLayout({
         <body className={ `${inter.className}` }>
           <NextTopLoader showSpinner={false} />
 
+          <Suspense fallback="loading">
           {children} 
-
+          </Suspense>
+          
           <Script strategy="lazyOnload" 
             src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
 

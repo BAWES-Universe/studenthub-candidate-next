@@ -1,15 +1,23 @@
 import { setLanguage } from "@/store/slices/appSlice";
 import { logout } from "@/store/slices/authSlice";
-import { Globe, KeyRound, LogOut } from "lucide-react";
+import { EyeClosed, Globe, KeyRound, LogOut, Trash } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import i18n from "@/app/18n";
+import { removeProfile, updateJobSearchStatus } from "@/providers/logged-in/account.service";
+import { useAppSelector } from "@/store/store";
+import { useState } from "react";
+import { setUser } from "@/store/slices/userSlice";
 
 export function CandidateAction() {
     const router = useRouter()
     const {  t } = useTranslation();
     const dispatch = useDispatch();
+
+    const { user } = useAppSelector((state) => state.user);
+
+    const [updating, setUpdating] = useState(false);
 
     const logoutClicked = () => {   
         dispatch(logout());
@@ -27,9 +35,41 @@ export function CandidateAction() {
         }));    
     }
 
+    const updateJobSearchStatusClicked = () => {
+        setUpdating(true);
+
+        const params = {
+            job_search_status: user?.candidate_job_search_status == 1 ? 0 : 1
+        };
+        
+        updateJobSearchStatus(params).then((response) => {
+            setUpdating(false);
+
+            if (response.operation != 'success') {
+                alert(response.message);
+            } else {
+                dispatch(setUser({
+                    user: {
+                        ...user,
+                        candidate_job_search_status: params.job_search_status
+                    }
+                }));
+                
+                router.push("/");    
+            }
+        });
+    }
+
+    const deleteProfileClicked = () => {
+        removeProfile().then(() => {
+            dispatch(logout());
+            router.push("/");    
+        })
+    }
+
     return (
         <div className="w-full h-40 py-2 bg-white rounded-2xl flex-col justify-start items-start inline-flex">
-            
+             
             <div onClick={() => router.push("/change-password")} className="cursor-pointer border-slate-200 border-b  self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
                 <div className="self-stretch justify-start items-center gap-2 inline-flex">
                     <div className="w-6 h-6 relative">
@@ -39,6 +79,19 @@ export function CandidateAction() {
                 </div>
             </div>
 
+            { user && !user.store && user.candidate_job_search_status && (
+                <div onClick={() => !updating && updateJobSearchStatusClicked()} className="cursor-pointer border-slate-200 border-b self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
+                    <div className="self-stretch justify-start items-center gap-2 inline-flex">
+                        <div className="w-6 h-6 relative">
+                            <EyeClosed />
+                        </div>
+                        <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                        { t("I don’t want a job anymore") }  
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div onClick={changeLanguageClicked} className="cursor-pointer border-slate-200 border-b self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
                 <div className="self-stretch justify-start items-center gap-2 inline-flex">
                     <div className="w-6 h-6 relative">
@@ -46,6 +99,17 @@ export function CandidateAction() {
                     </div>
                     <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
                       { i18n.language == "ar"?"English": "عربي" }  
+                    </div>
+                </div>
+            </div>
+ 
+            <div onClick={deleteProfileClicked} className="cursor-pointer  self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
+                <div className="self-stretch justify-start items-center gap-2 inline-flex">
+                    <div className="w-6 h-6 relative">
+                        <Trash />
+                    </div>
+                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                    {t("Delete Profile")}
                     </div>
                 </div>
             </div>

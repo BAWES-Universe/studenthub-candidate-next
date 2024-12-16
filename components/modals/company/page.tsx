@@ -4,13 +4,21 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Company } from '@/models/company'; // Adjust the import path as necessary
+
+
+interface CompanyPageProps {
+  company: Company;
+  dismiss: () => void;
+}
+
 import { langContent } from '@/utils/common';
-import { Brand } from '@/models/brand';
+
 import { page, track } from '@/providers/analytics.service';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Brand } from '@/models/brand';
 
-const CompanyPage = ({ company, dismiss }: { company: Company, dismiss: () => void}) => {
+const CompanyPage = ({ company, dismiss }:CompanyPageProps) => {
   //const [company, setCompany] = useState<Company | null>(null);
   const { t } = useTranslation(); // Translation hook
   const slideOpts = {

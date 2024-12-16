@@ -10,9 +10,9 @@ import { detailInvitation } from '@/providers/logged-in/invitation.service';
 import { useParams } from 'next/dist/client/components/navigation';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import CompanyPage from '../../company/page';
+import CompanyPage from '../../../../components/modals/company/page';
 import { useTranslation } from 'react-i18next';
-import FeedbackPage from '../feedback/page';
+import FeedbackPage from '../../../../components/modals/feedback/page';
 
 const InvitationDetailPage = () => {
     const { id } = useParams() as { id: string };
