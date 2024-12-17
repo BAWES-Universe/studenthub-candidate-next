@@ -7,6 +7,7 @@ import { useAppDispatch } from '@/store/store';
 import { errorMessage } from '@/utils/common';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
+import { alertDialog } from '@/hooks/use-alert-dialog';
 
 const WorkingCounter = () => {
   const { t } = useTranslation();
@@ -67,12 +68,18 @@ const WorkingCounter = () => {
              // workStarted$.next({});
           }
 
-          alert(errorMessage(data.message));
+          alertDialog({
+            title: t('Error'),
+            description: errorMessage(data.message),
+          });
       }
 
-  } catch (error) {
-      alert(errorMessage('Location permission required to start the work'));
-  }
+    } catch (error) {
+        alertDialog({
+          title: t('Error'),
+          description: t('Location permission required to start the work'),
+        });
+    }
   };
 
   const stopWorkClicked = async () => {
@@ -100,14 +107,20 @@ const WorkingCounter = () => {
               }}));
 
              // workStopped$.next({});
+          } else {
+            alertDialog({
+              title: t('Error'),
+              description: errorMessage(data.message),
+            });
           }
-
-          alert(errorMessage(data.message));
       }
 
-  } catch (error) {
-      alert(errorMessage('Location permission required to start the work'));
-  }
+    } catch (error) {
+      alertDialog({
+        title: t('Error'),
+        description: t('Location permission required to start the work')
+      });
+    }
   };
 
   return (

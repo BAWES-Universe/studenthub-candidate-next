@@ -43,6 +43,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { t } from "i18next";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
@@ -517,7 +519,7 @@ export default function RootLayout({
   }
 
   const { alertDialogs } = useAlertDialog();
- 
+
   return (
     <Provider store={store}>
         
@@ -530,6 +532,8 @@ export default function RootLayout({
             {children} 
           </Suspense>
           
+          <Toaster />
+
           {/*<AlertDialogs />*/}
           {alertDialogs.map((alertDialog, index) => {
             return (
@@ -540,9 +544,9 @@ export default function RootLayout({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>{alertDialog.title}</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    { alertDialog.description && <AlertDialogDescription>
                     {alertDialog.description}
-                    </AlertDialogDescription>
+                    </AlertDialogDescription> }
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     {/**<AlertDialogCancel>Cancel</AlertDialogCancel> */}
@@ -556,9 +560,7 @@ export default function RootLayout({
 
           <Script strategy="lazyOnload" 
             src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
-
-
-  {/*
+ 
         <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-Q2JP5Y7ZNF"></Script>
 
         <Script strategy="afterInteractive"
@@ -600,7 +602,6 @@ export default function RootLayout({
         `,
             }}
           />
-  */}
 
         </body>
       </html>

@@ -10,6 +10,7 @@ import { accept } from '@/providers/logged-in/invitation.service';
 import { reject } from '@/providers/logged-in/invitation.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { Button } from '@/components/ui/button';
+import { alertDialog } from '@/hooks/use-alert-dialog';
 //import { X } from 'lucide-react';
 
 const FeedbackPage = ({ invitation, invitation_status, onClose }: { 
@@ -45,10 +46,16 @@ const FeedbackPage = ({ invitation, invitation_status, onClose }: {
             if (action.operation === 'success') {
                 onClose(true);
             } else {
-                alert(t('Try Again'));
+                alertDialog({
+                    title: t('Error'),
+                    description: t('Try Again')
+                });
             }
         } catch (error) {
-            alert(t('An error occurred'));
+            alertDialog({
+                title: t('Error'),
+                description: t('An error occurred')
+            });
         } finally {
             setLoading(false);
         }

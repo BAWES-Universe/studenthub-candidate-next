@@ -12,6 +12,7 @@ import { setCredentials } from "@/store/slices/authSlice";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { useTranslation } from "react-i18next";
 import Script from "next/dist/client/script";
+import { alertDialog } from "@/hooks/use-alert-dialog";
  
 //import Rocket from '../../public/'; // Adjust the path as necessary
 
@@ -33,9 +34,7 @@ export function Hero() {
 
       if (googleUser && googleUser.authentication && googleUser.authentication.idToken) {
         const res = await useGoogleIdTokenForAuth(googleUser.authentication.idToken);
-
-        console.log(res);
-
+ 
         if (res.operation == 'success') {
           // After successful login
 
@@ -53,19 +52,33 @@ export function Hero() {
           router.push('/home');
 
         } else {
-          alert(res.message);
+          alertDialog({
+            title: t('Error'),
+            description: res.message
+          });
         }
       } else {
-        alert('Error getting login by Google');
+        alertDialog({
+          title: t('Error'),
+          description: t('Error getting login by Google')
+        });
       }
     }).catch(async err => {
  
       if (err = 'popup_closed_by_user') {
-        alert(err);
+         
+        alertDialog({
+          title: t('Error'),
+          description: t(err)
+        });
         return false;
       }
 
-      alert('Error getting login by Google');
+      alertDialog({
+        title: t('Error'),
+        description: t('Error getting login by Google')
+      });
+      
     }).finally(() => {
       setGoogleLoginLoading(false);
     });

@@ -9,6 +9,7 @@ import { removeProfile, updateJobSearchStatus } from "@/providers/logged-in/acco
 import { useAppSelector } from "@/store/store";
 import { useState } from "react";
 import { setUser } from "@/store/slices/userSlice";
+import { alertDialog } from "@/hooks/use-alert-dialog";
 
 export function CandidateAction() {
     const router = useRouter()
@@ -46,7 +47,12 @@ export function CandidateAction() {
             setUpdating(false);
 
             if (response.operation != 'success') {
-                alert(response.message);
+                
+                alertDialog({
+                    title: t('Error'),
+                    description: response.message
+                });
+                
             } else {
                 dispatch(setUser({
                     user: {

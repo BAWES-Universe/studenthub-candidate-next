@@ -68,8 +68,16 @@ Detailed documentation can be found in the `/docs` directory:
 https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
-- test chat, OneSignal
+- test chat
+- test OneSignal
 - replace alert with alertDialog 
+- enter not working on all pages in auth 
+- alert popup showing <br /> tag
+- build:dev using production endpoint 
+- google login not working at https://studenthub-candidate.netlify.app
+- check sentry works properly 
+- google signin deprecated, need to migrate, can try next.js popular auth.js with other option like linkedin, facebook 
+- 
 
 https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev
 

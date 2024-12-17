@@ -19,6 +19,8 @@ import { FormTextarea } from '@/components/ui/form-textarea';
 import { FormTimeInput } from '@/components/ui/form-time';
 import { FormDateInput } from '@/components/ui/form-date';
 import { t } from 'i18next';
+import { toast } from '@/hooks/use-toast';
+import { alertDialog } from '@/hooks/use-alert-dialog';
 
 
 const timeComparisonValidator = (data: any) => {
@@ -87,12 +89,21 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
     setSaving(false);
 
     if (response.operation === "success") {
-      //Alert.alert(t('Success'), response.message);
+      
+      toast({
+        title: t('Success'),
+        description: response.message
+      });
+
       reset(); // Reset the form
       onClose({ refresh: true }); // Close the modal
+
     } else if (response.operation === "error") {
-      //Alert.alert(t('Error'), response.message);
-      alert(response.message);
+      
+      alertDialog({
+        title: t('Error'),
+        description: response.message
+      });
     }
   };
  
