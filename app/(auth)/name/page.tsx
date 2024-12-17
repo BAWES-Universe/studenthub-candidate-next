@@ -18,15 +18,7 @@ import { setUser } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import { profile } from "@/providers/logged-in/account.service";
 import { page, track } from "@/providers/analytics.service";
-
-const formSchema = z.object({
-  name_en: z.string().min(2, {
-    message: "Name in English must be at least 2 characters.",
-  }),
-  name_ar: z.string().min(2, {
-    message: "Name in Arabic must be at least 2 characters.",
-  }),
-})
+import { useTranslation } from "react-i18next";
 
 export default function Name() {
 
@@ -39,7 +31,19 @@ export default function Name() {
   const [loading, setLoading] = useState(false);
   const params = useSearchParams();
 
+  const { t } = useTranslation();
+
   // 1. Define your form.
+
+  const formSchema = z.object({
+    name_en: z.string().min(2, {
+      message: t("Name in English must be at least 2 characters."),
+    }),
+    name_ar: z.string().min(2, {
+      message: t("Name in Arabic must be at least 2 characters."),
+    }),
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -96,7 +100,7 @@ export default function Name() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[11, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            What’s your name, hero?
+          {t("What’s your name, hero?")}
         </h5>
 
         <Form {...form} >

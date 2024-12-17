@@ -23,7 +23,7 @@ import {
     Form
   } from "@/components/ui/form"
 import { z } from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { addDays, format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
@@ -59,14 +59,14 @@ const CandidateAssignmentPage = () => {
  
     const formSchema = z.object({
         start_date: z.date({
-        required_error: 'Please add date.'
+            required_error: t('Please add date.')
         }).max(new Date(), {
-        message: "Can not add future dates.",
+            message: t("Can not add future dates."),
         }),
         end_date: z.date({
-            required_error: 'Please add date.'
+            required_error: t('Please add date.')
         }).max(new Date(), {
-            message: "Can not add future dates.",
+            message: t("Can not add future dates."),
         })
     // dateFormatted: z.string({
         // required_error: 'Please add date.'
@@ -190,7 +190,7 @@ const CandidateAssignmentPage = () => {
                                 </svg>
                             </div>
                             <div className={ `${(form.formState.isValid) ?'text-[#4c6ff2]': 'text-[#7d7d8d]'}  text-base font-bold leading-normal` }>
-                                Filter by Date
+                                {t("Filter by Date")}
                             </div>
                         </div> 
                         </PopoverTrigger>

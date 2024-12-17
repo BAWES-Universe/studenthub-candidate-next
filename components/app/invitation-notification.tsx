@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { CandidateNotification } from '@/models/candidate-notification';
-import { toDate } from '@/utils/common';
 import { format } from 'date-fns';
 
 const InvitationNotification = ({ candidateNotification, onClick }: { candidateNotification: CandidateNotification, onClick: any }) => {
@@ -27,7 +26,7 @@ const InvitationNotification = ({ candidateNotification, onClick }: { candidateN
                         : t("Part-timer")
                 })}
             </p>
-            <p className="txt-time text-right text-gray-500 text-xs leading-4 m-0">
+            <p className="txt-time text-end text-gray-500 text-xs leading-4 m-0">
                 { candidateNotification.created_at ? 
                     format(candidateNotification.created_at, 'MMM d') : ''   
                 }

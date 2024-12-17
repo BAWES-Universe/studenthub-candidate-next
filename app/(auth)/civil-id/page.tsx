@@ -12,7 +12,6 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
@@ -23,23 +22,9 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
-
-const formSchema = z.object({
-  candidate_civil_photo_back_url: z.string(),
-  candidate_civil_photo_front_url: z.string(),
-  candidate_civil_photo_back: z.string({
-     //   required_error: 'Please upload back side of your national id.'
-    }).nullable(),
-  candidate_civil_photo_front: z.string({
-    //    required_error: 'Please upload front side of your national id.'
-    }).nullable(),
-  candidate_civil_expiry_date: z.string({
-    }).min(1, 'Please add expiry date.'),
-    candidate_civil_id: z.string({
-        //required_error: 'Please add id number.'
-    }).min(1, 'Please add id number.')
-})
 
 export default function PreferredTime() {
   const [loading, setLoading] = useState(false);
@@ -54,6 +39,8 @@ export default function PreferredTime() {
   const router = useRouter();
 
   const params = useSearchParams();
+
+  const { t} = useTranslation();
 
   useEffect(() => {
 
@@ -90,7 +77,22 @@ export default function PreferredTime() {
     }
   }, [user]);
 
-  // 1. Define your form.
+  const formSchema = z.object({
+    candidate_civil_photo_back_url: z.string(),
+    candidate_civil_photo_front_url: z.string(),
+    candidate_civil_photo_back: z.string({
+       //   required_error: 'Please upload back side of your national id.'
+      }).nullable(),
+    candidate_civil_photo_front: z.string({
+      //    required_error: 'Please upload front side of your national id.'
+      }).nullable(),
+    candidate_civil_expiry_date: z.string({
+      }).min(1, t('Please add expiry date.')),
+    candidate_civil_id: z.string({
+        //required_error: 'Please add id number.'
+    }).min(1, t('Please add id number.'))
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -125,7 +127,11 @@ export default function PreferredTime() {
         else
           router.push('/preferred-time');
       } else {
-        alert(errorMessage(res.message));
+         
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -225,7 +231,7 @@ export default function PreferredTime() {
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">
-            Civil ID Information
+            {t('Civil ID Information')}
         </h5>
   { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
 
@@ -238,10 +244,11 @@ export default function PreferredTime() {
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6 mt-[8px] mb-[4px] block">
-                    ID Photo (Front)</h6> 
+                      {t('ID Photo (Front)')}
+                </h6> 
 
                 <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
-                    Make sure the image is bright and not blurry
+                    {t('Make sure the image is bright and not blurry')}
                 </p>
 
                 <input
@@ -263,7 +270,10 @@ export default function PreferredTime() {
                                     onCivilIdUploaded(res);
 
                                   } else {
-                                    alert(errorMessage(res.message));
+                                    alertDialog({
+                                      title: t("Error"),
+                                      description: errorMessage(res.message),
+                                    });
                                   }
 
                                 }).finally(() => {
@@ -283,7 +293,7 @@ export default function PreferredTime() {
 
                 <a onClick={() => document.getElementById('frontIdUpload')?.click()} 
                   className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 mt-[16px] block cursor-pointer">
-                    { uploadingFrontId ? "Uploading..." : "Upload ID Front" }
+                    { uploadingFrontId ? t("Uploading...") : t("Upload ID Front") }
                 </a>
             </div> }
 
@@ -294,7 +304,7 @@ export default function PreferredTime() {
 
                 <Button variant={"ghost"} disabled={removingFrontId} onClick={resetFrontId} className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
                     <img src="/assets/icons/trash.svg" className="w-[16px]"></img>  
-                    { removingFrontId ? "Removing..." : "Remove" }
+                    { removingFrontId ? t("Removing...") : t("Remove") }
                 </Button>
             </div> }
             
@@ -305,11 +315,11 @@ export default function PreferredTime() {
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6  mt-[8px] mb-[4px] block">
-                    ID Photo (Back)
+                    {t("ID Photo (Back)")}
                     </h6> 
 
                 <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
-                    Make sure the image is bright and not blurry
+                    {t("Make sure the image is bright and not blurry")}
                 </p>
                 <input
                     type="file"
@@ -332,7 +342,10 @@ export default function PreferredTime() {
                                     onCivilIdUploaded(res);
 
                                   } else {
-                                    alert(errorMessage(res.message));
+                                    alertDialog({
+                                      title: t("Error"),
+                                      description: errorMessage(res.message),
+                                    });
                                   }
 
                                 }).finally(() => {
@@ -349,7 +362,7 @@ export default function PreferredTime() {
                     }}
                 />
                 <a onClick={() => document.getElementById('backIdUpload')?.click()} className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block cursor-pointer">
-                    { uploadingBackId ? "Uploading..." : "Upload ID Back" }
+                    { uploadingBackId ? t("Uploading...") : t("Upload ID Back") }
                 </a>
             </div> }
 
@@ -361,7 +374,7 @@ export default function PreferredTime() {
 
                 <Button variant={ "ghost"} disabled={removingBackId} onClick={resetBackId} className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
                     <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    
-                    { removingBackId ? "Removing..." : "Remove" }
+                    { removingBackId ? t("Removing...") : t("Remove") }
                 </Button>
             </div> }
             
@@ -371,7 +384,7 @@ export default function PreferredTime() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[16px] max-w-[650px] m-auto mb-[100px]">
   
           <p className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7">
-            ID Details
+            {t("ID Details")}
           </p>
 
           <FormInput

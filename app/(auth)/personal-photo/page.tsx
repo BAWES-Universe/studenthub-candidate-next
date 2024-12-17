@@ -19,15 +19,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
-import { Candidate } from "@/models/candidate";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
-const formSchema = z.object({
-    candidate_personal_photo: z.string({
-        required_error: "Please upload photo."
-    }),
-    candidate_personal_photo_url: z.string(),
-})
+
 // Define the User type
 interface User {
   candidate_personal_photo?: string; // Add other properties as needed
@@ -42,7 +38,17 @@ export default function PersonalPhoto() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useSearchParams();
+
+  const { t } = useTranslation();
+
   // 1. Define your form.
+  const formSchema = z.object({
+    candidate_personal_photo: z.string({
+        required_error: t("Please upload photo.")
+    }),
+    candidate_personal_photo_url: z.string(),
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,7 +108,10 @@ export default function PersonalPhoto() {
         else
         router.push('/about-yourself');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -121,10 +130,10 @@ export default function PersonalPhoto() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 24]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
-            Show us what you look like
+          {t("Show us what you look like")}
         </h5>
         <p className="mb-[40px] self-stretch text-[#4B4B61] text-center text-base font-normal leading-6">
-        Please make sure that your picture is professional, shows your face and is not blurry
+          {t("Please make sure that your picture is professional, shows your face and is not blurry")}
         </p>
 
         <Form {...form}>
@@ -146,14 +155,14 @@ export default function PersonalPhoto() {
                 <a onClick={() => document.getElementById('photoUpload')?.click()} 
                 className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center 
                  text-xs font-medium leading-4 block cursor-pointer">
-                   { uploading ? "Uploading..." : "Upload picture" }    
+                   { uploading ? t("Uploading...") : t("Upload picture") }    
                 </a>
             </div> }
             
             { form.getValues().candidate_personal_photo && 
                 <a onClick={() => document.getElementById('photoUpload')?.click()} className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center 
                   m-auto block text-xs font-medium leading-4 mt-[8px] cursor-pointer">
-                    { uploading ? "Uploading..." : "Upload picture" }    
+                    { uploading ? t("Uploading...") : t("Upload picture") }    
                 </a> }
  
                 <input

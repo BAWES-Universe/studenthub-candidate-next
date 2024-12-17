@@ -18,6 +18,8 @@ import { CheckIcon } from "lucide-react";
 import React, { useEffect, useId, useState } from "react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { filterUniversities } from "@/providers/university.service";
+import { langContent } from "@/utils/common";
+import { useTranslation } from "react-i18next";
 
 interface NationalityInputProps {
     university_id?: number;
@@ -59,6 +61,8 @@ export default function NationalityInput({ university_id, onSelect }: Nationalit
 
     const id = useId()
 
+    const { t } = useTranslation();
+    
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -75,7 +79,7 @@ export default function NationalityInput({ university_id, onSelect }: Nationalit
                             `}
                         >
                             {selectedUniversity ?
-                                selectedUniversity['university_name_en'] : null}
+                                langContent(selectedUniversity['university_name_en'], selectedUniversity['university_name_ar']) : null}
                         </p>
 
                     </FormControl>
@@ -92,7 +96,7 @@ export default function NationalityInput({ university_id, onSelect }: Nationalit
                                 
                             `}
                     >
-                        University
+                        {t('University')}
                     </FormLabel>
                     <FormMessage />
                 </FormItem>
@@ -104,7 +108,7 @@ export default function NationalityInput({ university_id, onSelect }: Nationalit
                     <CommandList>
                         <ScrollArea className="h-72">
                             <CommandEmpty>
-                                {loading ? 'Loading...' : 'No university found.'}
+                                {loading ? t('Loading...') : t('No university found.')}
                             </CommandEmpty>
 
                             <CommandGroup>
@@ -113,7 +117,7 @@ export default function NationalityInput({ university_id, onSelect }: Nationalit
 
                                         <CommandItem key={university.university_id} className="gap-2 cursor-pointer"
                                             onSelect={() => handleSelect(university)}>
-                                            <span className="flex-1 text-sm">{university.university_name_en}</span>
+                                            <span className="flex-1 text-sm">{langContent(university.university_name_en, university.university_name_ar)}</span>
                                             <CheckIcon
                                                 className={`ml-auto size-4 ${university.university_id == university_id ?
                                                     "opacity-100" : "opacity-0"}`}

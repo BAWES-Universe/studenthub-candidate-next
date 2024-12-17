@@ -9,7 +9,6 @@ import { z } from "zod"
 import {
   Form,
 } from "@/components/ui/form"
-import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import NationalityInput from "@/components/on-board/nationality-input";
@@ -25,17 +24,14 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
-
-const formSchema = z.object({
-  // nationality: z.string().email('Please enter valid nationality'),
-  country_id: z.number({
-    required_error: 'Please enter valid nationality'
-  }),
-})
-
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
+ 
 
 export default function Nationality() {
 
+  const { t } = useTranslation();
+  
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
@@ -47,6 +43,14 @@ export default function Nationality() {
   });
 
   // 1. Define your form.
+
+  const formSchema = z.object({
+    // nationality: z.string().email('Please enter valid nationality'),
+    country_id: z.number({
+      required_error: t('Please enter valid nationality')
+    }),
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +58,6 @@ export default function Nationality() {
       // nationality: any
     },
   })
-
 
   useEffect(() => {
 
@@ -104,7 +107,10 @@ export default function Nationality() {
         else
           router.push('/area');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -122,7 +128,7 @@ export default function Nationality() {
       { !params?.get('from-profile') && <OnboardProgress arrProgress={[77, 0, 0]}></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-        Tell us more about your nationality
+        {t("Tell us more about your nationality")}
       </h5>
 
       <Form {...form}>
@@ -132,7 +138,7 @@ export default function Nationality() {
             onSelect={(country) => onCountryChange(country)}></NationalityInput>
           
           <p className="text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 mb-[0]">
-            Is your mother Kuwaiti?
+            {t("Is your mother Kuwaiti?")}
 
             <Popover>
               <PopoverTrigger asChild>
@@ -141,11 +147,11 @@ export default function Nationality() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[100%] p-[24px] max-w-[429px] text-[color:var(--Neutral-95,#23233D)] text-center text-base font-normal leading-6">
-                <p className="mb-[24px]">This is required for us to know whether we can match you for jobs in the food and beverage sector.</p>
+                <p className="mb-[24px]">{t("This is required for us to know whether we can match you for jobs in the food and beverage sector.")}</p>
 
-                <p className="mb-[24px]">Current Kuwaiti regulations only allow us to issue health cards for Kuwaiti nationals.</p>
+                <p className="mb-[24px]">{t("Current Kuwaiti regulations only allow us to issue health cards for Kuwaiti nationals.")}</p>
 
-                <p className="mb-[24px]">This is hopefully temporary as we’re currently working on legalizing health cards for non-Kuwaitis.</p>
+                <p className="mb-[24px]">{t("This is hopefully temporary as we’re currently working on legalizing health cards for non-Kuwaitis.")}</p>
               </PopoverContent>
 
             </Popover>
@@ -154,11 +160,11 @@ export default function Nationality() {
           <RadioGroup defaultValue="option-one" className="mt-[0]">
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-one" id="option-one" />
-              <Label htmlFor="option-one">Yes</Label>
+              <Label htmlFor="option-one">{t("Yes")}</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-two" id="option-two" />
-              <Label htmlFor="option-two">No</Label>
+              <Label htmlFor="option-two">{t("No")}</Label>
             </div>
           </RadioGroup>
 

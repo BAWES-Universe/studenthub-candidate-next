@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
+import { useTranslation } from 'react-i18next'
 
 
 interface FormInputProps {
@@ -35,6 +36,8 @@ export function FormSelect({
   onChange
 }: FormInputProps) {
   const id = useId()
+
+  const { t } = useTranslation();
 
   return (
     <FormField
@@ -87,7 +90,7 @@ export function FormSelect({
 
               ${fieldState.error ? 'text-destructive' : 'text-gray-500 peer-focus:text-primary'}`}
           >
-            {label}
+            {t(label)}
           </FormLabel>
           </div>
           <FormDescription dir="ltr" className='mt-[8px]'>

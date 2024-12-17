@@ -11,6 +11,8 @@ import Pager from '@/components/common/pager';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { langContent } from '@/utils/common';
+import NoItems from '@/components/common/no-items';
 
 const DiscountsPage = () => {
     const [discounts, setDiscounts] = useState<Discount[]>([]);
@@ -127,12 +129,12 @@ const DiscountsPage = () => {
 
         <div className="mb-4">
                 <Button variant="outline" onClick={resetCategorySelected} className={`me-1 rounded-2xl ${!filters.category_id ? 'bg-primary text-white' : 'bg-white'}`}>
-                    All
+                    {t("All")}
                 </Button>
                 {discountCategories.map((category: DiscountCategory) => (
                     <Button variant="outline" key={category.category_id} onClick={() => onCategorySelected(category)} 
                     className={`rounded-2xl me-1  ${filters.category_id === category.category_id ? 'bg-primary text-white' : 'bg-white'}`}>
-                        {category.name_en} {/* Translate based on language */}
+                        {langContent(category.name_en, category.name_ar)} {/* Translate based on language */}
                     </Button>
                 ))}
             </div>
@@ -141,8 +143,8 @@ const DiscountsPage = () => {
                 {discounts.map((discount) => (
                      <Card key={discount.discount_uuid}>
                         <CardHeader>
-                            <CardTitle>{discount.company?.company_common_name_en}</CardTitle>
-                            <CardDescription>{discount.description_en}</CardDescription>
+                            <CardTitle>{langContent(discount.company?.company_common_name_en, discount.company?.company_common_name_ar)}</CardTitle>
+                            <CardDescription>{langContent(discount.description_en, discount.description_ar)}</CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-4">
                             {discount.image ? (
@@ -151,17 +153,16 @@ const DiscountsPage = () => {
                             ) : (
                                 <img src="/assets/icons/logo.svg" alt="Default" />
                             )} 
-                            <p>{discount.how_to_apply_en}</p>  
+                            <p>{langContent(discount.how_to_apply_en, discount.how_to_apply_ar)}</p>  
                         </CardContent>
                      </Card>    
                 ))}
             </div>
 
             {!loading && discounts.length === 0 && (
-                <div className="no-items text-center justify-center">
-                    <img src="assets/icons/no-invitation.svg" alt="No items" className='m-auto' />
-                    <p>Coming soon...</p>
-                </div>
+                <NoItems image="assets/icons/no-invitation.svg" 
+                    title='Coming soon...'
+                    message="" />
             )}
 
             <Pager pagination={pagination} loadPage={loadData} />

@@ -72,7 +72,7 @@ const WalletBalanceListPage = () => {
                 <h1 className="text-xl font-bold">{t("Wallet")}</h1>
             </header>*/}
 
-            {loading && <div className="progress-bar">Loading...</div>}
+            {loading && <div className="progress-bar">{t("Loading...")}</div>}
             <h2 className="font-semibold text-lg mt-6">{t("Wallet Balance")}</h2>
 
             {balances.length > 0 ? (

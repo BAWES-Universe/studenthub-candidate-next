@@ -116,7 +116,7 @@ const ChatListPage = () => {
                         title={ 'You have no active chats' }
                         message={ '' } /> }
 
-                {loading && <div>Loading...</div>}
+                {loading && <div>{t("Loading...")}</div>}
 
                 {chats.map((chat: Chat) => (
                     <ChatComponent chat={chat} key={chat.chat_uuid} onLogoError={() => onLogoError(chat)} 

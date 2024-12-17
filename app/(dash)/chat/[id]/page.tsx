@@ -136,7 +136,7 @@ const ChatViewPage = () => {
             <div className="max-w-4xl mx-auto p-6">
  
                 {loading && (
-                    <div className="text-center"><span className="skeleton-text">Loading messages...</span></div>
+                    <div className="text-center"><span className="skeleton-text">{t("Loading messages...")}</span></div>
                 )} 
                 
                 { chat && messageGroups.map((group: any) => (
@@ -150,7 +150,7 @@ const ChatViewPage = () => {
                 }
                 {haveUnreadMessage && (
                     <button className="alert-new-message" onClick={() => { setHaveUnreadMessage(false); scrollToBottom(); }}>
-                        New message
+                        {t("New message")}
                     </button>
                 )}
             </div>
@@ -165,7 +165,7 @@ const ChatViewPage = () => {
                         className="txt-message"
                     />
                     <Button className="btn-send" onClick={sendMessage} disabled={sendingMessage}>
-                        {sendingMessage ? <span>Sending...</span> : <span>Send</span>}
+                        {sendingMessage ? <span>{t("Sending...")}</span> : <span>{t("Send")}</span>}
                     </Button>
                 </div>
             </footer>

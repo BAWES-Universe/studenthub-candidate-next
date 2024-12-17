@@ -18,6 +18,8 @@ import { CheckIcon } from "lucide-react";
 import React, { useEffect, useId, useState } from "react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { listDegrees } from "@/providers/logged-in/candidate-education.service";
+import { langContent } from "@/utils/common";
+import { useTranslation } from "react-i18next";
 
 interface DegreeInputProps {
     degree_uuid?: string;
@@ -59,6 +61,8 @@ export default function DegreeInput({ degree_uuid, selectedDegreeGroup, onSelect
 
     const id = useId()
 
+    const { t } = useTranslation();
+    
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -104,7 +108,7 @@ export default function DegreeInput({ degree_uuid, selectedDegreeGroup, onSelect
                     <CommandList>
                         <ScrollArea className="h-72">
                             <CommandEmpty>
-                                {loading ? 'Loading...' : 'No degree found.'}
+                                {loading ? t('Loading...') : t('No degree found.')}
                             </CommandEmpty>
 
                             <CommandGroup>
@@ -113,7 +117,9 @@ export default function DegreeInput({ degree_uuid, selectedDegreeGroup, onSelect
 
                                         <CommandItem key={degree.degree_uuid} className="gap-2 cursor-pointer"
                                             onSelect={() => handleSelect(degree)}>
-                                            <span className="flex-1 text-sm">{degree.degree_name_en}</span>
+                                            <span className="flex-1 text-sm">
+                                                {langContent(degree.degree_name_en, degree.degree_name_ar)}
+                                            </span>
                                             <CheckIcon
                                                 className={`ml-auto size-4 ${degree.degree_uuid == degree_uuid ?
                                                     "opacity-100" : "opacity-0"}`}

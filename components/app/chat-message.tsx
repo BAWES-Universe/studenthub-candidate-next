@@ -12,7 +12,7 @@ export function ChatMessageComponent({ chat, message }: { chat: Chat, message: C
                 </div>
                 <div className="py-2.5">
                     <p className="text-sm leading-tight tracking-tight">{message.message}</p>
-                    <span className="text-xs tracking-tight mt-1 float-right">
+                    <span className="text-xs tracking-tight mt-1 float-end">
                         {format(message.created_at || '', 'hh:mm a')}
                     </span>
                 </div>

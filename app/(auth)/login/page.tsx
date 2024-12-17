@@ -20,12 +20,8 @@ import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import Link from "next/link";
 import { page, track } from "@/providers/analytics.service";
+import { useTranslation } from "react-i18next";
 
-
-const formSchema = z.object({
-  email: z.string().email('Please enter valid email address'),
-  password: z.string().min(4, { message: "Password must be at least 4 characters long" })
-})
 
 export default function Email() {
 
@@ -36,6 +32,13 @@ export default function Email() {
   const [loading, setLoading] = useState(false);
 
   const params = useSearchParams();
+
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    email: z.string().email(t('Please enter valid email address')),
+    password: z.string().min(4, { message: t("Password must be at least 4 characters long") })
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,7 +87,7 @@ export default function Email() {
     <div className="bg-[#fff]">
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          What is your email address?
+          {t("What is your email address?")}
         </h5>
 
         <Form {...form}>
@@ -103,7 +106,9 @@ export default function Email() {
               form={form as any}
               type="password"
             />
-            <Link href="/forgot-password">Forgot Password?</Link>
+            <Link href="/forgot-password">
+              {t("Forgot Password?")}
+            </Link>
 
             <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             

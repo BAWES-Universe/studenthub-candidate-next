@@ -14,19 +14,16 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
 import { useEffect, useState } from "react";
-import { profile, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
+import { profile, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 
-const formSchema = z.object({
-  profile_url: z.string({
-        required_error: 'Please add profile url.'
-    })
-})
 
 export default function PreferredTime() {
 
@@ -36,7 +33,16 @@ export default function PreferredTime() {
   const router = useRouter();
   const params = useSearchParams();
 
+  const { t } = useTranslation();
+
   // 1. Define your form.
+
+  const formSchema = z.object({
+    profile_url: z.string({
+          required_error: t('Please add profile url.')
+      })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -87,7 +93,10 @@ export default function PreferredTime() {
         else
         router.push('/complete');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -99,7 +108,7 @@ export default function PreferredTime() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[0, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            Profile Url
+            {t("Profile Url")}
         </h5>
  
         <Form {...form} >

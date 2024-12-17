@@ -1,5 +1,6 @@
 import { Certificate } from "@/models/certificate";
 import { downloadCertificate } from "@/providers/logged-in/candidate.service";
+import { langContent } from "@/utils/common";
 import { format } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
@@ -54,7 +55,7 @@ export function CertificateComponent({ certificate }: { certificate: Certificate
                             StudentHub
                         </div> 
                         <div className="self-stretch text-[#3f5dca] text-sm font-medium leading-tight">
-                            {certificate.exam.title_en}
+                            {langContent(certificate.exam.title_en, certificate.exam.title_ar)}
                         </div>
                     </div> }
 
@@ -75,7 +76,7 @@ export function CertificateComponent({ certificate }: { certificate: Certificate
                 <button disabled={downloading} onClick={() => downloadClicked(certificate)} 
                     className="disabled:opacity-70 w-[133px] h-10 shrink-0 [background:var(--Blue-Tint-1,#F5F7FF)] rounded-lg 
                     text-[color:var(--Primary-Main,#4C70F2)] text-sm font-semibold leading-5 mt-4">
-                    <img src="/assets/icons/download.svg" className="inline w-6 " /> Certificate
+                    <img src="/assets/icons/download.svg" className="inline w-6 " /> {t('Certificate')}
                 </button>
             </div> }
         </div>

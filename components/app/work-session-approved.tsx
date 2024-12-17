@@ -21,7 +21,7 @@ const WorkSessionApproved = ({ candidateNotification, onClick }: { candidateNoti
         })}
       </p> }
 
-      <p className="text-gray-500 text-xs text-right my-0">
+      <p className="text-gray-500 text-xs text-end my-0">
         {format(candidateNotification.created_at || '', 'MMM d')}
       </p>
 

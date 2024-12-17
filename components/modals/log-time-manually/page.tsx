@@ -6,19 +6,19 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { useForm } from 'react-hook-form'; // Assuming you're using react-hook-form for form handling
 import { addWorkingHour } from '@/providers/logged-in/candidate-working-hour.service';
-import { CircleX, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import Spinner from '@/components/common/spinner';
 import { page, track } from '@/providers/analytics.service';
 import { Backdrop } from '@/components/common/backdrop';
 import {
   Form,
-  FormField
 } from "@/components/ui/form"
 import { z } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormTextarea } from '@/components/ui/form-textarea';
 import { FormTimeInput } from '@/components/ui/form-time';
 import { FormDateInput } from '@/components/ui/form-date';
+import { t } from 'i18next';
 
 
 const timeComparisonValidator = (data: any) => {
@@ -31,18 +31,18 @@ const timeComparisonValidator = (data: any) => {
  
 const formSchema = z.object({
   start_time: z.string({
-    required_error: 'Please add start time.'
+    required_error: t('Please add start time.')
   }),
   end_time: z.string({
-    required_error: 'Please add end time.'
+    required_error: t('Please add end time.')
   }),
   note: z.string({
-    required_error: 'Please add notes.'
+    required_error: t('Please add notes.')
   }),
   date: z.date({
-    required_error: 'Please add date.'
+    required_error:t( 'Please add date.')
   }).max(new Date(), {
-    message: "Can not add future dates.",
+    message: t("Can not add future dates."),
   })
  // dateFormatted: z.string({
    // required_error: 'Please add date.'
@@ -53,9 +53,8 @@ const formSchema = z.object({
   
 const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, setValue, watch, reset } = useForm();
+  const { reset } = useForm();
   const [saving, setSaving] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -154,7 +153,7 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
               }}
               />
                
-{/**|| !form.formState.isValid || !form.formState.isDirty */}
+{/** todo: || !form.formState.isValid || !form.formState.isDirty */}
               <button
                 type="submit"
                 className="disabled:opacity-70 text-[color:var(--Neutral-0,#FFF)] text-base font-semibold leading-6 w-full h-14 shrink-0 [background:var(--Primary-Main,#4C70F2)] rounded-xl"

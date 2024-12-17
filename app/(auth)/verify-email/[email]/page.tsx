@@ -23,22 +23,9 @@ import { useAppDispatch } from "@/store/store";
 import { setCredentials, setUnVerifiedToken } from "@/store/slices/authSlice";
 import { setIsProfileCompleted, setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
  
-const formSchema = z.object({
-  c1: z.string({
-    required_error: 'Please enter code',
-  }),
-  c2: z.string({
-    required_error: 'Please enter code',
-  }),
-  c3: z.string({
-    required_error: 'Please enter code',
-  }),
-  c4: z.string({
-    required_error: 'Please enter code',
-  })
-})
-
 declare global {
   interface Window {
     grecaptcha: any;
@@ -47,6 +34,8 @@ declare global {
 
 export default function VerifyEmailPage() {
 
+  const { t } = useTranslation();
+  
   const [loading, setLoading] = useState(false);
 
   const router = useRouter()
@@ -58,6 +47,22 @@ export default function VerifyEmailPage() {
   const email: string = decodeURIComponent(params?.email as string); // Access the dynamic parameter
  
   // 1. Define your form.
+
+  const formSchema = z.object({
+    c1: z.string({
+      required_error: t('Please enter code'),
+    }),
+    c2: z.string({
+      required_error: t('Please enter code'),
+    }),
+    c3: z.string({
+      required_error: t('Please enter code'),
+    }),
+    c4: z.string({
+      required_error: t('Please enter code'),
+    })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -148,7 +153,10 @@ export default function VerifyEmailPage() {
 
       } else if (res.operation === 'error') {
 
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
 
         /*
         todo: have alert
@@ -203,10 +211,11 @@ export default function VerifyEmailPage() {
         { !sparams?.get('from-profile') && <OnboardProgress arrProgress={[22, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
-            We’ve sent you a code on your email
+          {t('We’ve sent you a code on your email')}
         </h5>
         <p className="self-stretch text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] ">
-            Please check your email address and type the code here</p>
+          {t("Please check your email address and type the code here")}    
+        </p>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
@@ -280,9 +289,9 @@ export default function VerifyEmailPage() {
             </div>
 
             <p className="text-[color:var(--Neutral-95,#23233D)] text-sm font-normal leading-5">
-                Didn’t receive a code?  &nbsp;
+                {t("Didn’t receive a code?")}  &nbsp;
                 <a onClick={() => resendCode()} className="cursor-pointer no-underline text-primary">
-                    Resend Code
+                  {t("Resend Code")}
                 </a>
             </p>
 

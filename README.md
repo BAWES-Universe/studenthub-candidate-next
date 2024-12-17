@@ -68,7 +68,8 @@ Detailed documentation can be found in the `/docs` directory:
 https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
-- location page in profile builder pages 
+- test chat, OneSignal
+- replace alert with alertDialog 
 
 https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev
 

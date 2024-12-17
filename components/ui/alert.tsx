@@ -56,4 +56,9 @@ const AlertDescription = React.forwardRef<
 ))
 AlertDescription.displayName = "AlertDescription"
 
-export { Alert, AlertTitle, AlertDescription }
+type AlertProps = React.ComponentPropsWithoutRef<typeof Alert>
+
+//type AlertActionElement = React.ReactElement<typeof AlertAction>
+//AlertActionElement
+
+export { Alert, AlertTitle, AlertDescription, type AlertProps }

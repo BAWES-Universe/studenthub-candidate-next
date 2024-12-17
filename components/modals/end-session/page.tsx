@@ -42,7 +42,7 @@ const EndSessionPage = ({ onClose }: { onClose: any }) => {
         <div className='p-6'>
 
           <p className=" text-[#4b4b61] text-base font-normal leading-normal mb-6 mt-0">
-            Do you want to end and submit this session? you can start more sessions later.
+            {t("Do you want to end and submit this session? you can start more sessions later.")}
           </p>
 
           <div className="justify-start items-start gap-4 inline-flex">
@@ -56,7 +56,7 @@ const EndSessionPage = ({ onClose }: { onClose: any }) => {
               <button
                 className="w-[186px] h-14  bg-[#4c6ff2] rounded-xl text-center text-white text-base font-semibold leading-normal"
                 onClick={() => onClose({ submit: true })}>
-                Stop & Submit
+                {t("Stop & Submit")}
               </button>
 
               <div className='clearfix'></div>

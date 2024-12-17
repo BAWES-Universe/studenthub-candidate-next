@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "./button";
 
 
@@ -10,6 +11,9 @@ interface SubmitButtonProps {
  
 
 export default function SubmitButton({ disabled, float = true, loading = false, onClick }: SubmitButtonProps) {
+
+    const { t } = useTranslation();
+
     return (
         <>
         <div className={ `${float ? 'xs:float-auto sm:float-end':'text-center'} mt-8 
@@ -23,13 +27,15 @@ export default function SubmitButton({ disabled, float = true, loading = false, 
                 disabled:bg-[#EEEEF0] disabled:text-[color:#68687A]" disabled={ disabled } onClick={onClick}>
                 {loading ? (
                     <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
-                        <span className="sr-only">Loading...</span>
+                        <span className="sr-only">{t('Loading...')}</span>
                     </div>
                 ) : (
-                    "Next"
+                    t("Next")
                 )}
             </Button>
-            <p className={ `mt-[8px] xs:hidden ${disabled?'hideen':'sm:block'}  text-center` }>Enter ↵</p> 
+            <p className={ `mt-[8px] xs:hidden ${disabled?'hideen':'sm:block'}  text-center` }>
+                {t('Enter ↵')}    
+            </p> 
 
 
         </div>

@@ -27,23 +27,10 @@ import { FormSelect } from "@/components/ui/form-select";
 import { Country } from "@/models/country";
 import { Area } from "@/models/area";
 import Script from "next/script";
+import { alertDialog } from "@/hooks/use-alert-dialog";
 
 
-const formSchema = z.object({
-    area_uuid: z.string({
-        required_error: 'Please select your location'
-    }).min(1, 'Please select your location'),
-    latitude: z.string({    
-        required_error: 'Please select your location'
-    }).min(1, 'Please select your location'), 
-    longitude: z.string({
-        required_error: 'Please select your location'
-    }).min(1, 'Please select your location'),
-    country_name: z.string({
-    }),
-    query: z.string({
-    }),
-})
+
 
 export default function AreaPage() {
 
@@ -78,6 +65,21 @@ export default function AreaPage() {
     ];
 
    // const searchInput = useRef<HTMLInputElement>(null);
+   const formSchema = z.object({
+      area_uuid: z.string({
+          required_error: t('Please select your location')
+      }).min(1, t('Please select your location')),
+      latitude: z.string({    
+          required_error: t('Please select your location')
+      }).min(1, t('Please select your location')), 
+      longitude: z.string({
+          required_error: t('Please select your location')
+      }).min(1, t('Please select your location')),
+      country_name: z.string({
+      }),
+      query: z.string({
+      }),
+  })
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -154,7 +156,10 @@ export default function AreaPage() {
         else
           router.push('/personal-info-complete');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -233,11 +238,10 @@ export default function AreaPage() {
       }
       else
       {
-        alert(errorMessage(result.message));
-        /*this.alertCtrl.create({
-          message: this.translateService.errorMessage(result.message),
-          buttons: [ok]
-        }).then(alert => alert.present());*/
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(result.message),
+        });
       }
     }).finally(() => {
         setLoading(false);  
@@ -253,13 +257,10 @@ export default function AreaPage() {
         areaByLocation(resp.coords.latitude, resp.coords.longitude);
       }
     }).catch((error: any) => {
-
-        alert(error);
-      /*this.alertCtrl.create({
-        header: this.translateService.transform('Error'),
-        message: this.translateService.transform('Getting location'),
-        buttons: [this.translateService.transform('Okay')]
-      }).then(alert => alert.present());*/
+      alertDialog({
+        title: t("Error"),
+        description: error,
+      });
     });
   }
 
@@ -276,12 +277,10 @@ export default function AreaPage() {
         setArea(result.country, result.area, latitude, longitude);
 
       } else {
-
-        alert(result.message)
-        /*this.alertCtrl.create({
-          header: result.message,
-          buttons: [this.translateService.transform('Okay')]
-        }).then(alert => alert.present());*/
+        alertDialog({
+          title: t("Error"),
+          description: result.message,
+        });
       }
     }).finally(() => {
         setLoading(false); 
@@ -412,6 +411,6 @@ export default function AreaPage() {
 
   function getPlaceholderText() {
     const country = form.getValues().country_name as string;
-    return placeholders[country] || 'Sekect Area';
+    return placeholders[country] || t('Select Area');
   }
 }

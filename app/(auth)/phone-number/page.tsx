@@ -22,6 +22,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   phone: z.string()
@@ -34,6 +36,9 @@ export default function Email() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useSearchParams();
+
+  const { t } = useTranslation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,7 +91,10 @@ export default function Email() {
         else
         router.push('/dob');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -103,7 +111,7 @@ export default function Email() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[44, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          What about your phone number?
+          {t("What about your phone number?")}
         </h5>
 
         <Form {...form}>

@@ -44,14 +44,14 @@ const LogDateListPage = () => {
 
   const formSchema = z.object({
       start_date: z.date({
-        required_error: 'Please add date.'
+        required_error: t('Please add date.')
       }).max(new Date(), {
-        message: "Can not add future dates.",
+        message: t("Can not add future dates."),
       }),
       end_date: z.date({
-          required_error: 'Please add date.'
+          required_error: t('Please add date.')
       }).max(new Date(), {
-          message: "Can not add future dates.",
+          message: t("Can not add future dates."),
       })
   // dateFormatted: z.string({
       // required_error: 'Please add date.'
@@ -170,7 +170,7 @@ const LogDateListPage = () => {
                   </svg>
               </div>
               <div className={ `${(form.formState.isValid) ?'text-[#4c6ff2]': 'text-[#7d7d8d]'}  text-base font-bold leading-normal` }>
-                  Filter by Date
+                  {t("Filter by Date")}
               </div>
           </div> 
           </PopoverTrigger>
@@ -226,7 +226,7 @@ const LogDateListPage = () => {
             ))}
         </>)) }
 
-        {loading && <div className="progress-bar">Loading...</div>}
+        {loading && <div className="progress-bar">{t("Loading...")}</div>}
 
         <Pager pagination={pagination} loadPage={loadPage} />
        

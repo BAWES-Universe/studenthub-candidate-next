@@ -1,7 +1,6 @@
 import { Area } from "@/models/area";
 import { Candidate } from "@/models/candidate";
 import { Country } from "@/models/country";
-import { updateObjective } from "@/providers/logged-in/account.service";
 import { useAppSelector } from "@/store/store";
 import { calculateAge } from "@/utils/app";
 import { format } from "date-fns";
@@ -109,21 +108,21 @@ export function PersonalDdetail()   {
         <div className="flex-col justify-start items-start gap-8 inline-flex">
 
         <div className="flex-col justify-start items-start gap-2 flex cursor-pointer" onClick={updateBioClicked}>
-            <div className="text-[#22223d] text-lg font-semibold leading-7">Bio</div>
+            <div className="text-[#22223d] text-lg font-semibold leading-7">{t('Bio')}</div>
             <div className="text-[#4b4b61] text-base font-normal leading-normal">
-                { user.candidate_intro?user.candidate_intro: "Write a short brief to introduce yourself"}
+                { user.candidate_intro?user.candidate_intro: t("Write a short brief to introduce yourself")}
             </div>
         </div>
         
         <div className="flex-col justify-start items-start gap-2 flex cursor-pointer" onClick={updateObjectiveClicked}>
-            <div className="text-[#22223d] text-lg font-semibold leading-7">Objective</div>
+            <div className="text-[#22223d] text-lg font-semibold leading-7">{t('Objective')}</div>
             <div className="text-[#4b4b61] text-base font-normal leading-normal">
-                { user.candidate_objective? user.candidate_objective: "Tell us more about yourself. What makes you special?"}
+                { user.candidate_objective? user.candidate_objective: t("Tell us more about yourself. What makes you special?")}
             </div>
         </div>
 
         <div className="flex-col justify-start items-start gap-4 flex ">
-            <div className="text-[#22223d] text-lg font-semibold leading-7">Contact Information</div>
+            <div className="text-[#22223d] text-lg font-semibold leading-7">{t('Contact Information')}</div>
             <div className="flex-col justify-start items-start gap-4 flex">
 
                 <div className="self-stretch justify-start items-start gap-4 inline-flex cursor-pointer" onClick={updatePhoneClicked}>
@@ -134,7 +133,7 @@ export function PersonalDdetail()   {
                             </svg>
                         </div>
                         <div className="text-[#22223d] text-sm font-medium leading-tight">
-                        {user.candidate_phone ? user.candidate_phone: 'Phone number (not set)'}
+                        {user.candidate_phone ? user.candidate_phone: t('Phone number (not set)')}
                         </div>
                     </div>
                 </div>
@@ -160,14 +159,16 @@ export function PersonalDdetail()   {
                         </svg>
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
-                    {user.candidate_preferred_time ?  user.candidate_preferred_time: 'Prefered time to contact (not set)'}
+                    {user.candidate_preferred_time ?  user.candidate_preferred_time: t('Prefered time to contact (not set)')}
                     </div>
                 </div>
 
             </div>
         </div>
         <div className="self-stretch flex-col justify-start items-start gap-4 flex cursor-pointer">
-            <div className="text-[#22223d] text-lg font-semibold leading-7">General Information</div>
+            <div className="text-[#22223d] text-lg font-semibold leading-7">
+                {t('General Information')}
+            </div>
             <div className="self-stretch  flex-col justify-start items-start gap-4 flex">
 
                 <div className="justify-start items-center gap-2 inline-flex cursor-pointer" onClick={updateAreaClicked}>
@@ -179,7 +180,7 @@ export function PersonalDdetail()   {
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
                         { user.area && user.country ? <p dangerouslySetInnerHTML={{ 
-                            __html: t('txt_lives_in', { area : area(user.area, user.country)}  ) }} />: 'Area you live in (not set)'}
+                            __html: t('txt_lives_in', { area : area(user.area, user.country)}  ) }} />: t('Area you live in (not set)')}
                     </div>
                 </div>
 
@@ -195,7 +196,7 @@ export function PersonalDdetail()   {
                         { user.nationality? (
                                 (i18n.language == 'ar' && user.nationality.country_nationality_name_ar)?
                                 user.nationality.country_nationality_name_ar: user.nationality.country_nationality_name_en
-                            ): "Where are you from?" 
+                            ): t("Where are you from?") 
                         }
                     </div>
                 </div>
@@ -245,10 +246,10 @@ export function PersonalDdetail()   {
                         </div>
                         <div className="w-[262px]">
                             { user.candidate_civil_id && <span className="text-[#22223d] text-sm font-medium leading-tight">
-                                {user.candidate_civil_id? user.candidate_civil_id: 'Civil ID (not set)'}
+                                {user.candidate_civil_id? user.candidate_civil_id: t('Civil ID (not set)')}
                             </span> }
                             { user.candidate_civil_expiry_date && <><br/><span className="text-[#68687a] text-sm font-normal leading-tight">
-                                Expiring on {format(user.candidate_civil_expiry_date, 'MMM d, yyyy')} 
+                                {t('Expiring on')} {format(user.candidate_civil_expiry_date, 'MMM d, yyyy')} 
                             </span></> }
                         </div>
                     </div>
@@ -261,9 +262,9 @@ export function PersonalDdetail()   {
                         </svg>
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
-                        { user.candidate_driving_license == 1 && 'Has Driving License' }
-                        { user.candidate_driving_license == 2 && 'Has No Driving License' }
-                        { !user.candidate_driving_license && 'Driving License (not set)' }
+                        { user.candidate_driving_license == 1 && t('Has Driving License') }
+                        { user.candidate_driving_license == 2 && t('Has No Driving License') }
+                        { !user.candidate_driving_license && t('Driving License (not set)') }
                     </div>
                 </div>
             
@@ -278,7 +279,7 @@ export function PersonalDdetail()   {
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
                         { user.candidate_birth_date? format(user.candidate_birth_date, 'MMM d, yyyy') + '(' + calculateAge(user.candidate_birth_date)+')'
-                            : "How old are you?" }
+                            : t("How old are you?") }
                     </div>
                 </div>
 
@@ -291,7 +292,7 @@ export function PersonalDdetail()   {
                         </svg>
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
-                        { user.profile_url? user.profile_url: "Profie Url (not set)" }
+                        { user.profile_url? user.profile_url: t("Profie Url (not set)") }
                     </div>
                 </div>            
 
@@ -303,23 +304,23 @@ export function PersonalDdetail()   {
                         </svg>
                     </div>
                     <div>
-                        <span className="text-[#22223d] text-sm font-medium leading-tight">Created on { format(user.candidate_created_at, 'MMM d, yyyy') }</span>
+                        <span className="text-[#22223d] text-sm font-medium leading-tight">{t('Created on')} { format(user.candidate_created_at, 'MMM d, yyyy') }</span>
                         { user.candidate_updated_at && <>
-                            <br/><span className="text-[#68687a] text-sm font-normal leading-tight">Updated on { format(user.candidate_updated_at, 'MMM d, yyyy') }</span>
+                            <br/><span className="text-[#68687a] text-sm font-normal leading-tight">{t('Updated on')} { format(user.candidate_updated_at, 'MMM d, yyyy') }</span>
                         </>}
                     </div>
                 </div> }
 
                 <div className="justify-start items-start gap-8">
                     <div className="w-full justify-start items-start gap-4 mt-4 cursor-pointer" onClick={updateCivilIdFrontClicked}>
-                        <div className="text-[#22223d] text-lg font-semibold mb-4 leading-7">ID Photo Front</div>
+                        <div className="text-[#22223d] text-lg font-semibold mb-4 leading-7">{t('ID Photo Front')}</div>
                         <div className="min-h-[161px] bg-white rounded-2xl">
                             { user.candidate_civil_photo_back && <img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'photos/' + user.candidate_civil_photo_back } 
                                 className="w-full h-full object-cover rounded-2xl" /> }
                         </div>    
                     </div>
                     <div className="w-full justify-start items-start gap-4 mt-4 cursor-pointer" onClick={updateCivilIdBackClicked}>
-                        <div className="text-[#22223d] text-lg font-semibold leading-7 mb-4">ID Photo Back</div>
+                        <div className="text-[#22223d] text-lg font-semibold leading-7 mb-4">{t('ID Photo Back')}</div>
                         <div className="min-h-[161px] bg-white rounded-2xl">
                             { user.candidate_civil_photo_front && <img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'photos/' + user.candidate_civil_photo_front } 
                                 className="w-full h-full object-cover rounded-2xl" /> }

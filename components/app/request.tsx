@@ -13,10 +13,10 @@ const RequestListing = ({ request, interview }: { request: any, interview: any }
             <div className={`ion-card ${request.request_status === 'pending' ? 'pending' : ''} my-4 rounded-lg shadow-md bg-white`}>
                 <div className="ion-card-content p-0">
                     <div className="inner-card-content p-3">
-                        <h1 className="font-bold text-lg text-left text-gray-800">{request.request_position_title}</h1>
+                        <h1 className="font-bold text-lg text-start text-gray-800">{request.request_position_title}</h1>
 
                         {request.company && (
-                            <h3 className="font-semibold text-md text-left text-gray-600">
+                            <h3 className="font-semibold text-md text-start text-gray-600">
                                 {request.company.company_common_name_en || request.company.company_name}
                             </h3>
                         )}
@@ -30,10 +30,14 @@ const RequestListing = ({ request, interview }: { request: any, interview: any }
                                 </span>
                             ))}
                             {request.request_position_type === 1 && (
-                                <span className="ion-badge bg-blue-500 text-white mr-2">Full-time</span>
+                                <span className="ion-badge bg-blue-500 text-white mr-2">
+                                    {t('Full-time')}
+                                </span>
                             )}
                             {request.request_position_type === 2 && (
-                                <span className="ion-badge bg-blue-500 text-white mr-2">Part-time</span>
+                                <span className="ion-badge bg-blue-500 text-white mr-2">
+                                    {t('Part-time')}
+                                </span>
                             )}
                             {request.request_location && (
                                 <span className="ion-badge bg-blue-500 text-white mr-2">

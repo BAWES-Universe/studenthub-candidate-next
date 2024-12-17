@@ -18,6 +18,7 @@ import { CheckIcon } from "lucide-react";
 import React, { useEffect, useId, useState } from "react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { listDegreeGroups } from "@/providers/logged-in/candidate-education.service";
+import { useTranslation } from "react-i18next";
 
 interface DegreeGroupInputProps {
     degree_group_uuid?: string;
@@ -30,6 +31,9 @@ export default function DegreeGroupInput({ degree_group_uuid, onSelect }: Degree
     const [loading, setLoading] = useState(false);
     const [degreeGroupList, setDegreeGroupList] = useState([]);
     const [selectedDegreeGroup, setSelectedDegreeGroup] = useState(null);
+
+    const { t } = useTranslation();
+
     useEffect(() => {
         setLoading(true);
 
@@ -90,7 +94,7 @@ export default function DegreeGroupInput({ degree_group_uuid, onSelect }: Degree
                                 
                             `}
                     >
-                        DegreeGroup
+                        {t('Degree Group')}
                     </FormLabel>
                     <FormMessage />
                 </FormItem>
@@ -102,7 +106,7 @@ export default function DegreeGroupInput({ degree_group_uuid, onSelect }: Degree
                     <CommandList>
                         <ScrollArea className="h-72">
                             <CommandEmpty>
-                                {loading ? 'Loading...' : 'No degreeGroup found.'}
+                                {loading ? t('Loading...') : t('No degree Group found.')}
                             </CommandEmpty>
 
                             <CommandGroup>

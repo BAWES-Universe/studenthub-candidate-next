@@ -3,17 +3,19 @@
 
 import Request from '@/components/app/request';
 import Pager from '@/components/common/pager';
-import { RequestInterview } from '@/models/request-interview';
 import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { listInterviewRequests } from '@/providers/logged-in/request.service';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 
 const InterviewListPage = () => {
     const [loading, setLoading] = useState(false);
     const [interviews, setInterviews] = useState<any[]>([]);
 
+    const { t } = useTranslation();
+    
     const [pagination, setPagination] = useState({
         current_page: 1,
         total_pages: 1,
@@ -62,14 +64,16 @@ const InterviewListPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-4">
-            <h3 className="text-3xl font-bold capitalize">Scheduled Interviews</h3>
-            {loading && <div className="progress-bar">Loading...</div>}
+            <h3 className="text-3xl font-bold capitalize">
+                {t("Scheduled Interviews")}
+            </h3>
+            {loading && <div className="progress-bar">{t("Loading...")}</div>}
             <div className="flex flex-col">
                 {interviews.map((interview) => (
                     <Request key={interview.id} request={interview.request} interview={interview} />
                 ))}
                 {!loading && interviews.length === 0 && (
-                    <p>~ Your scheduled interviews will be listed here ~</p>
+                    <p>~ {t("Your scheduled interviews will be listed here")} ~</p>
                 )}
             </div>  
 

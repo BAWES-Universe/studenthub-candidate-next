@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { page, track } from "@/providers/analytics.service";
 import Link from "next/dist/client/link";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function EducationComplete() {
 
+    const { t} = useTranslation();
+    
     useEffect(() => {
 
         page('Education Complete Page');
@@ -25,17 +28,17 @@ export default function EducationComplete() {
             </div>
 
             <h5 className="self-stretch text-[color:var(--Neutral-100,#0F0F2C)] text-center font-bold xs:text-xl xs:leading-7 sm:text-[40px] sm:leading-[56px]">
-                Looks good! One more step to go
+                {t("Looks good! One more step to go")}
             </h5>
 
             <div className="xs:flex sm:block xs:bottom-[60px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
                 <Link href="/driver-license">
                 <Button size="lg" className=" sm:w-[300px] h-[56px]">
-                    Continue
+                    {t("Continue")}
                     </Button>
                 </Link>
 
-                <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
+                <p className="mt-[8px] xs:hidden sm:block">{t("Enter ↵")}</p> 
             </div>
 
             <OnboardFooter></OnboardFooter>      

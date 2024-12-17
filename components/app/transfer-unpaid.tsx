@@ -15,7 +15,7 @@ const TransferReverted = ({ candidateNotification, onClick }: { candidateNotific
             <p className="text-gray-600 text-sm">
                 {t("Your compensation transfer has been reverted due to some issues. A ticket has been created and support will be in touch.")}
             </p>
-            <p className="txt-time text-right text-gray-500 text-xs">
+            <p className="txt-time text-end text-gray-500 text-xs">
                 {format(candidateNotification.created_at, 'MMM d')}
 
                 {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}

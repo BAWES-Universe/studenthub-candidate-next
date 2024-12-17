@@ -9,10 +9,8 @@ import { z } from "zod"
 import {
   Form
 } from "@/components/ui/form"
-import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
@@ -23,6 +21,8 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
     video: z.string({
@@ -45,6 +45,9 @@ export default function Video() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const sparams = useSearchParams();
+
+  const { t } = useTranslation();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -130,7 +133,7 @@ export default function Video() {
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">
-            You’re almost there
+          { t("You’re almost there")}
         </h5>
   { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
 
@@ -142,7 +145,7 @@ export default function Video() {
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6 mt-[8px] mb-[4px] block">
-                    Introductory Video
+                    {t("Introductory Video")}
                     
                     <Popover>
                       <PopoverTrigger asChild>
@@ -152,29 +155,29 @@ export default function Video() {
                       </PopoverTrigger>
                       <PopoverContent className="w-[100%] p-[24px] max-w-[429px] text-[color:var(--Neutral-95,#23233D)] text-center text-base font-normal leading-6">
                         <p className="mb-[24px]">
-                        Introductory video enhances your chance of being selected among other candidates.</p>
+                        {t("Introductory video enhances your chance of being selected among other candidates.")}</p>
                       </PopoverContent>
 
                     </Popover>    
                 </h6> 
 
                 <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
-                Record a 30-second video introducing yourself
+                  {t("Record a 30-second video introducing yourself.")}
                 </p>
 
               <div className="mt-[16px] block">
                 { /** TODO: ability to record video */ 
-                uploadingVideo? <p className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-normal leading-5 text-center">Uploading...</p> :
+                uploadingVideo? <p className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-normal leading-5 text-center">{t("Uploading...")}</p> :
                 <>
 
                   <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 ">
-                    Record yourself
+                    {t("Record yourself")}
                   </a>
 
                   <span className="text-xs font-medium">&nbsp;or&nbsp;</span> 
 
                   <a onClick={() => document.getElementById('videoUpload')?.click()}  className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4">
-                    Upload video
+                    {t("Upload video")}
                   </a>
                 </>
 }
@@ -192,7 +195,7 @@ export default function Video() {
                 <Button variant={ "ghost"} onClick={() => removeVideo()} 
                   className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
                     <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    
-                    { removingVideo ? "Removing..." : "Remove" } 
+                    { removingVideo ? t("Removing...") : t("Remove") } 
                 </Button>
             </div> }
             
@@ -203,15 +206,15 @@ export default function Video() {
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6  mt-[8px] mb-[4px] block">
-                    CV or Portfolio
+                    {t("CV or Portfolio")}
                 </h6> 
 
                 <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
-                  Have a cool file to showcase your skills and experiences?
+                  {t("Have a cool file to showcase your skills and experiences?")}
                 </p>
 
                 <a onClick={() => document.getElementById('resumeUpload')?.click()} className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block">
-                { uploadingResume ? "Uploading..." : "Upload CV or Portfolio" }   
+                { uploadingResume ? t("Uploading...") : t("Upload CV or Portfolio") }   
                 </a>
 
             </div> }
@@ -225,7 +228,7 @@ export default function Video() {
                 <Button variant={ "ghost"} onClick={() => removeResume()} 
                   className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
                     <img src="/assets/icons/trash.svg" className="w-[16px]"></img>   
-                    { removingResume ? "Removing..." : "Remove" } 
+                    { removingResume ? t("Removing...") : t("Remove") } 
                 </Button>
             </div> }
             
@@ -254,7 +257,10 @@ export default function Video() {
                           candidate_resume: res.candidate_resume
                         } }));
                       } else {
-                          alert(errorMessage(res.message));
+                          alertDialog({
+                            title: t("Error"),
+                            description: errorMessage(res.message),
+                          });
                       }
                     }).finally(() => {
                       setUploadingResume(false);
@@ -291,7 +297,10 @@ export default function Video() {
                         } }));
 
                       } else {
-                        alert(errorMessage(res.message));
+                        alertDialog({
+                          title: t("Error"),
+                          description: errorMessage(res.message),
+                        });
                       }
                     }).finally(() => {
                       setUploadingVideo(false);

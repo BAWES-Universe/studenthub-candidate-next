@@ -62,7 +62,7 @@ const InvitationsPage = () => {
     return (
         <div className="max-w-4xl mx-auto p-4">
             
-            {loading && <div className="progress-bar">Loading...</div>}
+            {loading && <div className="progress-bar">{t("Loading...")}</div>}
             <div className="flex flex-col">
                 {invitations.map((invitation: any) => (
                     <Invitation key={invitation.id} model={invitation} />

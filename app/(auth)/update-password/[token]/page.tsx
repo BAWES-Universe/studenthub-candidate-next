@@ -1,6 +1,5 @@
 "use client"
 
-import { OnboardProgress } from "@/components/on-board/progress";
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -14,23 +13,18 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
 import { useEffect, useState } from "react";
-import { profile, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setIsProfileCompleted, setUser } from "@/store/slices/userSlice";
-import { resetPasswordRequest, updatePassword } from "@/providers/auth.service";
+import { useAppDispatch } from "@/store/store";
+import { setIsProfileCompleted } from "@/store/slices/userSlice";
+import { updatePassword } from "@/providers/auth.service";
 import { setCredentials } from "@/store/slices/authSlice";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 
 declare let grecaptcha: any;
-
-const formSchema = z.object({
-  password: z.string({
-    required_error: 'Please add new password.'
-  })
-})
 
 export default function UpdatePasswordPage() {
 
@@ -44,7 +38,16 @@ export default function UpdatePasswordPage() {
  
   const sparams = useSearchParams();
 
+const { t } = useTranslation();
+
   // 1. Define your form.
+
+const formSchema = z.object({
+  password: z.string({
+    required_error: t('Please add new password.')
+  })
+})
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,7 +75,11 @@ export default function UpdatePasswordPage() {
             updatePassword(values.password, token).then(res => {
                 if (res.operation == 'success') {
  
-                    alert(res.message);//'Password recovery email sent, please check your email.'
+                  alertDialog({
+                    title: t("Error"),
+                    description: res.message,
+                  });
+                  //'Password recovery email sent, please check your email.'
                     
                     dispatch(setCredentials({
                         token: res.accessToken.token
@@ -84,7 +91,10 @@ export default function UpdatePasswordPage() {
 
                     router.push('/home');
                 } else {
-                    alert(errorMessage(res.message));
+                    alertDialog({
+                      title: t("Error"),
+                      description: errorMessage(res.message),
+                    });
                 }
             }).finally(() => {
                 setLoading(false);
@@ -97,7 +107,7 @@ export default function UpdatePasswordPage() {
     <>
         
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-        Type your new password
+          {t("Type your new password")}
         </h5>
  
         <Form {...form} >

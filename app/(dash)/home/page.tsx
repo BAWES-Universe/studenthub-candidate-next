@@ -81,7 +81,7 @@ const DashboardPage = () => {
     return (
         <div className="max-w-4xl mx-auto p-4">
              
-            {loadingProfile && <div className="progress-bar">Loading...</div>}
+            {loadingProfile && <div className="progress-bar">{t("Loading...")}</div>}
             {user && (
                 <div>
                     {/* Student Account Status */}
@@ -91,7 +91,9 @@ const DashboardPage = () => {
                     {pushNotificationAvailable && (
                         <Card className="p-0 mb-4">
                             <CardHeader>
-                            <CardTitle className='font-bold'>Receive faster updates by enabling push notifications</CardTitle>
+                            <CardTitle className='font-bold'>
+                                {t("Receive faster updates by enabling push notifications")}    
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>      
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
@@ -107,7 +109,7 @@ const DashboardPage = () => {
                     {user?.totalInterviewScheduled && user?.totalInterviewScheduled > 0 && (
                         <Card className="p-0 mb-4">
                              <CardHeader>
-                            <CardTitle className='font-bold'>Scheduled interviews</CardTitle>
+                            <CardTitle className='font-bold'>{t("Scheduled interviews")}</CardTitle>
                         </CardHeader>
 
                         <CardContent>    
@@ -128,13 +130,15 @@ const DashboardPage = () => {
                     ) && (
                         <Card className="p-0 mb-4"> 
                             <CardHeader>
-                                <CardTitle className='font-bold'>Urgent Civil Detail</CardTitle>
+                                <CardTitle className='font-bold'>
+                                    {t("Urgent Civil Detail")}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent>    
                                 <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">You won’t be able to receive payments until we have your valid civil ID.</p>
                                 <Button variant={'outline'} className="btn-civil-detail" onClick={
                                     () => router.push('/civil-id?from-profile=1')}>
-                                    Upload Civil ID
+                                    {t("Upload Civil ID")}
                                 </Button>
                             </CardContent>
                         </Card>
@@ -147,9 +151,11 @@ const DashboardPage = () => {
                             <CardTitle className='font-bold' dangerouslySetInnerHTML={{ __html: t('urgent_bank_detail') }}></CardTitle>
                         </CardHeader>
                         <CardContent>    
-                            <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">You won’t be able to receive payments until we have your bank information.</p>
+                            <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
+                                {t("You won’t be able to receive payments until we have your bank information to process your transfers.")}
+                            </p>
                             <Button variant={'outline'} className="btn-bank-detail" onClick={() => router.push('/bank')}>
-                                Enter my bank information
+                                {t("Enter my bank information")}
                             </Button>
                         </CardContent>
                         </Card>
@@ -159,15 +165,17 @@ const DashboardPage = () => {
                     {user?.candidate_job_search_status && !user?.candidate_video && (
                         <Card className="p-0 mb-4">
                             <CardHeader>
-                            <CardTitle className='font-bold'>Increase your chances of landing a job by recording an intro video</CardTitle>
+                            <CardTitle className='font-bold'>
+                                {t("Increase your chances of landing a job by recording an intro video") }
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>  
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
-                            While optional, an intro video makes your profile stand out to employers. It shows that you have the confidence required for the job and gives them the first impression they need to see you as something more than just a paper CV.
+                                {t("While optional, an intro video makes your profile stand out to employers. It shows that you have the confidence required for the job and gives them the first impression they need to see you as something more than just a paper CV.")}
                             </p>
                             <Button variant={'outline'} className="btn-video-recording" 
                                 onClick={() => router.push('/video?from-profile=1')}>
-                                I’d like to start recording
+                                {t("I’d like to start recording")}
                             </Button>
                         </CardContent>
                         </Card>
@@ -177,10 +185,12 @@ const DashboardPage = () => {
                     {user?.working_hour_count > 0 && (
                         <Card className="p-0 mb-4">
                         <CardHeader>
-                            <CardTitle className='font-bold'>Working logs</CardTitle>
+                            <CardTitle className='font-bold'>{t("Working logs")}</CardTitle>
                         </CardHeader>
                         <CardContent> 
-                            <Button variant={'outline'} onClick={() => router.push('/work-log/log-date-list')} className="btn-video-recording">Click here to view your working logs</Button>
+                            <Button variant={'outline'} onClick={() => router.push('/work-log/log-date-list')} className="btn-video-recording">
+                                {t("Click here to view your working logs")}
+                            </Button>
                         </CardContent>
                         </Card>
                     )}
@@ -188,11 +198,11 @@ const DashboardPage = () => {
                     {/* Wallet Card */}
                     <Card className="p-0 mb-4">
                         <CardHeader>
-                            <CardTitle className='font-bold'>Wallet</CardTitle>
+                            <CardTitle className='font-bold'>{t("Wallet")}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <Button variant={'outline'} onClick={() => router.push('/wallet')} className="btn-video-recording">
-                                Click here to view your wallet balance
+                                {t("Click here to view your wallet balance")}
                             </Button>
                         </CardContent>
                     </Card>
@@ -202,7 +212,7 @@ const DashboardPage = () => {
                         
                         <div className="card-work-details">
                             
-                            <h4 className='font-bold my-4'>Your history with StudentHub</h4>
+                            <h4 className='font-bold my-4'>{t("Your history with StudentHub")}</h4>
 
                             {workHistory.map((history: CandidateWorkHistory, index: number) => (
                                 <Card key={index} className="p-0 mb-4">
@@ -224,14 +234,14 @@ const DashboardPage = () => {
                                     
                                     <CardContent>
                                         <p className="mb-0 text-[#68687a] text-sm font-normal leading-tight">{
-                                            `${format(new Date(history.start_date || ""), 'MMMM d, yyyy')} to 
-                                            ${ history.end_date?format(new Date(history.end_date), 'MMMM d, yyyy') : t('now')}`
+                                            `${format(new Date(history.start_date || ""), 'MMMM d, yyyy')} ${t('to')} 
+                                            ${ history.end_date ? format(new Date(history.end_date), 'MMMM d, yyyy') : t('now')}`
                                             }</p>
                                     </CardContent>
                                 </Card>
                             ))}
                             <Button variant={'outline'}onClick={downloadCertificate} className="download-btn">
-                                Download Certificates
+                                {t("Download Certificates")}
                             </Button>
                         </div>
                     )}

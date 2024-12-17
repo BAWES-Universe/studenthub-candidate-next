@@ -7,6 +7,7 @@ import { viewSalary } from '@/providers/logged-in/account.service';
 import { format } from 'date-fns';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PaymentDetailPage = () => {
     
@@ -16,6 +17,8 @@ const PaymentDetailPage = () => {
     const params = useParams();
 
     const id = params?.id as any;
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         loadData();
@@ -37,17 +40,19 @@ const PaymentDetailPage = () => {
     return (
         <div className="max-w-4xl mx-auto p-4">
             
-            {loading && <div>Loading...</div>}
+            {loading && <div>{t("Loading...")}</div>}
 
             {salary &&
             <div>
-                <div className="text-[#22223d] text-lg font-semibold leading-7 mb-4">Transfer Details</div>
+                <div className="text-[#22223d] text-lg font-semibold leading-7 mb-4">
+                    {t("Transfer Details")}
+                </div>
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                            Employer
+                            {t("Employer")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
                             {salary.company_name}
                         </span>
                     </div>
@@ -56,9 +61,9 @@ const PaymentDetailPage = () => {
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                        Bank
+                        {t("Bank")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
                         {salary.bank && salary.bank.bank_name}  
                         </span>
                     </div>
@@ -66,9 +71,9 @@ const PaymentDetailPage = () => {
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                        Bank IBAN
+                            {t("Bank IBAN")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
                         {salary.transfer_benef_iban}  
                         </span>
                     </div>
@@ -77,9 +82,9 @@ const PaymentDetailPage = () => {
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                        Transferred to
+                        {t("Transferred to")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
                                 {salary.transfer_benef_name} 
                         </span>
                     </div>
@@ -87,9 +92,9 @@ const PaymentDetailPage = () => {
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                        Date
+                        {t("Date")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
                         {format(salary.tc_created_at || '', 'MMMM d, yyyy')}
                         </span>
                     </div>
@@ -97,9 +102,9 @@ const PaymentDetailPage = () => {
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                        Amount
+                        {t("Amount")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
                         {salary.currency_code} {salary.candidate_total?.toFixed(3)} 
                         </span>
                     </div>
@@ -107,10 +112,10 @@ const PaymentDetailPage = () => {
                 <div className="flex-row">
                     <div className='p-4 flex-row border-b'>
                         <span className='text-[color:var(--Neutral-90,#4B4B61)] text-sm font-normal leading-5'>
-                        Status
+                        {t("Status")}
                         </span>
-                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-right float-end text-sm font-normal leading-5'>
-                        { salary.status == 'Unpaid'? "Pending": "Successful"}
+                        <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
+                        { salary.status == 'Unpaid'? t("Pending"): t("Successful")}
                         </span>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Request } from '@/models/request';
 import { useTranslation } from 'react-i18next';
 import Pager from '@/components/common/pager';
+
 const RequestListPage = () => {
       
     const [loading, setLoading] = useState(false);
@@ -78,7 +79,8 @@ const RequestListPage = () => {
                 <h1 className="text-xl font-bold">{t("Jobs")}</h1>
             </header>
 
-            {loading && <div className="progress-bar">Loading...</div>}
+            {loading && <div className="progress-bar">{t("Loading...")}</div>}
+
             <div className="max-width">
                 {requests.length > 0 ? (
                     requests.map((request: Request) => (

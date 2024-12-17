@@ -95,8 +95,8 @@ export function Hero() {
       </div>
       
       <h1 className="font-bold tracking-tighter xs:text-[20px] sm:text-[40px]">
-        Ready for a whole new adventure? <br />
-        Let&apos;s get you working!
+        {t('Ready for a whole new adventure?')} <br />
+        {t('Let&apos;s get you working!')}
       </h1>
       
       <Button variant="outline" size="lg" disabled={googleLoginLoading} onClick={() => loginByGoogle()} 
@@ -111,24 +111,24 @@ export function Hero() {
         
         <Link href="/name">
         <Button size="lg" className=" sm:w-[300px] h-[56px]">
-          Let&apos;s do it!
+          {t("Let&apos;s do it!")}
         </Button>
         </Link>
                 
-        <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
+        <p className="mt-[8px] xs:hidden sm:block">{t('Enter ↵')}</p> 
       </div>
 
       <div className="xs:fixed xs:bottom-[16px] sm:mt-12 sm:relative  space-y-2 text-sm text-muted-foreground">
         <p>
-          Have an account?{" "}
+          {t('Have an account?')}{" "}
           <Link href="/login" className="no-underline text-primary">
-            Login
+            {t('Login')}
           </Link>
         </p>
         <p>
-          Need help?{" "}
+          {t('Need help?')}{" "}
           <Link href="/contact" className="no-underline text-primary">
-            Contact Us
+            {t('Contact Us')}
           </Link>
         </p>
       </div>

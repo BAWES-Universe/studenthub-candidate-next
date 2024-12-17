@@ -1,7 +1,7 @@
 "use client"
 
 // src/components/ActivityPage.tsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
  
 import { useTranslation } from 'react-i18next'; // For translations
 import WorkHourApproved from '@/components/app/work-hour-approved';
@@ -22,6 +22,8 @@ import { alertCount$ } from '@/providers/event.service';
 import NoItems from '@/components/common/no-items';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+
+//todo: button to mark all as read
 
 const ActivityPage = () => {
   const { t } = useTranslation();

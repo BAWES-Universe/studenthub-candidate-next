@@ -31,7 +31,7 @@ const Unassigned = ({ candidateNotification, onClick }: { candidateNotification:
                 <p className="txt-meta text-gray-500 text-sm">
                     {t("Reason stated")}: {candidateNotification.message}
                 </p>
-                <p className="txt-time text-right text-gray-500 text-xs">
+                <p className="txt-time text-end text-gray-500 text-xs">
                     {format(candidateNotification.created_at, 'MMM d')}
                     {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
                 </p>

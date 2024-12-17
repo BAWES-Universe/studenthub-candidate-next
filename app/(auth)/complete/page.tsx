@@ -3,11 +3,15 @@
 import OnboardFooter from "@/components/on-board/layout/footer";
 import { Button } from "@/components/ui/button";
 import { page, track } from "@/providers/analytics.service";
+import { t } from "i18next";
 import Link from "next/link";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Complete() {
 
+    const {t} = useTranslation();
+    
     useEffect(() => {
 
         page('Complete Profile Page');
@@ -25,18 +29,18 @@ export default function Complete() {
             </div>
 
             <h5 className="self-stretch text-[color:var(--Neutral-100,#0F0F2C)] text-center font-bold xs:text-xl xs:leading-7 sm:text-[40px] sm:leading-[56px]">
-                Congratulations! your account is now ready. Let’s get you working!
+                {t("Congratulations! your account is now ready. Let’s get you working!")}
             </h5>
 
 
             <div className="xs:flex sm:block xs:bottom-[60px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
                 <Link href="/">
                     <Button size="lg" className=" sm:w-[300px] h-[56px]">
-                        Let’s go!
+                        {t("Let’s go!")}
                     </Button>
                 </Link>
 
-                <p className="mt-[8px] xs:hidden sm:block">Enter ↵</p> 
+                <p className="mt-[8px] xs:hidden sm:block">{t("Enter ↵")}</p> 
             </div>
 
             <OnboardFooter></OnboardFooter>      

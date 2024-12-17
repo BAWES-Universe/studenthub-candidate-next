@@ -15,7 +15,7 @@ const TransferPaid = ({ candidateNotification, onClick }: { candidateNotificatio
             <p className="text-gray-600 text-sm">
                 {t("Congratulations! Your compensation has been transferred to your bank account.")}
             </p>
-            <p className="txt-time text-right text-gray-500 text-xs">
+            <p className="txt-time text-end text-gray-500 text-xs">
                 {format(candidateNotification.created_at, 'MMM d')}
                 {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
             </p>

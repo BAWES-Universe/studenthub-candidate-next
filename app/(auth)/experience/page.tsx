@@ -16,7 +16,7 @@ import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
-import { profile, updateExperiences, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { profile } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -24,17 +24,7 @@ import { setUser } from "@/store/slices/userSlice";
 import { saveExperience } from "@/providers/logged-in/candidate-experience.service";
 import { useTranslation } from "react-i18next";
 import { page, track } from "@/providers/analytics.service";
-
-const formSchema = z.object({
-  experiences: z.array(z.object({
-    candidate_experience_id: z.any().nullable(),
-    experience: z.string().max(128).min(1, 'Job title is required'),
-    employer: z.string().max(128).nullable().optional(),
-    start_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional(),
-    end_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional()
-  }))
-})
-  
+import { alertDialog } from "@/hooks/use-alert-dialog";
  
 export default function Experiences() {
 
@@ -46,6 +36,16 @@ export default function Experiences() {
   const { t } = useTranslation();
   const params = useSearchParams();
   let formattedExperiences: any[] = [];
+
+  const formSchema = z.object({
+    experiences: z.array(z.object({
+      candidate_experience_id: z.any().nullable(),
+      experience: z.string().max(128).min(1, t('Job title is required')),
+      employer: z.string().max(128).nullable().optional(),
+      start_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional(),
+      end_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional()
+    }))
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -118,7 +118,10 @@ export default function Experiences() {
         else
           router.push('/education-complete');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);

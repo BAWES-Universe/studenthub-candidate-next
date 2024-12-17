@@ -27,7 +27,6 @@ export default function OnboardNav() {
             
             <button onClick={() => router.back()} disabled={!canGoBack} className="border-e border-e-[#EEEEF0] ">
                 <img alt="" src={ `/assets/icons/${canGoBack ? 'up-arrow' : 'up-arrow-disabled'}.svg` } className="disabled:fill-[#EEEEF0]" />
-
             </button>
             <button onClick={() => router.forward()} disabled={!canGoForward}>
                 <img alt="" src={ `/assets/icons/${canGoForward ? 'down-arrow' : 'down-arrow-disabled'}.svg` } className="disabled:fill-[#EEEEF0]" />

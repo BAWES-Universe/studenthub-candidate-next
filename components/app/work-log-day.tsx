@@ -45,7 +45,9 @@ export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingD
                     { !candidateWorkingDate.end_time && <div className="h-6 px-1.5 py-0.5 bg-[#f5f5f7] rounded-md justify-start items-center gap-2.5 inline-flex">
                         <div className="justify-start items-center gap-1 flex">
                             <div className="w-3.5 h-3.5 bg-[#4c6ff2] rounded-full"></div>
-                            <div className="text-[#22223d] text-xs font-medium leading-none">Working</div>
+                            <div className="text-[#22223d] text-xs font-medium leading-none">
+                                {t('Working')}
+                            </div>
                         </div>
                     </div> }
                 </div>

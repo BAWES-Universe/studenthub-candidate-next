@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
 import { Textarea } from './textarea'
+import { useTranslation } from 'react-i18next'
 
 
 interface FormInputProps {
@@ -37,6 +38,8 @@ export function FormTextarea({
 }: FormInputProps) {
   const id = useId()
 
+  const { t } = useTranslation();
+  
   return (
     <FormField
       control={form.control}
@@ -88,7 +91,7 @@ export function FormTextarea({
 
               ${fieldState.error ? 'text-destructive' : 'text-gray-500 peer-focus:text-primary'}`}
           >
-            {label}
+            {t(label)}
           </FormLabel>
           </div>
           <FormDescription dir="ltr" className='mt-[8px]'>

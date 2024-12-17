@@ -23,6 +23,7 @@ import { useAppSelector } from '@/store/store';
 import { Ribbon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ProfilePage = () => { 
     const [loading, setLoading] = useState(false);
@@ -39,6 +40,8 @@ const ProfilePage = () => {
         { key: 'work-details', value: 'Work Details' },
         { key: 'personal-details', value: 'Personal Details' }
     ];
+
+    const {t} = useTranslation();
 
     useEffect(() => {
         page('Profile Page');
@@ -109,7 +112,7 @@ const ProfilePage = () => {
 
     return (
         <div className='bg-[#f7f8fa]'>
-            {loading && <div className='max-w-4xl mx-auto p-6'>Loading...</div>}
+            {loading && <div className='max-w-4xl mx-auto p-6'>{t("Loading...")}</div>}
             {user && (
                 <>
                     <div className=' bg-white'>
@@ -139,7 +142,7 @@ const ProfilePage = () => {
 
                                             </div>
                                             <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">
-                                                CV / Portfolio
+                                                {t("CV / Portfolio")}
                                             </div>
                                         </div>
                                     </div>
@@ -153,7 +156,7 @@ const ProfilePage = () => {
                                                 </svg>
                                             </div>
                                             <div className="w-[103px] text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">
-                                                Intro Video
+                                                {t("Intro Video")}
                                             </div>
                                         </div>
                                     </div>
@@ -161,7 +164,7 @@ const ProfilePage = () => {
 
                                 {user.certificates && user.certificates.length > 0 && <>
                                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-assignment.svg" /> Certificates
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-assignment.svg" /> {t("Certificates")}
                                     </h5>
                                     { user.certificates.map((candidateCertificate: Certificate) => (
                                         <CertificateComponent key={candidateCertificate.certificate_uuid} certificate={candidateCertificate} />
@@ -170,7 +173,7 @@ const ProfilePage = () => {
 
                                 {currentAssignments.length > 0 && <>
                                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-assignment.svg" /> Current Assignments
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-assignment.svg" /> {t("Current Assignments")}
                                     </h5>
                                     { currentAssignments.map((history: any) => (
                                         <Assignment key={history.id} history={history} />
@@ -179,7 +182,7 @@ const ProfilePage = () => {
 
                                 {workHistories.length > 0 && <>
                                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-suitcase.svg" /> Work History
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-suitcase.svg" /> {t("Work History")}
                                     </h5>
                                     { workHistories.map((history: any) => (
                                         <WorkHistoryComponent key={history.id} history={history} />
@@ -188,7 +191,7 @@ const ProfilePage = () => {
 
                                 <div className='cursor-pointer' onClick={updateExperienceClicked}>   
                                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-suitcase.svg" /> Experiences
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-suitcase.svg" /> {t("Experiences")}
                                     </h5>
                                     { user.candidateExperiences?.map((experience: CandidateExperience) => (
                                         <Experience key={experience.candidate_experience_id} experience={experience} />
@@ -197,7 +200,7 @@ const ProfilePage = () => {
 
                                 <div className='cursor-pointer' onClick={updateSkillClicked}> 
                                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 my-4'>
-                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-puzzle.svg" /> Skills
+                                        <img className='w-6 h-6 inline me-2' src="/assets/images/icon-puzzle.svg" /> {t("Skills")}
                                     </h5>
                                     { user.candidateSkills?.map((candidateSkill: CandidateSkill) => (
                                         <span className='inline justify-center items-center gap-2.5 [background:var(--Neutral-0,#FFF)] px-3 py-1.5 rounded-lg
@@ -208,7 +211,7 @@ const ProfilePage = () => {
 
                                 <div className='cursor-pointer' onClick={updateEducationClicked}>
                                 <h5 className='text-[color:var(--Neutral-95,#23233D)] text-lg font-semibold leading-7 mb-4 mt-6'>
-                                    <Ribbon className='w-6 h-6 inline' /> Educations
+                                    <Ribbon className='w-6 h-6 inline' /> {t("Educations")}
                                 </h5>
                                 { user.candidateEducations?.map((candidateEducation: CandidateEducation) => (
                                     <Education key={candidateEducation.education_uuid} education={candidateEducation}></Education>

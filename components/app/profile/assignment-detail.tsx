@@ -7,11 +7,15 @@ export function AssignmentDetail({ history }: { history: CandidateWorkHistory })
     const { t } = useTranslation();
 
     return (<div className="w-full flex-col justify-start items-start gap-6 inline-flex">
-        <div className="text-[#22223d] text-lg font-semibold leading-7">Assignment Details</div>
+        <div className="text-[#22223d] text-lg font-semibold leading-7">
+            {t('Assignment Details')}
+        </div>
 
         <div className="self-stretch h-12 flex-col justify-start items-start gap-4 flex">
             <div className="self-stretch h-12 flex-col justify-start items-start gap-1 flex">
-                <div className="self-stretch text-[#4b4b61] text-sm font-medium leading-tight">Employer</div>
+                <div className="self-stretch text-[#4b4b61] text-sm font-medium leading-tight">
+                    {t('Employer')}
+                </div>
                 <div className="text-[#22223d] text-base font-semibold leading-normal">
                     { history.company.company_name }
                 </div>
@@ -19,7 +23,9 @@ export function AssignmentDetail({ history }: { history: CandidateWorkHistory })
         </div>
         <div className="self-stretch h-12 flex-col justify-start items-start gap-4 flex">
             <div className="self-stretch h-12 flex-col justify-start items-start gap-1 flex">
-                <div className="self-stretch text-[#4b4b61] text-sm font-medium leading-tight">Compensation</div>
+                <div className="self-stretch text-[#4b4b61] text-sm font-medium leading-tight">
+                    {t('Compensation')}
+                </div>
                 
                 <div className="self-stretch text-[#22223d] text-base font-semibold leading-normal">
                     { !history.contract && <>{history.candidate_hourly_rate} KD/hr</> }
@@ -34,7 +40,7 @@ export function AssignmentDetail({ history }: { history: CandidateWorkHistory })
                             }
 
                             { history.contract.type == 'MONTHLY_SALARY' && 
-                                <> { history.contract.amount.candidate_total } { history.contract.currency_code } /month</> 
+                                <> { history.contract.amount.candidate_total } { history.contract.currency_code } /{t('month')}</> 
                             }
                         </> }
                 </div> 
@@ -43,7 +49,9 @@ export function AssignmentDetail({ history }: { history: CandidateWorkHistory })
 
         <div className="self-stretch h-12 flex-col justify-start items-start gap-4 flex">
             <div className="self-stretch h-12 flex-col justify-start items-start gap-1 flex">
-                <div className="self-stretch text-[#4b4b61] text-sm font-medium leading-tight">Start Date</div>
+                <div className="self-stretch text-[#4b4b61] text-sm font-medium leading-tight">
+                    {t('Start Date')}
+                </div>
                 <div className="self-stretch text-[#22223d] text-base font-semibold leading-normal">
                     {format(history.start_date, 'MMM d, yyyy')} 
                 </div>

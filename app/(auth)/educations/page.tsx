@@ -15,37 +15,19 @@ import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
-import { profile, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { profile } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
-import { saveEducation, updateEducation } from "@/providers/logged-in/candidate-education.service";
-import UniversityInput from "@/components/on-board/university-input";
-import DegreeGroupInput from "@/components/on-board/degree-group";
-import DegreeInput from "@/components/on-board/degree-input";
-import MajorInput from "@/components/on-board/major-input";
+import { saveEducation } from "@/providers/logged-in/candidate-education.service";
 import PagedUniversityInput from "@/components/on-board/paged-university-input";
 import PagedMajorInput from "@/components/on-board/paged-major";
 import PagedDegreeInput from "@/components/on-board/paged-degree-input";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
-
-const formSchema = z.object({
-  candidateEducations: z.array(z.object({
-    university: z.any(),
-    degree: z.any(),
-    major: z.any(),
-
-    education_uuid: z.string().nullable(),
-    graduation_year: z.coerce.number().min(1900)
-      .max((new Date()).getFullYear()).nullable().optional(), //.min(1, 'End year is required'),
-    university_id: z.coerce.number().min(1, "University is required"),
-    degree_uuid: z.string(),
-    major_uuid: z.string(),
-    is_currently_studying: z.boolean(),
-  }))
-})
 
 export default function Educations() {
 
@@ -55,6 +37,24 @@ export default function Educations() {
   const router = useRouter();
   const params = useSearchParams();
   let formattedEducations: any[] = [];
+
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    candidateEducations: z.array(z.object({
+      university: z.any(),
+      degree: z.any(),
+      major: z.any(),
+
+      education_uuid: z.string().nullable(),
+      graduation_year: z.coerce.number().min(1900)
+        .max((new Date()).getFullYear()).nullable().optional(), //.min(1, 'End year is required'),
+      university_id: z.coerce.number().min(1, t("University is required")),
+      degree_uuid: z.string(),
+      major_uuid: z.string(),
+      is_currently_studying: z.boolean(),
+    }))
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -132,7 +132,10 @@ export default function Educations() {
         else
           router.push('/skills');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -144,7 +147,7 @@ export default function Educations() {
       { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 25, 0]}></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-        Where did you study?
+        {t("Where did you study?")}
       </h5>
 
       <Form {...form}>
@@ -221,7 +224,7 @@ export default function Educations() {
                         onClick={() => remove(index)}
                         className="text-red-500"
                         >
-                        Remove
+                        {t("Remove")}
                     </Button>)
                }
 
@@ -247,7 +250,7 @@ export default function Educations() {
             className="text-[color:var(--Primary-Main,#4C70F2)] text-sm font-medium leading-5"
           >
             
-            <img src="/assets/icons/plus.svg" /> Add education
+            <img src="/assets/icons/plus.svg" /> {t("Add education")}
           </Button>
 
           <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>

@@ -13,6 +13,7 @@ import {
 import { UseFormReturn } from 'react-hook-form'
 import CircularTimePicker from '@/components/ui/circular-time-picker';
 import { Timer } from '../common/timer'
+import { useTranslation } from 'react-i18next'
 
 interface FormInputProps {
   name: string,
@@ -38,6 +39,8 @@ export function FormTimeInput({
   const id = useId()
 
   const [isTimerOpen, setIsTimerOpen] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   return (
     <FormField
@@ -113,7 +116,7 @@ export function FormTimeInput({
 
               ${fieldState.error ? 'text-destructive' : 'text-gray-500 peer-focus:text-primary'}`}
           >
-            {label}
+            {t(label)}
           </FormLabel>
           </div>
 

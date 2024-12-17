@@ -14,7 +14,7 @@ const CompensationTransferNotification = ({ candidateNotification, onClick }: { 
       <p className="text-gray-600 text-sm leading-4 m-0">
         {t("Your compensation transfer has been initiated. It should be completed within 1-2 business days.")}
       </p>
-      <p className="txt-time text-right text-gray-500 text-xs leading-4 m-0">
+      <p className="txt-time text-end text-gray-500 text-xs leading-4 m-0">
         {format(candidateNotification.created_at, 'MMM d')}
         {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
       </p>

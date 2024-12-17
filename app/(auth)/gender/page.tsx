@@ -12,6 +12,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
  
  
 export default function Name() {
@@ -26,6 +28,8 @@ export default function Name() {
   const [loading, setLoading] = useState(false);
  
   const params = useSearchParams();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
       
@@ -69,7 +73,10 @@ export default function Name() {
           else
           router.push('/nationality');
         } else {
-          alert(errorMessage(res.message));
+          alertDialog({
+            title: t("Error"),
+            description: errorMessage(res.message),
+          });
         }
       });
     }
@@ -80,7 +87,7 @@ export default function Name() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[66, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            What is your gender?
+            {t("What is your gender?")}
         </h5>
         
         <div suppressHydrationWarning={true} className="max-w-[650px] m-auto">
@@ -92,14 +99,14 @@ export default function Name() {
                         'border border-[color:var(--Neutral-30,#EEEEF0)] background:var(--Neutral-0,#FFF)' }
 
                     `}>
-                    Male
+                    {t("Male")}
                 </button>
                 <button onClick={ () => setGender(2) } className={ `flex-[1_0_0] flex-col xs:ms-[8px] xs:me-[8px] sm:ms-[16px] sm:me-[16px] px-6 py-5 rounded-2xl border-solid
                     
                     ${gender == 2 ? 'border-[color:var(--Blue-Tint-Main,#4C70F2)] [background:var(--Blue-Tint-1,#F5F7FF)] border-2' :
                         'border border-[color:var(--Neutral-30,#EEEEF0)] background:var(--Neutral-0,#FFF)' }
                     `}>
-                    Female
+                    {t("Female")}
                 </button>
                 <button onClick={ () => setGender(3) } className={ `flex-[1_0_0] flex-col xs:ms-[8px] sm:ms-[16px] px-6 py-5 rounded-2xl border-solid 
                     
@@ -107,7 +114,7 @@ export default function Name() {
                         'border border-[color:var(--Neutral-30,#EEEEF0)] background:var(--Neutral-0,#FFF)' }
 
                     `}>
-                    Other
+                    {t("Other")}
                 </button>
             </div>
 

@@ -1,11 +1,10 @@
-/**
- "use client"
+"use client"
 
 // Inspired by react-hot-toast library
 import * as React from "react"
-
+//AlertActionElement,
+  
 import type {
-  AlertActionElement,
   AlertProps,
 } from "@/components/ui/alert"
 
@@ -16,7 +15,7 @@ type Alert = AlertProps & {
   id: string
   title?: React.ReactNode
   description?: React.ReactNode
-  action?: AlertActionElement
+  action?: any//AlertActionElement
 }
 
 const actionTypes = {
@@ -157,11 +156,11 @@ function alert({ ...props }: AlertInput) {
     alert: {
       ...props,
       id,
-      open: true,
+      /*open: true,
       onOpenChange: (open) => {
         if (!open) 
           dismiss()
-      },
+      },*/
     },
   })
 
@@ -193,4 +192,3 @@ function useAlert() {
 }
 
 export { useAlert, alert }
- */

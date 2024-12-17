@@ -13,6 +13,7 @@ import React, { useEffect, useId, useState } from "react";
 import { FormInput } from "../ui/form-input";
 import { Card, CardContent } from "../ui/card";
 import { listMajors } from "@/providers/logged-in/candidate-education.service";
+import { langContent } from "@/utils/common";
 
 interface NationalityInputProps {
     selectedMajor: any | null;
@@ -100,7 +101,7 @@ export default function PagedMajorInput({ selectedMajor, onSelect, name, form }:
 
                         <li key={major.major_uuid} className="gap-2 cursor-pointer"
                             onClick={() => handleSelect(major)}>
-                            <span className="flex-1 text-sm">{major.major_name_en}</span>
+                            <span className="flex-1 text-sm">{langContent(major.major_name_en, major.major_name_ar)}</span>
                             <CheckIcon
                                 className={`ml-auto size-4 ${major.major_uuid == selectedMajor?.major_uuid ?
                                     "opacity-100" : "opacity-0"}`}
@@ -120,7 +121,9 @@ export default function PagedMajorInput({ selectedMajor, onSelect, name, form }:
                                 onClick={() => loadPage(pagination.current_page - 1)} />
                         </PaginationItem>
 
-                        {Array.from({ length: Math.min(pagination.total_pages, 2) }, (_, i) => i + 1).map((page) => (
+                        {/*Math.min(pagination.total_pages, 2)*/}
+
+                        {Array.from({ length: pagination.total_pages }, (_, i) => i + 1).map((page) => (
                             <PaginationItem key={page}>
                                 <PaginationLink 
                                     className="cursor-pointer"
@@ -132,11 +135,11 @@ export default function PagedMajorInput({ selectedMajor, onSelect, name, form }:
                             </PaginationItem>
                         ))}
                          
-                         {
+                         {/*
                             pagination.total_pages > 2 && (
                                 <PaginationEllipsis />
                             )
-                         }
+                         */}
 
                         <PaginationItem>
                             <PaginationNext 

@@ -19,13 +19,16 @@ import { StoreState, useAppDispatch, useAppSelector } from "@/store/store";
 import { countInvitations } from "@/providers/logged-in/invitation.service";
 import { requestUpdated$ } from "@/providers/event.service";
 import { setPendingInvitations } from "@/store/slices/appSlice";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+  const { t } = useTranslation();
+
   const [startingChat, setStartingChat] = useState(false);
    
   const { totalUnreadMessages} = useAppSelector((state: StoreState) => state.app);
@@ -44,7 +47,10 @@ export default function RootLayout({
       setStartingChat(false);
     
       if (res.operation == "error") {
-        alert(errorMessage(res.message))
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
       else 
       {

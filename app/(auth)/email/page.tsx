@@ -21,10 +21,8 @@ import { setUnVerifiedToken } from "@/store/slices/authSlice";
 import { profile, updateEmail } from "@/providers/logged-in/account.service";
 import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
-
-const formSchema = z.object({
-  email: z.string().email('Please enter valid email address')
-})
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 declare let grecaptcha: any;
 
@@ -37,7 +35,15 @@ export default function Email() {
   
   const { user } = useAppSelector((state: RootState) => state.user);
   const params = useSearchParams();
+
+  const { t } = useTranslation();
+
   // 1. Define your form.
+
+  const formSchema = z.object({
+    email: z.string().email(t('Please enter valid email address.'))
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -114,7 +120,10 @@ export default function Email() {
           router.push('/login');
         }
 
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
 
         /*
         todo: have alert
@@ -138,7 +147,7 @@ export default function Email() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[22, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          What is your email address?
+          {t("What is your email address?")}
         </h5>
 
         <Form {...form}>

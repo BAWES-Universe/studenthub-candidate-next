@@ -9,10 +9,8 @@ import { z } from "zod"
 import {
   Form
 } from "@/components/ui/form"
-import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { Textarea } from "@/components/ui/textarea";
 
 import { useEffect, useState } from "react";
 import { profile, updateObjective, updatePhoneDetail } from "@/providers/logged-in/account.service";
@@ -22,12 +20,8 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { FormTextarea } from "@/components/ui/form-textarea";
 import { page, track } from "@/providers/analytics.service";
-
-const formSchema = z.object({
-    objective: z.string({
-        required_error: 'Please add introduction note'
-    })
-})
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 export default function Objective() {
 
@@ -36,7 +30,17 @@ export default function Objective() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useSearchParams();
+
+  const { t } = useTranslation();
+
   // 1. Define your form.
+
+  const formSchema = z.object({
+    objective: z.string({
+        required_error: t('Please add objective note')
+    })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -87,7 +91,11 @@ export default function Objective() {
         else
         router.push('/video');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
+
       }
     }).finally(() => {
       setLoading(false);
@@ -99,11 +107,11 @@ export default function Objective() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 48]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
-          What’s your objective?
+          {t("What’s your objective?")}
         </h5>
 
         <p className="text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] mt-[8px]">
-          Tell us a bit about what you hope to achieve
+          {t("Tell us a bit about what you hope to achieve")}
         </p>
 
         <Form {...form}>
@@ -112,7 +120,7 @@ export default function Objective() {
             <FormTextarea
               label=""
               name="objective"
-              placeholder="Small brief about yourself"
+              placeholder={t("Small brief about yourself")}
               form={form as any}
             />
  

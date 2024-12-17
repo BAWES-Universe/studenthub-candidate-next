@@ -21,23 +21,27 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { resetPasswordRequest } from "@/providers/auth.service";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
 
 declare let grecaptcha: any;
 
-const formSchema = z.object({
-  email: z.string({
-    required_error: 'Please add email address.'
-    })
-})
-
 export default function PreferredTime() {
+  
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useSearchParams();
-  // 1. Define your form.
+
+  const formSchema = z.object({
+    email: z.string({
+      required_error: t('Please add email address.')
+      })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,11 +68,16 @@ export default function PreferredTime() {
            
             resetPasswordRequest(values.email, token).then(res => {
                 if (res.operation == 'success') {
- 
-                    alert(res.message);//'Password recovery email sent, please check your email.'
-                    router.push('/login');
+                  alertDialog({
+                    title: t("Error"),
+                    description: res.message,
+                  });//'Password recovery email sent, please check your email.'
+                  router.push('/login');
                 } else {
-                    alert(errorMessage(res.message));
+                    alertDialog({
+                      title: t("Error"),
+                      description: errorMessage(res.message),
+                    });
                 }
             }).finally(() => {
                 setLoading(false);
@@ -81,7 +90,7 @@ export default function PreferredTime() {
     <>
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            Forgot your password?
+            {t("Forgot your password?")}
         </h5>
  
         <Form {...form} >

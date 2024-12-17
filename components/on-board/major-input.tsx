@@ -18,6 +18,8 @@ import { CheckIcon } from "lucide-react";
 import React, { useEffect, useId, useState } from "react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { listMajors } from "@/providers/logged-in/candidate-education.service";
+import { langContent } from "@/utils/common";
+import { useTranslation } from "react-i18next";
 
 interface MajorInputProps {
     major_uuid?: any;
@@ -58,6 +60,8 @@ export default function MajorInput({ major_uuid, onSelect }: MajorInputProps) {
 
     const id = useId()
 
+    const { t } = useTranslation();
+    
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -74,7 +78,7 @@ export default function MajorInput({ major_uuid, onSelect }: MajorInputProps) {
                             `}
                         >
                             { selectedMajor ?
-                                selectedMajor['major_name_en'] : null}
+                                langContent(selectedMajor['major_name_en'], selectedMajor['major_name_ar']) : null}
                         </p>
 
                     </FormControl>
@@ -91,7 +95,7 @@ export default function MajorInput({ major_uuid, onSelect }: MajorInputProps) {
                                 
                             `}
                     >
-                        Field of Study
+                        {t('Field of Study')}
                     </FormLabel>
                     <FormMessage />
                 </FormItem>
@@ -103,7 +107,7 @@ export default function MajorInput({ major_uuid, onSelect }: MajorInputProps) {
                     <CommandList>
                         <ScrollArea className="h-72">
                             <CommandEmpty>
-                                {loading ? 'Loading...' : 'No major found.'}
+                                {loading ? t('Loading...') : t('No major found.')}
                             </CommandEmpty>
 
                             <CommandGroup>
@@ -112,7 +116,9 @@ export default function MajorInput({ major_uuid, onSelect }: MajorInputProps) {
 
                                         <CommandItem key={major.major_uuid} className="gap-2 cursor-pointer"
                                             onSelect={() => handleSelect(major)}>
-                                            <span className="flex-1 text-sm">{major.major_name_en}</span>
+                                            <span className="flex-1 text-sm">
+                                                {langContent(major.major_name_en, major.major_name_ar)}
+                                            </span>
                                             <CheckIcon
                                                 className={`ml-auto size-4 ${major.major_uuid == major_uuid ?
                                                     "opacity-100" : "opacity-0"}`}

@@ -21,22 +21,28 @@ import { useAppDispatch } from "@/store/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { page, track } from "@/providers/analytics.service";
 import { FormDateInput } from "@/components/ui/form-date";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
-const formSchema = z.object({
-  candidate_birth_date: z.date().min(new Date(new Date().setFullYear(new Date().getFullYear() - 25)), {
-    message: "Candidate age should be between 16 to 25.",
-  }).max(new Date(new Date().setFullYear(new Date().getFullYear() - 16)), {
-    message: "Candidate age should be between 16 to 25.",
-  }),
-})
 
 export default function Name() {
+  const { t } = useTranslation();
+
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useSearchParams();
   // 1. Define your form.
+
+  const formSchema = z.object({
+    candidate_birth_date: z.date().min(new Date(new Date().setFullYear(new Date().getFullYear() - 25)), {
+      message: t("Candidate age should be between 16 to 25."),
+    }).max(new Date(new Date().setFullYear(new Date().getFullYear() - 16)), {
+      message: t("Candidate age should be between 16 to 25."),
+    }),
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -89,7 +95,10 @@ export default function Name() {
         else
           router.push('/gender');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -101,7 +110,7 @@ export default function Name() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[55, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            When were you born?
+            {t("When were you born?")}
         </h5>
 
         <Form {...form}>

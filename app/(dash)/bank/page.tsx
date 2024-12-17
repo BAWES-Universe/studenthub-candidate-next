@@ -19,28 +19,29 @@ import {
   Form
 } from "@/components/ui/form"
 import { FormInput } from "@/components/ui/form-input";
+import { alertDialog } from '@/hooks/use-alert-dialog';
 
-const formSchema = z.object({
-  benef_name: z.string({
-    required_error: 'Please add beneficiary name.'
-  }),
-  iban: z.string({
-    required_error: 'Please add IBAN.'
-    }),
-})
 
 const UpdateBankPage = () => {
    
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
-   
-  const benefNameRef = useRef(null);
-
+    
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   // 1. Define your form.
+
+  const formSchema = z.object({
+    benef_name: z.string({
+      required_error: t('Please add beneficiary name.')
+    }),
+    iban: z.string({
+      required_error: t('Please add IBAN.')
+    }),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -124,7 +125,10 @@ const UpdateBankPage = () => {
 
   const handleError = async (res: any) => {
     //await Alert.alert(t(res.message));
-    alert(errorMessage(res.message));
+    alertDialog({
+      title: t("Error"),
+      description: errorMessage(res.message),
+    });
   };
 
   return (

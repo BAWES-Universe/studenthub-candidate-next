@@ -1,5 +1,4 @@
-/**
- "use client"
+"use client"
 
 // Inspired by react-hot-toast library
 import * as React from "react"
@@ -192,5 +191,4 @@ function useAlertDialog() {
   }
 }
 
-export { useAlertDialog, alertDialog }
- */
+export { useAlertDialog, alertDialog } 

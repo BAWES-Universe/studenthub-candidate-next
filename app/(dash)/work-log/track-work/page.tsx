@@ -4,14 +4,14 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Geolocation } from '@capacitor/geolocation'; // Assuming you're using Capacitor for geolocation
-import { ArrowRight, ChevronRight } from 'lucide-react';
-import { secondsToTime, toDate } from '@/utils/common';
+import {  ChevronRight } from 'lucide-react';
+import { secondsToTime } from '@/utils/common';
 import { CandidateWorkingHour } from '@/models/candidate';
 import { checkWorkStatus, startWork, stopWork, discardSession } from '@/providers/logged-in/account.service';
 import { listHours } from '@/providers/logged-in/candidate-working-hour.service';
 import LogTimeManuallyPage from '../../../../components/modals/log-time-manually/page';
 import EndSessionPage from '../../../../components/modals/end-session/page';
-import Spinner from '@/components/common/spinner';
+
 import { page, track } from '@/providers/analytics.service';
 import Pager from '@/components/common/pager';
 import { format } from 'date-fns';
@@ -19,6 +19,7 @@ import { Timer } from '@/components/common/timer';
 import { setUser } from '@/store/slices/userSlice';
 import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
 import { workingDateStats } from '@/providers/logged-in/candidate-working-hour.service';
+import i18n from '@/app/18n';
 
 const TrackWorkPage = () => {
   const { t } = useTranslation();
@@ -189,19 +190,19 @@ const TrackWorkPage = () => {
             onClick={ () => !(savingHours || startingWork) && toggleTrack()}>
 
             {savingHours || startingWork ? 
-              <div className="left-[52px] top-[66px] absolute text-white">
-                { savingHours? 'Saving...': 'Starting...'}
+              <div className={ `${i18n.language == "en"? 'left-[52px]': 'left-[52px]'} top-[66px] absolute text-white` }>
+                { savingHours? t('Saving...'): t('Starting...')}
               </div> : null}
 
-            {!savingHours && !startingWork && <div className="left-[41px] top-[52px] absolute text-center text-white text-lg font-semibold leading-7">
-              Start<br/>Tracking
+            {!savingHours && !startingWork && <div className={ `${i18n.language == "en"? 'left-[41px]': 'left-[65px]'} top-[52px] absolute text-center text-white text-lg font-semibold leading-7` }>
+              {t("Start")}<br/>{t("Tracking")}
             </div> }
         </div> }
 
         { started && 
         <div className="cursor-pointer w-28 h-28 pl-[22px] pr-[21px] pt-7 pb-[29px] bg-[#eb5757] rounded-[32px] shadow flex-col justify-center items-center gap-2 inline-flex"
           onClick={ () => !(savingHours || startingWork) && toggleTrack()}>
-            <div className="text-center text-white text-lg font-semibold leading-7">End</div>
+            <div className="text-center text-white text-lg font-semibold leading-7">{t("End")}</div>
             <div>
               <Timer start={started} />
             </div>
@@ -242,23 +243,23 @@ const TrackWorkPage = () => {
     </div>
  
     {candidateWorkingHourData.length > 0 && <div className="session-wrapper mt-6">
-        <h5 className="txt-session-heading text-neutral-900 text-lg font-semibold leading-7 border-t border-neutral-300 pt-6 text-left">
+        <h5 className="txt-session-heading text-neutral-900 text-lg font-semibold leading-7 border-t border-neutral-300 pt-6">
           {t("Sessions")} <span className="text-[#7D7D8D]">({pagination.total_count})</span>
         </h5>
+
         {candidateWorkingHourData.map((hour: CandidateWorkingHour) => (
 
-          <p key={hour.candidate_working_hour_uuid} className="flex justify-between items-center bg-white shadow-md rounded-lg p-4 my-4">
+          <p key={hour.candidate_working_hour_uuid} className="flex justify-between items-center bg-white shadow-md rounded-lg p-4 my-4" >
             <b className="text-neutral-900 text-base font-medium leading-6">
               { hour.total_time ? secondsToTime(hour.total_time): "On-Going" } 
             </b>
-            <span className="text-neutral-600 text-sm font-normal leading-5">
+            <span className="text-neutral-600 text-sm font-normal leading-5" dir='ltr'>
               { hour.start_time ? format(hour.start_time, "hh:mm a") : '00:00'} 
               { /**<ArrowRight className="inline text-gray-600 text-small" /> */}
                
                 &nbsp;<img src='/assets/icons/chevron-right.svg' className="inline relative top-[-2px]" />&nbsp;
                 { hour.end_time ? format(hour.end_time, "hh:mm a") : 'Now'}
                 
-    
             </span>
           </p>
         ))}

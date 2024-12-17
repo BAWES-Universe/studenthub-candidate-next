@@ -21,16 +21,14 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { FormTextarea } from "@/components/ui/form-textarea";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
-
-const formSchema = z.object({
-  candidate_intro: z.string({
-        required_error: 'Please add introduction note'
-    })
-})
 
 export default function AboutYourself() {
 
+  const { t } = useTranslation();
+  
   const params = useSearchParams();
   
   const [loading, setLoading] = useState(false);
@@ -38,6 +36,12 @@ export default function AboutYourself() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const formSchema = z.object({
+    candidate_intro: z.string({
+          required_error: t('Please add introduction note')
+      })
+  })
+  
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,8 +76,6 @@ export default function AboutYourself() {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     
-    console.log("values", values);
-
     setLoading(true);
 
     updateIntro(values.candidate_intro).then(res => {
@@ -92,7 +94,10 @@ export default function AboutYourself() {
           router.push('/objective');
 
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -104,11 +109,11 @@ export default function AboutYourself() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 36]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
-            Tell us about yourself
+            {t("Tell us about yourself")}
         </h5>
 
         <p className="text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] mt-[8px]">
-            We know it’s hard, but you can do it!
+            {t("We know it’s hard, but you can do it!")}
         </p>
 
         <Form {...form}>
@@ -117,7 +122,7 @@ export default function AboutYourself() {
             <FormTextarea
               label=""
               name="candidate_intro"
-              placeholder="Small brief about yourself"
+              placeholder={t("Small brief about yourself")}
               form={form as any}
             />
  

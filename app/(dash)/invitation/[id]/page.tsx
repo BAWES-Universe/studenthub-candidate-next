@@ -8,7 +8,6 @@ import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { detailInvitation } from '@/providers/logged-in/invitation.service';
 import { useParams } from 'next/dist/client/components/navigation';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import CompanyPage from '../../../../components/modals/company/page';
 import { useTranslation } from 'react-i18next';
@@ -85,15 +84,15 @@ const InvitationDetailPage = () => {
 
     return (
         <>
-            {loading && <div className="progress-bar">Loading...</div>}
+            {loading && <div className="progress-bar">{t("Loading...")}</div>}
             {model && (
                 
                 <div className="max-w-4xl mx-auto p-4">
                     
                     <p className="font-bold text-base leading-normal">
                         {model.request && model.request.request_position_type === 1
-                            ? "You’d be working full-time as a"
-                            : "You’d be working part-time as a"}
+                            ? t("You’d be working full-time as a")
+                            : t("You’d be working part-time as a")}
                     </p>
 
                     <p className="text-2xl my-2">
@@ -118,19 +117,19 @@ const InvitationDetailPage = () => {
 
                     {model.request && model.request.request_compensation && (
                         <>
-                            <h3 className="font-bold text-lg my-2">Compensation</h3>
+                            <h3 className="font-bold text-lg my-2">{t("Compensation")}</h3>
                             <p className="my-2" dangerouslySetInnerHTML={{ __html: model.request.request_compensation }} />
                         </>
                     )}
 
-                    <h2 className="font-bold text-lg my-2">Job location</h2>
+                    <h2 className="font-bold text-lg my-2">{t("Job location")}</h2>
 
                     <p className="my-2">
                         {model.request && model.request.request_location}</p>
 
                     {model.request && model.request.requestSkills && model.request.requestSkills.length > 0 && (
                         <>
-                            <h2 className="font-bold text-lg my-2">Skills</h2>
+                            <h2 className="font-bold text-lg my-2">{t("Skills")}</h2>
                             {model.request.requestSkills.map((skill) => (
                                 <span key={skill.skill} className="badge">{skill.skill}</span>
                             ))}
@@ -147,7 +146,7 @@ const InvitationDetailPage = () => {
                                         More about company
                                     </Button> */}
 
-                                    <Button onClick={accept} className="">I’d like to apply</Button>
+                                    <Button onClick={accept} className="">{t("I’d like to apply")}</Button>
                                     <Button onClick={reject} className="" variant={"secondary"}>Reject</Button>
 
                                     <Popover open={feedbackOpen} modal={true}>
@@ -164,7 +163,7 @@ const InvitationDetailPage = () => {
                             {model.invitation_status == 3 && (
                             <div className='mt-4'>
                                 <h3>
-                                { "You applied for it with the message:" }
+                                    { t("You applied for it with the message:") }
                                 </h3>
                                 {
                                     model.note && <p> 
@@ -178,7 +177,7 @@ const InvitationDetailPage = () => {
                                     </div>
                                     <div className="w-5/6 sm:w-5/6 md:w-10/12 lg:w-10/12">
                                         <span className="text-black text-sm">
-                                            {"We're now working on convincing them to hire you. Check back here later to see if you made it."}
+                                            { t("We're now working on convincing them to hire you. Check back here later to see if you made it.")}
                                         </span>
                                     </div>
                                 </div> 
@@ -187,7 +186,7 @@ const InvitationDetailPage = () => {
                             {model.invitation_status == 2 && (     
                                 <div className='mt-4'>
                                 <h3>
-                                { "You rejected it with the message:" }
+                                { t("You rejected it with the message:") }
                                 </h3>
                                 {
                                     model.note && <p> 
@@ -201,7 +200,7 @@ const InvitationDetailPage = () => {
                                     </div>
                                     <div className="w-5/6 sm:w-5/6 md:w-10/12 lg:w-10/12">
                                         <span className="text-black text-sm">
-                                            {"We’ll keep you updated on any other jobs that pop up."}
+                                            { t("We’ll keep you updated on any other jobs that pop up.") }
                                         </span>
                                     </div>
                                 </div> 
@@ -214,7 +213,7 @@ const InvitationDetailPage = () => {
                             {model.invitation_status === 1 && (
                                 <div>
                                     <h3 className="font-bold">
-                                        You didn’t apply for it
+                                        {t("You didn’t apply for it")}
                                     </h3>
                                 </div>
                             )}
@@ -222,7 +221,7 @@ const InvitationDetailPage = () => {
                             {model.invitation_status === 2 && (
                                 <div>
                                     <h3 className="font-bold">
-                                        You rejected it with the message:
+                                        {t("You rejected it with the message")}:
                                     </h3>
                                     {model.note && (
                                         <p className="application-msg">
@@ -235,7 +234,7 @@ const InvitationDetailPage = () => {
                             {model.invitation_status === 3 && (
                                 <div>
                                     <h3 className="font-bold">
-                                        You applied for it with the message:
+                                        {t("You applied for it with the message")}:
                                     </h3>
                                     {model.note && (
                                         <p className="application-msg">
@@ -252,7 +251,7 @@ const InvitationDetailPage = () => {
                                     </div>
                                     <div className="w-5/6">
                                         <span className="text-sm">
-                                            This job has filled up. If you didn’t make it, we’ll be working on finding you other jobs.
+                                            {t("This job has filled up. If you didn’t make it, we’ll be working on finding you other jobs.")}
                                         </span>
                                     </div>
                                 </div>
@@ -265,7 +264,7 @@ const InvitationDetailPage = () => {
                                     </div>
                                     <div className="w-5/6">
                                         <span className="text-sm">
-                                            This job was cancelled. They’ll hopefully have another opening soon.
+                                            {t("This job was cancelled. They’ll hopefully have another opening soon.")}
                                         </span>
                                     </div>
                                 </div>

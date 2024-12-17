@@ -13,6 +13,7 @@ import { useAppDispatch } from '@/store/store';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PaymentsPage = () => {
     
@@ -28,6 +29,7 @@ const PaymentsPage = () => {
     const { user } = useAppSelector(state => state.user);
     const dispatch = useAppDispatch();
 
+    const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) {
@@ -82,20 +84,20 @@ const PaymentsPage = () => {
  
     return (
         <div className="max-w-4xl mx-auto p-4">
-            {loading && <div>Loading...</div>}
+            {loading && <div>{t("Loading...")}</div>}
             {user && (
                 <>
-                    <h1 className="text-2xl font-bold">{!user.bank_id ? "Bank Information" : "Payments"}</h1>
+                    <h1 className="text-2xl font-bold">{!user.bank_id ? t("Bank Information") : t("Payments")}</h1>
 
                     {!user.bank_id && (
-                        <h3 className='mt-1'>We'll need your bank information to pay you for work done</h3>
+                        <h3 className='mt-1'>{t("We'll need your bank information to pay you for work done")}</h3>
                     )}
                     {user.bank_id && salaries.length === 0 && (
-                        <h3 className='mt-1'>We'll be making payments to the following bank account</h3>
+                        <h3 className='mt-1'>{t("We'll be making payments to the following bank account")}</h3>
                     )}
 
                     <Button className="btn mt-2 mb-4" onClick={() => router.push('/bank')}>
-                        Enter Bank Information
+                        {t("Enter Bank Information")}
                     </Button>
 
                     {salaries.length > 0 && (
@@ -110,18 +112,20 @@ const PaymentsPage = () => {
                                     <CardContent className="p-6">  
                                         <span className="text-black text-sm">{format(new Date(salary.tc_created_at || ''), 'MMMM d, yyyy')}</span>
                                         <p className="text-black text-lg font-medium">
-                                            {salary.hours > 0 && <span>{salary.hours} hours </span>}
-                                            {salary.minutes > 0 && <span>{salary.minutes} minutes </span>}
-                                            {salary.seconds > 0 && <span>{salary.seconds} seconds </span>}
-                                            x {salary.candidate_hourly_rate.toFixed(3)} per hour
-                                            {salary.candidate_bonus > 0 && <span>+ {salary.candidate_bonus.toFixed(3)} {salary.currency_code} bonus</span>}
+                                            {salary.hours > 0 && <span>{salary.hours} {t("hours")} </span>}
+                                            {salary.minutes > 0 && <span>{salary.minutes} {t("minutes")} </span>}
+                                            {salary.seconds > 0 && <span>{salary.seconds} {t("seconds")} </span>}
+                                            x {salary.candidate_hourly_rate.toFixed(3)} {t("per hour")}
+                                            {salary.candidate_bonus > 0 && <span>+ {salary.candidate_bonus.toFixed(3)} {salary.currency_code} {t("bonus")}</span>}
                                         </p>
                                         <p className="text-black text-2xl font-semibold">{salary.candidate_total.toFixed(3)} {salary.currency_code}</p>
-                                        <p className="font-bold text-black mb-4">Transfer pending from {salary.company_name}</p>
-                                        {salary.status === 'Unpaid' && <p className="text-black text-xs">Transfer pending, please contact us if you don’t receive it</p>}
+                                        <p className="font-bold text-black mb-4">{t("Transfer pending from")} {salary.company_name}</p>
+                                        {salary.status === 'Unpaid' && <p className="text-black text-xs">
+                                            {t("Transfer pending, please contact us if you don’t receive it")}    
+                                        </p>}
                                         {salary.status === 'Paid' && (
                                             <div>
-                                                <span>Transferred to</span>
+                                                <span>{t("Transferred to")}</span>
                                                 <span>{salary.bank.bank_name}</span>
                                                 <span>{salary.transfer_benef_name}</span>
                                                 <span>{salary.transfer_benef_iban}</span>

@@ -1,4 +1,5 @@
 "use client"
+import { alertDialog } from '@/hooks/use-alert-dialog';
 // app/(dash)/request/RequestViewPage.tsx
 
 import { Request } from '@/models/request';
@@ -42,7 +43,10 @@ const RequestViewPage = () => {
             setRequest(prevRequest => ({ ...prevRequest, candidateApplication: data.candidateApplication }));
             dismiss();
         } else {
-            alert(errorMessage(data.message));
+            alertDialog({
+                title: t("Error"),
+                description: errorMessage(data.message),
+              });
         }
         setApplying(false);
     };
@@ -60,7 +64,7 @@ const RequestViewPage = () => {
                 </button>
             </div>
 
-            {loading && <div className="progress-bar">Loading...</div>}
+            {loading && <div className="progress-bar">{t("Loading...")}</div>}
 
             {request && (
                 <div>
@@ -113,7 +117,7 @@ const RequestViewPage = () => {
             {!request?.candidateApplication && (
                 <footer>
                     <button onClick={apply} disabled={applying} className="btn-apply">
-                        {applying ? <span>Loading...</span> : t("Apply")}
+                        {applying ? <span>{t("Loading...")}</span> : t("Apply")}
                     </button>
                 </footer>
             )}

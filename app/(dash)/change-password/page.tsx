@@ -20,18 +20,13 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 //import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog"
+import { useTranslation } from "react-i18next"
 
-
-const formSchema = z.object({
-    oldPassword: z.string({
-        required_error: 'Please add old password.'
-    }),
-    newPassword: z.string({
-        required_error: 'Please add new password.'
-    })
-})
 
 export default function PreferredTime() {
+
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector(state => state.user);
@@ -39,6 +34,16 @@ export default function PreferredTime() {
   const router = useRouter();
 
   // 1. Define your form.
+
+  const formSchema = z.object({
+    oldPassword: z.string({
+        required_error: t('Please add old password.')
+    }),
+    newPassword: z.string({
+        required_error: t('Please add new password.')
+    })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,7 +61,10 @@ export default function PreferredTime() {
       if (res.operation == 'success') {
         router.push('/profile');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -76,7 +84,7 @@ export default function PreferredTime() {
         {/*<OnboardProgress></OnboardProgress>*/}
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            Change Password
+            {t("Change Password")}
         </h5>
  
         <Form {...form} >

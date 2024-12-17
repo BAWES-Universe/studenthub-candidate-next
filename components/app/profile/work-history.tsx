@@ -15,7 +15,7 @@ export function WorkHistoryComponent({ history }: { history: CandidateWorkHistor
                     { history.store && <div className="grow shrink basis-0 text-[#4b4b61] text-sm font-normal leading-tight">
                         { history.store.store_name }
                     </div> }
-                    <div className="grow shrink basis-0 text-right text-[#4b4b61] text-xs font-normal leading-none">
+                    <div className="grow shrink basis-0 text-end text-[#4b4b61] text-xs font-normal leading-none">
                     {format(history.start_date || '', 'MMM. yyyy')} - { history.end_date? format(history.end_date, 'MMM. yyyy'): t('now')}
                     </div>
                 </div>

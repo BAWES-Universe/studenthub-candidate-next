@@ -20,7 +20,7 @@ export function Education({ education }: { education: CandidateEducation }) {
                     </div> }
 
                     { education.graduation_year && 
-                    <div className="grow shrink basis-0 text-right text-[#4b4b61] text-xs font-normal leading-none">
+                    <div className="grow shrink basis-0 text-end text-[#4b4b61] text-xs font-normal leading-none">
                         { education.graduation_year }
                     </div>
                     }

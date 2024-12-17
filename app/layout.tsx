@@ -29,6 +29,21 @@ import { loginByKey } from "@/providers/auth.service";
 import { getJobSearchStatus, profile } from "@/providers/logged-in/account.service";
 import { setUser } from "@/store/slices/userSlice";
 import { clickCampaign } from "@/providers/campaign.service";
+import { useAlertDialog } from "@/hooks/use-alert-dialog";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { t } from "i18next";
+
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
   description: 'Join StudentHub to start your educational journey with the best resources and support.',
@@ -79,6 +94,10 @@ export default function RootLayout({
     setMixpanel();
 
     initializeApp();
+    
+    document.getElementsByTagName('html')[0].setAttribute('dir', 
+      (i18n.language == 'ar') ? 'rtl' : 'ltr');
+
   }, []);
 
   async function initializeApp() {
@@ -497,6 +516,8 @@ export default function RootLayout({
     body.appendChild(script);
   }
 
+  const { alertDialogs } = useAlertDialog();
+ 
   return (
     <Provider store={store}>
         
@@ -506,9 +527,33 @@ export default function RootLayout({
           <NextTopLoader showSpinner={false} />
 
           <Suspense fallback="loading">
-          {children} 
+            {children} 
           </Suspense>
           
+          {/*<AlertDialogs />*/}
+          {alertDialogs.map((alertDialog, index) => {
+            return (
+              <AlertDialog key={index} {...alertDialog}>
+                {/**<AlertDialogTrigger asChild>
+                  <Button variant="outline">Show Dialog</Button>
+                </AlertDialogTrigger> */}
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{alertDialog.title}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                    {alertDialog.description}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    {/**<AlertDialogCancel>Cancel</AlertDialogCancel> */}
+                    <AlertDialogAction>{t('Continue')}</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            );
+          })}
+
+
           <Script strategy="lazyOnload" 
             src="https://www.google.com/recaptcha/api.js?render=6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V"></Script>
 

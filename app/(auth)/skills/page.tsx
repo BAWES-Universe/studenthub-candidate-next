@@ -12,20 +12,16 @@ import {
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { useState, useEffect } from "react";
-import { profile, updatePhoneDetail, updateSkills } from "@/providers/logged-in/account.service";
+import { profile, updateSkills } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { CandidateSkill } from "@/models/candidate.skill";
 import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
 
-
-const formSchema = z.object({
-  skills: z.array(z.string()).min(1, {
-    message: "Please add at least one skill"
-  })
-})
 
 export default function Skills() {
 
@@ -36,7 +32,16 @@ export default function Skills() {
   const params = useSearchParams();
   const [skills, setSkills] = useState<string[]>([]);
    
+  const { t } = useTranslation();
+
   // 1. Define your form.
+
+  const formSchema = z.object({
+    skills: z.array(z.string()).min(1, {
+      message: t("Please add at least one skill")
+    })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -90,7 +95,10 @@ export default function Skills() {
         else
         router.push('/experience');
       } else {
-        alert(errorMessage(res.message));
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
       }
     }).finally(() => {
       setLoading(false);
@@ -131,7 +139,7 @@ export default function Skills() {
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 50, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          What’s your skills?
+          {t("What’s your skills?")}
         </h5>
 
         <Form {...form}>
@@ -166,34 +174,34 @@ export default function Skills() {
               />
             </div>
             <p className="mt-2 text-sm text-[var(--Neutral-70,#7D7D8D)]">
-              Type " , " or press ↵ Enter after a skill to submit it
+              {t("Type \" , \" or press ↵ Enter after a skill to submit it")}
             </p>
           </div>
 
             <p className="mt-[16px] mb-[8px] self-stretch text-[color:var(--Neutral-100,#0F0F2C)] text-sm font-medium leading-5">
-              Suggestions:
+              {t("Suggestions")}:
             </p>
              
             <div className="block">
             <span 
-              onClick={ () => addSkills('Communication') } 
+              onClick={ () => addSkills(t('Communication')) } 
               className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
               text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
-                Communication
+                {t("Communication")}
             </span>
 
             <span 
-              onClick={ () => addSkills('Problem Solving') } 
+              onClick={ () => addSkills(t('Problem Solving')) } 
               className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
               text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
-                Problem Solving
+                {t("Problem Solving")}
             </span>
 
             <span 
-              onClick={ () => addSkills('Time Management') } 
+              onClick={ () => addSkills(t('Time Management')) } 
               className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
               text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
-                Time Management
+                {t('Time Management')}
             </span>
             </div> 
 

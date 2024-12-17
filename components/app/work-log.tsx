@@ -21,15 +21,15 @@ const WorkLog = ({ hour }: { hour: any }) => {
                 {hour.end_time && (
                     <>
                     {hour.status === 0 && <div className="px-1.5 py-0.5 bg-[#fff7ef] rounded-md justify-start items-start gap-2.5 flex">
-                        <div className="text-right text-[#CA7F3E] text-sm font-medium leading-tight">{t("Pending")}</div> 
+                        <div className="text-end text-[#CA7F3E] text-sm font-medium leading-tight">{t("Pending")}</div> 
                     </div>}
 
                     {hour.status === 1 && <div className="h-6 px-1.5 py-0.5 bg-[#edfcf3] rounded-md justify-start items-start gap-2.5 inline-flex">
-                        <div className="text-right text-[#28b563] text-sm font-medium leading-tight">{t("Approved")}</div>
+                        <div className="text-end text-[#28b563] text-sm font-medium leading-tight">{t("Approved")}</div>
                     </div> }
 
                     {hour.status === 2 && <div className="h-6 px-1.5 py-0.5 bg-[#fff2f2] rounded-md justify-start items-start gap-2.5 inline-flex">
-                        <div className="text-right text-[#eb5757] text-sm font-medium leading-tight">{t("Rejected")}</div>
+                        <div className="text-end text-[#eb5757] text-sm font-medium leading-tight">{t("Rejected")}</div>
                     </div> } 
                     </> )}
 

@@ -68,14 +68,16 @@ export function CandidateAction() {
     }
 
     return (
-        <div className="w-full h-40 py-2 bg-white rounded-2xl flex-col justify-start items-start inline-flex">
+        <div className="w-full py-2 bg-white rounded-2xl flex-col justify-start items-start inline-flex">
              
             <div onClick={() => router.push("/change-password")} className="cursor-pointer border-slate-200 border-b  self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
                 <div className="self-stretch justify-start items-center gap-2 inline-flex">
                     <div className="w-6 h-6 relative">
                         <KeyRound />
                     </div>
-                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">Change Password</div>
+                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                        {t("Change Password")}
+                    </div>
                 </div>
             </div>
 
@@ -103,7 +105,7 @@ export function CandidateAction() {
                 </div>
             </div>
  
-            <div onClick={deleteProfileClicked} className="cursor-pointer  self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
+            <div onClick={deleteProfileClicked} className="cursor-pointer border-slate-200 border-b self-stretch h-12 p-3 flex-col justify-start items-start gap-2 flex">
                 <div className="self-stretch justify-start items-center gap-2 inline-flex">
                     <div className="w-6 h-6 relative">
                         <Trash />
@@ -119,7 +121,9 @@ export function CandidateAction() {
                     <div className="w-6 h-6 relative">
                         <LogOut />
                     </div>
-                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">Logout</div>
+                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                        {t("Logout")}
+                    </div>
                 </div>
             </div>
         </div>

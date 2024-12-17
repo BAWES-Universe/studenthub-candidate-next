@@ -18,6 +18,8 @@ import { CheckIcon } from "lucide-react";
 import React, { useEffect, useId, useState } from "react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { filterUniversities } from "@/providers/university.service";
+import { langContent } from "@/utils/common";
+import { useTranslation } from "react-i18next";
 
 interface NationalityInputProps {
     selectedCountry: any;
@@ -30,6 +32,8 @@ export default function NationalityInput({ selectedCountry, onSelect }: National
     const [loading, setLoading] = useState(false);
     const [countryList, setCountryList] = useState([]);
 
+    const { t } = useTranslation();
+    
     useEffect(() => {
         setLoading(true);
 
@@ -64,7 +68,7 @@ export default function NationalityInput({ selectedCountry, onSelect }: National
                             `}
                         >
                             {selectedCountry?.country_id ?
-                                selectedCountry.country_nationality_name_en : null}
+                                langContent(selectedCountry.country_nationality_name_en, selectedCountry.country_nationality_name_ar) : null}
                         </p>
 
                     </FormControl>
@@ -81,7 +85,7 @@ export default function NationalityInput({ selectedCountry, onSelect }: National
                                 
                             `}
                     >
-                        Nationality
+                        {t('Nationality')}
                     </FormLabel>
                     <FormMessage />
                 </FormItem>
@@ -93,7 +97,7 @@ export default function NationalityInput({ selectedCountry, onSelect }: National
                     <CommandList>
                         <ScrollArea className="h-72">
                             <CommandEmpty>
-                                {loading ? 'Loading...' : 'No country found.'}
+                                {loading ? t('Loading...') : t('No country found.')}
                             </CommandEmpty>
 
                             <CommandGroup>
@@ -102,7 +106,7 @@ export default function NationalityInput({ selectedCountry, onSelect }: National
 
                                         <CommandItem key={country.country_id} className="gap-2 cursor-pointer"
                                             onSelect={() => handleSelect(country)}>
-                                            <span className="flex-1 text-sm">{country.country_nationality_name_en}</span>
+                                            <span className="flex-1 text-sm">{langContent(country.country_nationality_name_en, country.country_nationality_name_ar)}</span>
                                             <CheckIcon
                                                 className={`ml-auto size-4 ${country.country_id == selectedCountry?.country_id ?
                                                     "opacity-100" : "opacity-0"}`}
