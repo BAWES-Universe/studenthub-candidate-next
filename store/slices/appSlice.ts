@@ -9,6 +9,7 @@ interface AppState {
   currentLocation: any;
   showOneSignalPrompt: boolean,
   oneSignalStatus: boolean,
+  pushNotificationAvailable: boolean,
   canGoForward: boolean,
   totalUnreadActity: number,
   totalUnreadMessages: number,
@@ -23,6 +24,7 @@ const initialState: AppState = {
   currentLocation: null,
   showOneSignalPrompt: true,
   oneSignalStatus: false,
+  pushNotificationAvailable: false,
   canGoForward: false,
   totalUnreadActity: 0,
   totalUnreadMessages: 0,
@@ -51,11 +53,17 @@ const appSlice = createSlice({
     setCurrentLocation: (state, action: PayloadAction<{ currentLocation: any }>) => {
       state.currentLocation = action.payload.currentLocation;
     },
+    // if active/ inactive etc
     setOneSignalStatus: (state, action: PayloadAction<{ oneSignalStatus: boolean }>) => {
       state.oneSignalStatus = action.payload.oneSignalStatus;
     },
+    // to show prompt to enable 
     setShowOneSignalPrompt: (state, action: PayloadAction<{ showOneSignalPrompt: boolean }>) => {
       state.showOneSignalPrompt = action.payload.showOneSignalPrompt;
+    },
+    // if browser support notification 
+    setPushNotificationAvailable: (state, action: PayloadAction<{ pushNotificationAvailable: boolean }>) => {
+      state.pushNotificationAvailable = action.payload.pushNotificationAvailable;
     },
     setCanGoForward: (state, action: PayloadAction<{ canGoForward: boolean }>) => {
       state.canGoForward = action.payload.canGoForward;
@@ -74,5 +82,5 @@ const appSlice = createSlice({
 
 export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, 
   setShowOneSignalPrompt, setCanGoForward, setTotalUnreadActity, setTotalUnreadMessages, 
-  setOneSignalStatus, setPendingInvitations } = appSlice.actions;
+  setOneSignalStatus, setPendingInvitations, setPushNotificationAvailable } = appSlice.actions;
 export default appSlice.reducer;

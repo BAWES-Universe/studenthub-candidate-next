@@ -15,18 +15,21 @@ import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { setUser } from '@/store/slices/userSlice';
- 
+import { setOneSignal$ } from '@/providers/event.service';
+
 
 const DashboardPage = () => {
     
     const [loadingProfile, setLoadingProfile] = useState(false);
     const [workHistory, setWorkHistory] = useState([]);
     const [updating, setUpdating] = useState(false);
-    const [pushNotificationAvailable, setPushNotificationAvailable] = useState(true);
+    
     const router = useRouter();
     const { user } = useAppSelector(state => state.user);
 
-    const { t} = useTranslation();
+    const { t } = useTranslation();
+    const { showOneSignalPrompt, pushNotificationAvailable } = useAppSelector(state => state.app);
+
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -37,7 +40,7 @@ const DashboardPage = () => {
         //setInvitationSubscription();
 
         page('Home Page');
-
+ 
         return () => {
             track('page_exit', { page: 'Home Page' });
         }
@@ -60,7 +63,7 @@ const DashboardPage = () => {
     };
 
     const setSubscription = () => {
-        // TODO: Implement subscription logic
+        setOneSignal$.next({})
     };
 
     const loadWorkHistoryData = async () => {
@@ -88,7 +91,7 @@ const DashboardPage = () => {
                     <AccountStatus />
 
                     {/* Push Notification Card */}
-                    {pushNotificationAvailable && (
+                    {pushNotificationAvailable && showOneSignalPrompt && (
                         <Card className="p-0 mb-4">
                             <CardHeader>
                             <CardTitle className='font-bold'>
@@ -98,7 +101,7 @@ const DashboardPage = () => {
                         <CardContent>      
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
                                 { t("We’ll still email you important updates. This is cool if you aren’t an email person or would like to receive faster updates.") }</p>
-                            <Button variant={'outline'}onClick={() => setSubscription()}>
+                            <Button variant={'outline'} onClick={() => setSubscription()}>
                                 { t("Enable notifications") }
                             </Button>
                         </CardContent>

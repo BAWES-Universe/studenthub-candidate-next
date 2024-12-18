@@ -11,12 +11,12 @@ declare global {
 import "./globals.css";
 import { Inter } from 'next/font/google';
 import { Provider, useDispatch } from "react-redux";
-import { store } from "@/store/store";
+import { store, useAppDispatch } from "@/store/store";
 import Script from 'next/script'; 
 
 const inter = Inter({ subsets: ['latin'] });
 import NextTopLoader from 'nextjs-toploader'
-import { setCampaignId, setCanGoForward, setOneSignalStatus, setPendingInvitations, setShowOneSignalPrompt, setTotalUnreadActity, setTotalUnreadMessages } from "@/store/slices/appSlice";
+import { setCampaignId, setCanGoForward, setOneSignalStatus, setPendingInvitations, setPushNotificationAvailable, setShowOneSignalPrompt, setTotalUnreadActity, setTotalUnreadMessages } from "@/store/slices/appSlice";
 import { redirect, useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { publicRoutes } from "@/_middleware";
@@ -66,7 +66,7 @@ export default function RootLayout({
 
   const router = useRouter();
 
-  //const dispatch = usedispatch();
+  //const dispatch = useAppDispatch
   
   const state = store.getState(); // Get the state directly from the store
 
@@ -89,17 +89,15 @@ export default function RootLayout({
   let notificationScriptLoaded = false;
 
   useEffect(() => {
-    console.log("language", i18n.language)
     
     //i18n.changeLanguage(language);
 
-    setMixpanel();
-
-    initializeApp();
-    
     document.getElementsByTagName('html')[0].setAttribute('dir', 
       (i18n.language == 'ar') ? 'rtl' : 'ltr');
 
+    initializeApp();
+    
+    setMixpanel();
   }, []);
 
   async function initializeApp() {
@@ -141,7 +139,7 @@ export default function RootLayout({
       alertSubscribe();
     }
     
-   // _includeOneSignalJs();
+    _includeOneSignalJs();
 
     error404$.subscribe(data => {
       router.push('/not-found');
@@ -183,7 +181,7 @@ export default function RootLayout({
         });
       });
 
-     // oneSignalActionBasedOnStatus();
+      oneSignalActionBasedOnStatus();
 
       _updateAlert();
 
@@ -351,15 +349,13 @@ export default function RootLayout({
 
     store.dispatch(setOneSignalStatus({
       oneSignalStatus: true
-    }))
+    }));
   }
 
   /**
    * check oneSignal subscription status to show prompt in conversation list page
    */
   async function oneSignalActionBasedOnStatus() {
-    console.log("oneSignalStatus", oneSignalStatus);
-    
     if (oneSignalStatus) { // already accepted
       setOneSignalSubscription();
     } else { // not sure
@@ -436,7 +432,13 @@ export default function RootLayout({
    */
   async function _includeOneSignalJs() {
 
+    console.log("_includeOneSignalJs");
+
     if (!window.Notification) {
+      console.log("window.Notification not available");
+      store.dispatch(setPushNotificationAvailable({
+        pushNotificationAvailable: false
+      }));
       return null; // only for browser
     }
 
@@ -445,11 +447,20 @@ export default function RootLayout({
      * Cannot read property 'pushNotification' of undefined
      */
 
-    //const agent = window.navigator.userAgent.toLowerCase();
-
-    //this.platform.is('ios') && agent.indexOf('safari') > -1 && 
-    if((!window.safari || !window.safari.pushNotification)) {
+    const agent = window.navigator.userAgent.toLowerCase();
+    //agent.indexOf('safari') > -1 && (!window.safari || !window.safari.pushNotification)
+    console.log("agent", agent);
+    //this.platform.is('ios') 
+    if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
+      console.log("window.Notification not available");
+      store.dispatch(setPushNotificationAvailable({
+        pushNotificationAvailable: false
+      }));
       return null; // ios browser not supporting push notification
+    } else {
+      store.dispatch(setPushNotificationAvailable({
+        pushNotificationAvailable: true
+      }));
     }
 
     // if already loaded, just update tags
