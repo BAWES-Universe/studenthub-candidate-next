@@ -60,10 +60,10 @@ export async function handleAxiosError(err: any) {
     //    Router.push('/no-internet');  
     }
     
-    if(!navigator.onLine) {
+    /*if(!navigator.onLine) {
         internetOffline$.next({});
     //    Router.push('/no-internet');  
-    }
+    }*/
 
     // Handle Expired Session Error
     if (response.status === 401) { 

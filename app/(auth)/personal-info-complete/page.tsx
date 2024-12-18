@@ -4,18 +4,29 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import { Button } from "@/components/ui/button";
 import { page, track } from "@/providers/analytics.service";
 import Link from "next/dist/client/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function PersonalInfoComplete() {
 
     const { t } = useTranslation();
-    
+    const router = useRouter();
+
     useEffect(() => {
 
         page('Personal Info Page');
 
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                router.push("/educations");
+            }
+        };
+    
+        document.addEventListener('keydown', handleKeyDown);
+        
         return () => {
+            document.removeEventListener('keydown', handleKeyDown);
             track('page_exit', { page: 'Personal Info Page' });
         }
     }, []);

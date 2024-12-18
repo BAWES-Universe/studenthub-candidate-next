@@ -68,16 +68,21 @@ Detailed documentation can be found in the `/docs` directory:
 https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
+- add bank detail page not centered 
+- invitation page showing 10 but inside no data + no data message not matching 
+- need route change animation/ loader, can try moving suspense from layout to inner pages 
+- profile page: don't show loader if data available 
+- favicon + sep 
+- ability to record video and upload
+- make sure email verification code are 4 alphanumeric character 
+- prefetch next pages : https://stackoverflow.com/questions/72507091/how-to-prefetch-code-for-multiple-pages-from-one-page-request-in-next-js 
+  `router.prefetch(url, as)`
+- PWA 
+
 - test chat
 - test OneSignal
-- replace alert with alertDialog 
-- enter not working on all pages in auth 
-- alert popup showing <br /> tag
-- build:dev using production endpoint 
-- google login not working at https://studenthub-candidate.netlify.app
-- check sentry works properly 
 - google signin deprecated, need to migrate, can try next.js popular auth.js with other option like linkedin, facebook 
-- 
+ 
 
 https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev
 

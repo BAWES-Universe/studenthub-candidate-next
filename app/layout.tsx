@@ -253,7 +253,7 @@ export default function RootLayout({
 
     alertSubscription = setInterval(() => {
       _updateAlert();
-    }, 1 * 1000);
+    }, 3 * 1000);
   }
 
   /**
@@ -555,8 +555,8 @@ export default function RootLayout({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>{alertDialog.title}</AlertDialogTitle>
-                    { alertDialog.description && <AlertDialogDescription>
-                    {alertDialog.description}
+                    { alertDialog.description && <AlertDialogDescription 
+                      dangerouslySetInnerHTML={{__html: alertDialog.description}}>
                     </AlertDialogDescription> }
                   </AlertDialogHeader>
                   <AlertDialogFooter>

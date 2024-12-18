@@ -5,18 +5,30 @@ import { Button } from "@/components/ui/button";
 import { page, track } from "@/providers/analytics.service";
 import { t } from "i18next";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function Complete() {
 
     const {t} = useTranslation();
+    const router = useRouter();
     
     useEffect(() => {
 
         page('Complete Profile Page');
 
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                router.push("/");
+            }
+        };
+    
+        document.addEventListener('keydown', handleKeyDown);
+        
         return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+
             track('page_exit', { page: 'Complete Profile Page' });
         }
     }, []);

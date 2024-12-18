@@ -91,12 +91,23 @@ export function Hero() {
       return redirect('/home');
     }
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        router.push("/name");
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    
     GoogleAuth.initialize({
       clientId: '123188361193-od1ehqo4c35cle8mtplqetoenussu650.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
       grantOfflineAccess: true,
     });
 
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
@@ -123,9 +134,9 @@ export function Hero() {
       <div className="xs:flex sm:block xs:bottom-[76px] xs:fixed sm:bottom-auto sm:mt-8 sm:relative font-semibold text-base">
         
         <Link href="/name">
-        <Button size="lg" className=" sm:w-[300px] h-[56px]">
-          {t("Let&apos;s do it!")}
-        </Button>
+          <Button size="lg" className=" sm:w-[300px] h-[56px]">
+            {t("Let&apos;s do it!")}
+          </Button>
         </Link>
                 
         <p className="mt-[8px] xs:hidden sm:block">{t('Enter ↵')}</p> 

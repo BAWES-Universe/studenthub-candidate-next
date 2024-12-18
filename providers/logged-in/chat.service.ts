@@ -27,7 +27,7 @@ export async function listChats(page: number = 1, filters: any): Promise<any> {
 }
 
 export async function getMessages(chat_uuid: string, page: number = 1, last_index: number | null = null): Promise<any> {
-  let url = _chatEndpoint + '/messages/' + chat_uuid + "?page=" + page;
+  let url = _chatEndpoint + '/messages/' + chat_uuid + "?per-page=5&page=" + page;
 
   if (last_index) {
     url += "&last_index=" + last_index;

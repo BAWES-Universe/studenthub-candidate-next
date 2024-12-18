@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "./button";
+import { useEffect } from "react";
 
 
 interface SubmitButtonProps {
@@ -13,6 +14,19 @@ interface SubmitButtonProps {
 export default function SubmitButton({ disabled, float = true, loading = false, onClick }: SubmitButtonProps) {
 
     const { t } = useTranslation();
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !disabled) {
+                onClick?.();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [disabled]);
 
     return (
         <>
@@ -36,7 +50,6 @@ export default function SubmitButton({ disabled, float = true, loading = false, 
             <p className={ `mt-[8px] xs:hidden ${disabled?'hideen':'sm:block'}  text-center` }>
                 {t('Enter ↵')}    
             </p> 
-
 
         </div>
         
