@@ -78,6 +78,7 @@ https://www.npmjs.com/package/zod#basic-usage
 - prefetch next pages : https://stackoverflow.com/questions/72507091/how-to-prefetch-code-for-multiple-pages-from-one-page-request-in-next-js 
   `router.prefetch(url, as)`
 - PWA 
+- ping for candidate video status and update 
 
 - test chat
 - test OneSignal

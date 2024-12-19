@@ -247,8 +247,11 @@ export default function Video() {
       ele.pause();
     }
 
-    const file = new File([new Blob(recordedChunks, { type: 'video/' + format })], 
+    //'video/' + 
+    const file = new File([new Blob(recordedChunks, { type: format })], 
       user?.candidate_id + '.' + format);
+
+      console.log(maxDuration, timer);
 
     uploadVideoFile(file, {
       duration: (maxDuration - timer) + '',
@@ -397,7 +400,7 @@ export default function Video() {
         const newData = [...recordedChunks, e.data];
         
         setRecordedChunks(newData);//(chunks: any) => chunks.push(e.data));
-        setFormat(e.data.type)
+       // setFormat(e.data.type)
       }
     });
 
@@ -760,8 +763,7 @@ export default function Video() {
                 {countDown > 0 && <span className="txt-count-down">{countDown}</span>}
 
                 <div className="btn-wrapper">
-                  { recording && "recording started"}
-                  { countDown}
+                  
                   {countDown === 0 && !recording && (
                     <div className="grid grid-cols-1 gap-4">
                         {recordedChunks.length === 0 && (
@@ -770,7 +772,7 @@ export default function Video() {
                               className="btn-start-recording"
                               onClick={() => startCountDown()}
                             >
-                              <VideoIcon /> Start recording
+                              <VideoIcon /> {t('Start recording')}
                             </Button>
                         )}
 
@@ -780,10 +782,10 @@ export default function Video() {
                               <Button
                                 tabIndex={4}
                                 className="btn-start-recording"
-                                onClick={saveRecording}
+                                onClick={() => saveRecording()}
                                 disabled={uploadingVideo}
                               >
-                                { uploadingVideo ? <Spinner />: <><SaveIcon /> Save</> }
+                                { uploadingVideo ? <Spinner />: <><SaveIcon /> {t('Save')}</> }
                               </Button>
                             
                               <Button
@@ -791,7 +793,7 @@ export default function Video() {
                                 className="btn-restart-recording"
                                 onClick={() => startCamera(true)}
                               >
-                                <VideoIcon /> Re-take
+                                <VideoIcon /> {t('Re-take')}
                               </Button>
                           </>
                         )}
@@ -803,7 +805,7 @@ export default function Video() {
                           variant="outline"
                           onClick={cancelRecording}
                         >
-                          <X /> Cancel
+                          <X /> { t('Cancel')}
                         </Button>
                         
                     </div>
@@ -815,8 +817,8 @@ export default function Video() {
                       className="btn-stop-recording"
                       onClick={stopRecording}
                     >
-                      <b>Stop recording</b>
-                      <span>Time elapsed: {timer} seconds</span>
+                      <b>{t("Stop recording")}</b>
+                      <span>{t("Time elapsed")}: {timer} {t('seconds')}</span>
                     </Button>
                   )}
                 </div>
