@@ -185,7 +185,7 @@ export default function RootLayout({
 
       _updateAlert();
 
-      alertSubscribe();
+    //  alertSubscribe();
     });
 
     setOneSignal$.subscribe(() => {
