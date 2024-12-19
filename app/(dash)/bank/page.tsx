@@ -132,7 +132,7 @@ const UpdateBankPage = () => {
   };
 
   return (
-    <div className="max-w-4xl p-6">
+    <div className="max-w-4xl p-6 m-auto">
       
       <h3 className="mt-[52px] mb-[40px] text-center text-[24px] font-bold leading-[56px]">
         {t("Where would you like your money transferred?")}

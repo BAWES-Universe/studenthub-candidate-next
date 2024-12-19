@@ -3,7 +3,7 @@ import { StoreState, useAppSelector } from "@/store/store";
 import { Bell, House } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function Navigation() {

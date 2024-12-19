@@ -68,6 +68,15 @@ export default function RootLayout({
       }
     }, 1000 * 30); // every 30 second 
 
+    //prefetch tabs 
+    setTimeout(() => {
+      router.prefetch("/invitation");
+      router.prefetch("/work-log/track-work");
+      router.prefetch("/payments");
+      router.prefetch("/discounts");
+      router.prefetch("/profile");
+    }, 2000); //after 2 second
+
     return () => {
       clearInterval(invitationInterval);
     };
@@ -84,11 +93,9 @@ export default function RootLayout({
       if (pendingInvitations != total) {
         requestUpdated$.next({});
       }
-
-      console.log(total, count);
-
+ 
       dispatch(setPendingInvitations({
-        pendingInvitations: 10
+        pendingInvitations: total
       }));
     });
   }

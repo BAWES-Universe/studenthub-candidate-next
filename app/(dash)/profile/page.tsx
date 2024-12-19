@@ -112,7 +112,7 @@ const ProfilePage = () => {
 
     return (
         <div className='bg-[#f7f8fa]'>
-            {loading && <div className='max-w-4xl mx-auto p-6'>{t("Loading...")}</div>}
+            {loading && !user && <div className='max-w-4xl mx-auto p-6'>{t("Loading...")}</div>}
             {user && (
                 <>
                     <div className=' bg-white'>

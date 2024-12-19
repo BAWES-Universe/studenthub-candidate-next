@@ -536,6 +536,26 @@ export default function RootLayout({
         
       <html lang="en" dir={ i18n.language == "ar"? "rtl": "ltr" }>
         
+        <head>
+          <title>Studenthub</title>
+
+          <meta name="color-scheme" content="light dark" />
+          <meta name="viewport"
+                content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <meta name="format-detection" content="telephone=no" />
+          <meta name="msapplication-tap-highlight" content="no" />
+
+          <link rel="icon" type="image/png" href="/assets/icons/icon.png" />
+
+          <meta name="mobile-web-app-capable" content="yes" />
+          
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        
+          <meta name="theme-color" content="#3e50b4" />
+
+
+        </head>
         <body className={ `${inter.className}` }>
           <NextTopLoader showSpinner={false} />
 

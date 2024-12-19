@@ -1,5 +1,6 @@
 "use client"
 import Pager from '@/components/common/pager';
+import Spinner from '@/components/common/spinner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 // app/(dash)/payments/PaymentsPage.jsx
@@ -12,7 +13,7 @@ import { useAppSelector } from '@/store/store';
 import { useAppDispatch } from '@/store/store';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const PaymentsPage = () => {
@@ -126,7 +127,7 @@ const PaymentsPage = () => {
                                         {salary.status === 'Paid' && (
                                             <div>
                                                 <span>{t("Transferred to")}</span>
-                                                <span>{salary.bank.bank_name}</span>
+                                                {salary.bank && <span>{salary.bank.bank_name}</span>}
                                                 <span>{salary.transfer_benef_name}</span>
                                                 <span>{salary.transfer_benef_iban}</span>
                                             </div>

@@ -68,16 +68,11 @@ Detailed documentation can be found in the `/docs` directory:
 https://www.npmjs.com/package/zod#basic-usage
 
 # todo 
-- add bank detail page not centered 
-- invitation page showing 10 but inside no data + no data message not matching 
-- need route change animation/ loader, can try moving suspense from layout to inner pages 
-- profile page: don't show loader if data available 
-- favicon + sep 
-- ability to record video and upload
 - make sure email verification code are 4 alphanumeric character 
+- PWA 
+
 - prefetch next pages : https://stackoverflow.com/questions/72507091/how-to-prefetch-code-for-multiple-pages-from-one-page-request-in-next-js 
   `router.prefetch(url, as)`
-- PWA 
 - ping for candidate video status and update 
 
 
