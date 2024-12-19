@@ -27,6 +27,7 @@ import { candidateVideoProcessed$ } from "@/providers/event.service";
 import { setCanGoForward } from "@/store/slices/appSlice";
 import { PlayCircle, SaveIcon, VideoIcon, X } from "lucide-react";
 import Spinner from "@/components/common/spinner";
+//import { Backdrop } from "@/components/common/backdrop";
 
 const formSchema = z.object({
     video: z.string({
@@ -59,6 +60,7 @@ export default function Video() {
   const [shouldStop, setShouldStop] = useState(true);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [stream, setStream] = useState<any>(null);
+  const [videoBlobUrl, setVideoBlobUrl] = useState<string>("");
   const [countDown, setCountDown] = useState(0);
   const [timer, setTimer] = useState(0);
   //const [interval, setInterval] = useState();
@@ -246,13 +248,10 @@ export default function Video() {
       ele.volume = 0;
       ele.pause();
     }
-
-    //'video/' + 
-    const file = new File([new Blob(recordedChunks, { type: format })], 
+ 
+    const file = new File([new Blob(recordedChunks, { type: 'video/' + format })], 
       user?.candidate_id + '.' + format);
-
-      console.log(maxDuration, timer);
-
+ 
     uploadVideoFile(file, {
       duration: (maxDuration - timer) + '',
     });
@@ -306,7 +305,6 @@ export default function Video() {
 
     validateVideoFile(fileList[0]).then(() => {
       uploadVideoFile(fileList[0]);
-
     }, err => {
 
       alertDialog({
@@ -374,15 +372,28 @@ export default function Video() {
   }
 
   useEffect(() => {
-
+ 
       if(player && player.current) {
+
+        const blob = new Blob(recordedChunks, { 
+          //duration: (maxDuration - timer) + '',
+          type: 'video/' + format 
+        });
+        const url = URL.createObjectURL(blob);
+
+        setVideoBlobUrl(url);
+ 
+        /*const videoElement = document.getElementById('video');
+        videoElement.src = url;
+        videoElement.play();*/
+
         const ele = player.current as HTMLVideoElement;
         ele.muted = false;
         ele.volume = 1;
-
-        ele.src = URL.createObjectURL(new Blob(recordedChunks, { type: 'video/' + format }));
+        ele.src = url
         //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
-        ele.pause();
+        ele.pause();//
+ 
       }
 
   }, [recordedChunks, format]);
@@ -405,11 +416,22 @@ export default function Video() {
     });
 
     mediaRecorder.addEventListener('stop', () => {
- 
+  
       //this.candidate.tm = URL.createObjectURL(new Blob(recordedChunks));
       // downloadLink.download = 'acetest.webm';
 
       //const blob = new Blob([recordedChunks], { type: 'video/' . this.format });
+
+      //not triggering 
+      if(player && player.current && recordedChunks.length > 0) {
+        const ele = player.current as HTMLVideoElement;
+        ele.muted = false;
+        ele.volume = 1;
+        ele.src = URL.createObjectURL(new Blob(recordedChunks, { type: 'video/' + format }));
+        //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
+        //ele.play();
+ 
+      }
 
       setRecording(false);
 
@@ -421,6 +443,9 @@ export default function Video() {
 
      // window.history.back();
 
+     //saving recorded video without preview as it's showing blank video 
+      saveRecording();
+
     });
   }, [mediaRecorder]);
 
@@ -428,11 +453,13 @@ export default function Video() {
     if (player && player.current) {
       let ele = player.current as HTMLVideoElement;
 
-      if (!shouldStop) {
+      if (!shouldStop && stream) {
         ele.srcObject = stream;
         ele.muted = true;
         ele.onloadedmetadata = (e) => {
-          ele.play();
+          ele.play().catch(error => {
+            console.error('Error playing video:', error);
+          });
         };
       }
     }
@@ -457,6 +484,7 @@ export default function Video() {
   function startCameraInBrowser(immediate = false) {
 
     setRecordedChunks([]);
+    setStream(null);
 
     navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       .then((stream) => {
@@ -482,7 +510,7 @@ export default function Video() {
         } else {
           throw new Error("no suitable mimetype found for this device");
         }
-        
+         
        // setRecordedChunks([]);
 
         //mediaRecorder = new MediaRecorder(stream, options);
@@ -682,10 +710,10 @@ export default function Video() {
 
        <div suppressHydrationWarning={true} className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
             
-            { !form.getValues().video && <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
+            { !form.getValues().video && <div className="relative xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-2xl border-[1.333px] border-dashed mb-[24px] sm:mb-0 sm:me-[24px]">
 
-              { shouldStop && <>
+              { shouldStop && recordedChunks.length == 0 && <>
 
                 <img src="/assets/icons/video.svg" className="m-auto"></img>   
 
@@ -735,53 +763,56 @@ export default function Video() {
 
                 <video
                   controls={true}
-                  preload="none"
                   ref={player}
-                  muted
+                  src={videoBlobUrl}
                   id="player"
-                  poster={ user?.candidate_video? 
-                    process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 
-                      'candidate-video/' + user.candidate_video + '.jpg': '' }
                   //volume="0"
                   onEnded={() => onRecordingPlayerEnded()}
                   onClick={togglePlayer}
                   className="h-auto w-full"
+                  
+                  autoPlay loop muted 
                 >
-                  { user?.candidate_video && <source src={  process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL 
-                    + 'candidate-video/' + user.candidate_video + '.mp4' }
-                        type="video/mp4" /> }
+                  <source src={videoBlobUrl} type={ "video/" + format } />
+      
                 </video>
+
 
                 {/* Play button if video recorded */}
                 {!playingRecording && countDown === 0 && recordedChunks.length > 0 && (
-                  <Button className="btn-toggle-video" onClick={togglePlayer}>
+                  <Button variant="ghost" className="btn-toggle-video absolute top-10 start-[calc(50%)]" onClick={togglePlayer}>
                     <PlayCircle className="w-8" />
                   </Button>
                 )}
 
                 {/* Countdown display */}
-                {countDown > 0 && <span className="txt-count-down">{countDown}</span>}
+                {countDown > 0 && <span className="txt-count-down absolute w-full h-full 
+                  bg-[#0f0f2c]/50 justify-center flex items-center top-0 start-0">
+                  {/*<Backdrop onClick={() => {}} />*/}
+                  <span className="text-white text-8xl">
+                  {countDown}
+                  </span>
+                </span>}
 
-                <div className="btn-wrapper">
+                <div className="btn-wrapper mt-4">
                   
                   {countDown === 0 && !recording && (
-                    <div className="grid grid-cols-1 gap-4">
+                    <>
                         {recordedChunks.length === 0 && (
                             <Button
                               tabIndex={3}
-                              className="btn-start-recording"
+                              className="btn-start-recording me-4 mb-4"
                               onClick={() => startCountDown()}
                             >
                               <VideoIcon /> {t('Start recording')}
                             </Button>
                         )}
-
-                      <div className="grid grid-cols-subgrid gap-4 col-span-2">
+ 
                         {recordedChunks.length > 0 && (
                           <>
                               <Button
                                 tabIndex={4}
-                                className="btn-start-recording"
+                                className="btn-start-recording  me-4 mb-4"
                                 onClick={() => saveRecording()}
                                 disabled={uploadingVideo}
                               >
@@ -790,35 +821,37 @@ export default function Video() {
                             
                               <Button
                                 tabIndex={3}
-                                className="btn-restart-recording"
+                                className="btn-restart-recording  me-4 mb-4"
                                 onClick={() => startCamera(true)}
                               >
                                 <VideoIcon /> {t('Re-take')}
                               </Button>
                           </>
                         )}
-                        </div>
-                        
+                         
                         <Button
                           tabIndex={5}
-                          className="btn-cancel-upload"
+                          className="btn-cancel-upload  me-4 mb-4"
                           variant="outline"
                           onClick={cancelRecording}
                         >
                           <X /> { t('Cancel')}
                         </Button>
                         
-                    </div>
+                    </>
                   )}
 
-                  {countDown === 0 && recording && (
+                  { countDown === 0 && recording && (
                     <Button
                       tabIndex={3}
-                      className="btn-stop-recording"
+                      variant={"destructive"}
+                      className="btn-stop-recording h-[60px] relative pt-6"
                       onClick={stopRecording}
                     >
-                      <b>{t("Stop recording")}</b>
-                      <span>{t("Time elapsed")}: {timer} {t('seconds')}</span>
+                      <b className="top-2 start-[55px] absolute">{t("Stop recording")}</b> <br />
+                      <span className="opacity-70">
+                        {t("Time elapsed")}: {timer} {t('seconds')}
+                      </span>
                     </Button>
                   )}
                 </div>
@@ -829,9 +862,26 @@ export default function Video() {
             { form.getValues().video && <div className="xs:max-w-full w-full sm:max-w-[313px]  flex-none 
                   rounded-2xl mb-[24px] sm:mb-0 sm:me-[24px]">
 
-                <img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'candidate-video/' +  form.getValues().video + '.jpg' } 
+                {/*<img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'candidate-video/' +  form.getValues().video + '.jpg' } 
                   onError={() => onVideoError()}
-                  className="w-full"></img>   
+                  className="w-full"></img>   */}
+
+                <video
+                  controls={true}
+                  preload="none"
+                  ref={player}
+                  muted
+                  id="player"
+                  poster={ user?.candidate_video? 
+                    process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 
+                      'candidate-video/' + user.candidate_video + '.jpg': '' }
+                  //volume="0"
+                  className="h-auto w-full"
+                >
+                  { user?.candidate_video && <source src={  process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL 
+                    + 'candidate-video/' + user.candidate_video + '.mp4' }
+                        type="video/mp4" /> }
+                </video>
 
                 <Button variant={ "ghost"} onClick={() => removeVideo()} 
                   className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">

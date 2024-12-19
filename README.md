@@ -80,6 +80,7 @@ https://www.npmjs.com/package/zod#basic-usage
 - PWA 
 - ping for candidate video status and update 
 
+
 - test chat
 - test OneSignal
 - google signin deprecated, need to migrate, can try next.js popular auth.js with other option like linkedin, facebook 
