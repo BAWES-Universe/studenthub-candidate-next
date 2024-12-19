@@ -38,6 +38,7 @@ const formSchema = z.object({
     }).nullable(),
 })
 
+
 export default function Video() {
 
   const maxDuration = 30;
@@ -777,7 +778,6 @@ export default function Video() {
       
                 </video>
 
-
                 {/* Play button if video recorded */}
                 {!playingRecording && countDown === 0 && recordedChunks.length > 0 && (
                   <Button variant="ghost" className="btn-toggle-video absolute top-10 start-[calc(50%)]" onClick={togglePlayer}>
@@ -869,9 +869,8 @@ export default function Video() {
                 <video
                   controls={true}
                   preload="none"
-                  ref={player}
-                  muted
-                  id="player"
+                 muted
+                  id="saved-player"
                   poster={ user?.candidate_video? 
                     process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 
                       'candidate-video/' + user.candidate_video + '.jpg': '' }

@@ -45,6 +45,7 @@ import {
 import { t } from "i18next";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import NoSSR from "@/components/common/NoSSR";
 
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',
@@ -532,6 +533,7 @@ export default function RootLayout({
   const { alertDialogs } = useAlertDialog();
 
   return (
+    <NoSSR>
     <Provider store={store}>
         
       <html lang="en" dir={ i18n.language == "ar"? "rtl": "ltr" }>
@@ -637,5 +639,6 @@ export default function RootLayout({
         </body>
       </html>
     </Provider>
+    </NoSSR>
   );
 }
