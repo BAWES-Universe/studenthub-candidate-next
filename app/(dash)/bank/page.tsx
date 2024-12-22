@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/store/store';
 import { errorMessage } from '@/utils/common';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/dist/client/components/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useForm } from 'react-hook-form'; // Assuming you're using react-hook-form for form handling
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { z } from 'zod';
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form"
 import { FormInput } from "@/components/ui/form-input";
 import { alertDialog } from '@/hooks/use-alert-dialog';
+import Loading from './loading';
 
 
 const UpdateBankPage = () => {
@@ -134,7 +135,7 @@ const UpdateBankPage = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={<Loading />}> 
     <div className=' bg-white'>
             <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -174,7 +175,7 @@ const UpdateBankPage = () => {
         </Form>
            
     </div>
-    </>
+    </Suspense>
   );
 };
 

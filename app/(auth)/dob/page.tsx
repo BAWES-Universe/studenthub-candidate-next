@@ -12,7 +12,7 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { setUser } from "@/store/slices/userSlice";
 import { errorMessage } from "@/utils/common";
 import { profile, updateBirthDate } from "@/providers/logged-in/account.service";
@@ -23,6 +23,7 @@ import { page, track } from "@/providers/analytics.service";
 import { FormDateInput } from "@/components/ui/form-date";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 
 export default function Name() {
@@ -112,7 +113,7 @@ export default function Name() {
   } 
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[55, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
@@ -137,6 +138,6 @@ export default function Name() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

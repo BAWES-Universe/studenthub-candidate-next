@@ -1,7 +1,7 @@
 "use client"
 // app/(dash)/log-hour-list/page.tsx
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { format, parseISO } from 'date-fns'; // For date formatting
 import { useParams } from 'next/dist/client/components/navigation';
@@ -10,6 +10,7 @@ import { page, track } from '@/providers/analytics.service';
 import WorkLog from '@/components/app/work-log';
 import { secondsToTime } from '@/utils/common';
 import Pager from '@/components/common/pager';
+import Loading from './loading';
 
 const LogHourListPage = () => {
   const { date } = useParams() as { date: string }; // Get date from URL parameters
@@ -83,7 +84,7 @@ const LogHourListPage = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={<Loading />}> 
       <div className=' bg-white'>
           <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -181,7 +182,7 @@ const LogHourListPage = () => {
           {loading && <div className="progress-bar">{t("Loading...")}</div>}
 
       </div>       
-    </>
+    </Suspense>
   );
 };
 

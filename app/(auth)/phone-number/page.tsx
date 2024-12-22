@@ -15,7 +15,7 @@ import {
 import { PhoneInput } from "@/components/ui/phone-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 const formSchema = z.object({
   phone: z.string()
@@ -112,7 +113,7 @@ export default function Email() {
   }
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[44, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
@@ -144,6 +145,6 @@ export default function Email() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

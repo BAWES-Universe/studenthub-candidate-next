@@ -22,8 +22,9 @@ import { useAppDispatch } from '@/store/store';
 import { useAppSelector } from '@/store/store';
 import { Ribbon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Loading from './loading';
 
 const ProfilePage = () => { 
     const [loading, setLoading] = useState(false);
@@ -116,6 +117,7 @@ const ProfilePage = () => {
     }
 
     return (
+        <Suspense fallback={<Loading />}> 
         <div className='bg-[#f7f8fa]'>
             {loading && !user && <div className='max-w-4xl mx-auto p-6'>{t("Loading...")}</div>}
             {user && (
@@ -235,6 +237,7 @@ const ProfilePage = () => {
                 </>
             )}
         </div>
+        </Suspense>
     );
 };
 

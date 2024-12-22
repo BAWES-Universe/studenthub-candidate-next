@@ -1,7 +1,7 @@
 "use client"
 // app/(dash)/track-work/page.tsx
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Geolocation } from '@capacitor/geolocation'; // Assuming you're using Capacitor for geolocation
 import {  ChevronRight } from 'lucide-react';
@@ -20,6 +20,7 @@ import { setUser } from '@/store/slices/userSlice';
 import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
 import { workingDateStats } from '@/providers/logged-in/candidate-working-hour.service';
 import i18n from '@/app/18n';
+import Loading from './loading';
 
 const TrackWorkPage = () => {
   const { t } = useTranslation();
@@ -176,7 +177,7 @@ const TrackWorkPage = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={<Loading />}> 
       <div className=' bg-white'>
             <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -289,7 +290,7 @@ const TrackWorkPage = () => {
             <EndSessionPage onClose={handleModalStopWorkClose} />
           </Modal> */}
     </div>
-      </>
+      </Suspense>
     
   );
 };

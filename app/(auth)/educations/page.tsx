@@ -14,7 +14,7 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ import PagedDegreeInput from "@/components/on-board/paged-degree-input";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 
 export default function Educations() {
@@ -148,6 +149,7 @@ export default function Educations() {
   } 
 
   return (
+    <Suspense fallback={<Loading />}>
     <div className="mb-[100px]">
       { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 25, 0]}></OnboardProgress> }
 
@@ -264,5 +266,6 @@ export default function Educations() {
 
       <OnboardFooter />
     </div>
+    </Suspense>
   )
 }

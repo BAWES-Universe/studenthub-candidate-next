@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { page, track } from "@/providers/analytics.service";
 import Link from "next/dist/client/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 export default function EducationComplete() {
 
@@ -35,6 +36,7 @@ export default function EducationComplete() {
     }, []);
 
     return (
+        <Suspense fallback={<Loading />}>
         <div className="flex  min-h-screen flex-col items-center  text-center px-4 p-[16px]">
 
             <div className="w-[240px] h-[240px] bg-[#f9f9f9] rounded-[118px] flex justify-center items-center mb-[40px] xs:mt-[87px] sm:mt-[40px]">
@@ -57,5 +59,6 @@ export default function EducationComplete() {
 
             <OnboardFooter></OnboardFooter>      
         </div>
+        </Suspense>
     );
 }

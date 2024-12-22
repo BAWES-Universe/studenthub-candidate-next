@@ -1,7 +1,7 @@
 "use client"
 // app/(dash)/dashboard/DashboardPage.jsx
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { profile } from '@/providers/logged-in/account.service';
 //import { workHistory } from '@/providers/logged-in/candidate.service';
@@ -17,6 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { setUser } from '@/store/slices/userSlice';
 import { setOneSignal$ } from '@/providers/event.service';
 import Link from 'next/link';
+import Loading from './loading';
 
 
 const DashboardPage = () => {
@@ -84,6 +85,7 @@ const DashboardPage = () => {
     };
 
     return (
+        <Suspense fallback={<Loading />}>
         <div className="max-w-4xl mx-auto p-6">
              
             {loadingProfile && <div className="progress-bar">{t("Loading...")}</div>}
@@ -267,6 +269,7 @@ const DashboardPage = () => {
                 </div>
             )}
         </div>
+        </Suspense>
     );
 };
 

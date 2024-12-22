@@ -1,7 +1,7 @@
 "use client"
 
 // src/components/ActivityPage.tsx
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
  
 import { useTranslation } from 'react-i18next'; // For translations
 import WorkHourApproved from '@/components/app/work-hour-approved';
@@ -22,6 +22,7 @@ import { alertCount$ } from '@/providers/event.service';
 import NoItems from '@/components/common/no-items';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+import Loading from './loading';
 
 //todo: button to mark all as read
 
@@ -117,7 +118,8 @@ const ActivityPage = () => {
   };
 
   return ( 
-    <>
+    <Suspense fallback={<Loading />}>
+      
       <div className=' bg-white'>
           <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -217,7 +219,7 @@ const ActivityPage = () => {
             message='' />
         )} 
       </div>
-    </>  
+    </Suspense>
   );
 };
 

@@ -1,7 +1,7 @@
 "use client"
 // app/(dash)/discounts/DiscountsPage.jsx
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { DiscountCategory } from '@/models/discount-category';
 import { Discount } from '@/models/discount';
 import { listDiscountCategories } from '@/providers/logged-in/discount-category.service';
@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { langContent } from '@/utils/common';
 import NoItems from '@/components/common/no-items';
+import Loading from './loading';
 
 const DiscountsPage = () => {
     const [discounts, setDiscounts] = useState<Discount[]>([]);
@@ -114,7 +115,7 @@ const DiscountsPage = () => {
     };
 
     return (
-        <>
+        <Suspense fallback={<Loading />}>
         <div className=' bg-white'>
           <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -168,7 +169,7 @@ const DiscountsPage = () => {
             <Pager pagination={pagination} loadPage={loadData} />
       
         </div>
-        </> 
+        </Suspense>
     );
 };
 

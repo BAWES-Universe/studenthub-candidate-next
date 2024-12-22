@@ -1,7 +1,7 @@
 "use client"
 // app/(dash)/chat/ChatViewPage.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { alertCount$, alertUpdate$ } from '@/providers/event.service';
 import { viewChat, getMessages, getNewMessages, postChatMessage, markRead } from '@/providers/logged-in/chat.service';
@@ -15,6 +15,7 @@ import { ChatMessageComponent } from '@/components/app/chat-message';
 import { alertDialog } from '@/hooks/use-alert-dialog';
 import { errorMessage } from '@/utils/common';
 import { interval } from 'rxjs';
+import Loading from '../loading';
 
 const ChatViewPage = () => {
     const { id } = useParams() as { id: string };
@@ -340,7 +341,7 @@ const ChatViewPage = () => {
     //<span className="skeleton-text">Loading...</span>}
 
     return (
-        <>
+        <Suspense fallback={<Loading />}>
             <div className=' bg-white'>
                 <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -402,7 +403,7 @@ const ChatViewPage = () => {
                     </Button>
                 </div>
             </footer>
-        </>
+        </Suspense>
     );
 };
 

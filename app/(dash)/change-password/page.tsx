@@ -13,7 +13,7 @@ import { FormInput } from "@/components/ui/form-input";
 //import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog"
 import { useTranslation } from "react-i18next"
+import Loading from "./loading"
 
 
 export default function PreferredTime() {
@@ -82,7 +83,7 @@ export default function PreferredTime() {
   }, []);
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
         <div className=' bg-white'>
             <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -118,6 +119,6 @@ export default function PreferredTime() {
         </Form>
         </div>   
         {/*<OnboardFooter></OnboardFooter>*/}
-    </>
+    </Suspense>
   );
 }

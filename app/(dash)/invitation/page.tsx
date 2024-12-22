@@ -9,7 +9,8 @@ import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { listInvitations } from '@/providers/logged-in/invitation.service';
 import { t } from 'i18next';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+import Loading from './loading';
 
 
 const InvitationsPage = () => {
@@ -60,35 +61,35 @@ const InvitationsPage = () => {
   }
 
     return (
-       <> 
-        <div className=' bg-white'>
-          <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
+        <Suspense fallback={<Loading />}>  
+            <div className=' bg-white'>
+            <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
-              <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
-              { t('Invitations')}
-              </h5>
+                <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
+                { t('Invitations')}
+                </h5>
 
-          </div>    
-        </div>
-      
-        <div className="max-w-4xl mx-auto p-6 w-full">
-            
-            {loading && <div className="progress-bar">{t("Loading...")}</div>}
-            <div className="flex flex-col">
-                {invitations.map((invitation: any) => (
-                    <Invitation key={invitation.id} model={invitation} />
-                ))}
-                {!loading && invitations.length === 0 && (
-                    <NoItems image="assets/icons/no-invitation.svg" 
-                        title={ 'There are no assignments yet!' }
-                        message={ 'Our team is working hard to find you the suitable assigment for you. Stay tight!' } />
-                )}
+            </div>    
             </div>
-            
-            <Pager pagination={pagination} loadPage={loadPage} />
+        
+            <div className="max-w-4xl mx-auto p-6 w-full">
+                
+                {loading && <div className="progress-bar">{t("Loading...")}</div>}
+                <div className="flex flex-col">
+                    {invitations.map((invitation: any) => (
+                        <Invitation key={invitation.id} model={invitation} />
+                    ))}
+                    {!loading && invitations.length === 0 && (
+                        <NoItems image="assets/icons/no-invitation.svg" 
+                            title={ 'There are no assignments yet!' }
+                            message={ 'Our team is working hard to find you the suitable assigment for you. Stay tight!' } />
+                    )}
+                </div>
+                
+                <Pager pagination={pagination} loadPage={loadPage} />
 
-        </div>
-        </>  
+            </div>
+        </Suspense>
     );
 };
 

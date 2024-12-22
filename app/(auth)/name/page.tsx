@@ -12,13 +12,14 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setUser } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import { profile } from "@/providers/logged-in/account.service";
 import { page, track } from "@/providers/analytics.service";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 export default function Name() {
 
@@ -101,37 +102,37 @@ export default function Name() {
   } 
 
   return (
-    <>
-        { !params?.get('from-profile') && <OnboardProgress arrProgress={[11, 0, 0]}></OnboardProgress> }
+    <Suspense fallback={<Loading />}> 
+      { !params?.get('from-profile') && <OnboardProgress arrProgress={[11, 0, 0]}></OnboardProgress> }
 
-        <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          {t("What’s your name, hero?")}
-        </h5>
+      <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
+        {t("What’s your name, hero?")}
+      </h5>
 
-        <Form {...form} >
-          <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
-  
-            <FormInput
-              name="name_en"
-              label="Name in English"
-              form={form as any}
-            />
- 
-            <FormInput 
-              name="name_ar"
-              label=" الإسم بالعربي"
-              form={form as any}
-              helper="It should match what’s on your civil ID."
-              inputDir="rtl"
-            />
- 
-            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}>
-            </SubmitButton>  
-            
-          </form>
-        </Form>
+      <Form {...form} >
+        <form suppressHydrationWarning={true} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
 
-        <OnboardFooter></OnboardFooter>
-    </>
+          <FormInput
+            name="name_en"
+            label="Name in English"
+            form={form as any}
+          />
+
+          <FormInput 
+            name="name_ar"
+            label=" الإسم بالعربي"
+            form={form as any}
+            helper="It should match what’s on your civil ID."
+            inputDir="rtl"
+          />
+
+          <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}>
+          </SubmitButton>  
+          
+        </form>
+      </Form>
+
+      <OnboardFooter></OnboardFooter>
+    </Suspense>
   );
 }

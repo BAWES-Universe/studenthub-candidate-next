@@ -13,7 +13,7 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { deleteResume, deleteVideo, profile, updatePhoneDetail, updateResume, updateVideo } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ import { candidateVideoProcessed$ } from "@/providers/event.service";
 import { setCanGoForward } from "@/store/slices/appSlice";
 import { PlayCircle, SaveIcon, VideoIcon, X } from "lucide-react";
 import Spinner from "@/components/common/spinner";
+import Loading from "./loading";
 //import { Backdrop } from "@/components/common/backdrop";
 
 const formSchema = z.object({
@@ -704,7 +705,7 @@ export default function Video() {
   }
 
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
         { !sparams?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 60]}></OnboardProgress> }
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
@@ -989,6 +990,6 @@ export default function Video() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </div>
+    </Suspense>
   );
 }

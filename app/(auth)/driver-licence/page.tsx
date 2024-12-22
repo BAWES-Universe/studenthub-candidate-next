@@ -4,7 +4,7 @@ import { OnboardProgress } from "@/components/on-board/progress";
  
 import SubmitButton from "@/components/ui/submit-button";
 import OnboardFooter from "@/components/on-board/layout/footer";
-import React from "react";
+import React, { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { profile, updateDrivingLicense, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
@@ -14,6 +14,7 @@ import { setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 
  
@@ -89,7 +90,7 @@ export default function DriverLicence() {
   }
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 12]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
@@ -119,7 +120,7 @@ export default function DriverLicence() {
             <SubmitButton onClick={onSubmit} disabled={!haveLicence || loading} loading={loading}></SubmitButton>
         </div>
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }
 

@@ -12,7 +12,7 @@ import {
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile, updatePhoneDetail, updateProfilePhoto } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 
 // Define the User type
@@ -131,7 +132,7 @@ export default function PersonalPhoto() {
   }
   
   return (
-    <>
+    <Suspense fallback={<Loading />}>
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 24]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
@@ -204,6 +205,6 @@ export default function PersonalPhoto() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

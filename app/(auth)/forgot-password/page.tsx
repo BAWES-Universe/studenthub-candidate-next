@@ -13,7 +13,7 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -23,6 +23,7 @@ import { resetPasswordRequest } from "@/providers/auth.service";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 
 declare let grecaptcha: any;
@@ -89,7 +90,7 @@ export default function PreferredTime() {
   } 
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
             {t("Forgot your password?")}
@@ -111,6 +112,6 @@ export default function PreferredTime() {
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

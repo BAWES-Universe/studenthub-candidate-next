@@ -15,12 +15,13 @@ import SubmitButton from "@/components/ui/submit-button";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { basicAuth } from "@/providers/auth.service";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { useSearchParams, useRouter } from 'next/navigation'; 
 import Link from "next/link";
 import { page, track } from "@/providers/analytics.service";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 
 export default function Email() {
@@ -86,6 +87,7 @@ export default function Email() {
   } 
 
   return (
+    <Suspense fallback={<Loading />}>
     <div className="bg-[#fff]">
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
@@ -120,5 +122,6 @@ export default function Email() {
         <OnboardFooter></OnboardFooter>
 
     </div>
+    </Suspense>
   );
 }

@@ -15,7 +15,7 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -25,6 +25,7 @@ import { saveExperience } from "@/providers/logged-in/candidate-experience.servi
 import { useTranslation } from "react-i18next";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
+import Loading from "./loading";
  
 export default function Experiences() {
 
@@ -134,6 +135,7 @@ export default function Experiences() {
   } 
 
   return (
+    <Suspense fallback={<Loading />}>
     <div className="mb-[100px]">
       { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 75, 0]}></OnboardProgress> }
 
@@ -216,5 +218,6 @@ export default function Experiences() {
 
       <OnboardFooter />
     </div>
+    </Suspense>
   )
 }

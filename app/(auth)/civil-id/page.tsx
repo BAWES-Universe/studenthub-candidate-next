@@ -14,7 +14,7 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile, removeCivilPhotoBack, removeCivilPhotoFront, updateCivilIdAndExpiryDate, updateCivilPhotoBack, updateCivilPhotoFront, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -25,6 +25,7 @@ import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
 import { FormDateInput } from "@/components/ui/form-date";
+import Loading from "./loading";
 
 
 export default function PreferredTime() {
@@ -229,7 +230,7 @@ export default function PreferredTime() {
   }
 
   return (
-    <> 
+    <Suspense fallback={<Loading />}>
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 72]}></OnboardProgress> }
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
@@ -411,6 +412,6 @@ export default function PreferredTime() {
         </Form>
 
         <OnboardFooter ></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

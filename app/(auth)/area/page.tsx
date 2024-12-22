@@ -14,7 +14,7 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { getAreaByLocation, profile, updateLocation, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage, langContent } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -28,6 +28,7 @@ import { Country } from "@/models/country";
 import { Area } from "@/models/area";
 import Script from "next/script";
 import { alertDialog } from "@/hooks/use-alert-dialog";
+import Loading from "./loading";
 
 
 
@@ -354,7 +355,7 @@ export default function AreaPage() {
   }
 
   return (
-    <>
+    <Suspense fallback={<Loading />}> 
         { !params?.get('from-profile') && <OnboardProgress arrProgress={[88, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-0 text-center text-[40px] font-bold leading-[56px]">
@@ -411,7 +412,7 @@ export default function AreaPage() {
             console.log('google places loaded');
          }}
         />
-    </>
+    </Suspense>
   );
 
   function getPlaceholderText() {

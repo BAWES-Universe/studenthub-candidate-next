@@ -8,10 +8,11 @@ import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { detailInvitation } from '@/providers/logged-in/invitation.service';
 import { useParams } from 'next/dist/client/components/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import CompanyPage from '../../../../components/modals/company/page';
 import { useTranslation } from 'react-i18next';
 import FeedbackPage from '../../../../components/modals/feedback/page';
+import Loading from '../loading';
 
 const InvitationDetailPage = () => {
     const { id } = useParams() as { id: string };
@@ -83,7 +84,7 @@ const InvitationDetailPage = () => {
     }
 
     return (
-        <>
+        <Suspense fallback={<Loading />}>  
             <div className=' bg-white'>
                 <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -283,7 +284,7 @@ const InvitationDetailPage = () => {
                 </>
             )}    
             </div> 
-        </>
+        </Suspense>
     );
 };
 

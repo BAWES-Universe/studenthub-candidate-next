@@ -5,8 +5,9 @@ import { page, track } from '@/providers/analytics.service';
 import { downloadCertificate, listWorkHistory } from '@/providers/logged-in/candidate.service';
 import { toDate } from '@/utils/common';
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Loading from './loading';
 
 const WorkHistoryPage = () => {
 
@@ -51,7 +52,7 @@ const WorkHistoryPage = () => {
     };
 
     return (
-        <>
+        <Suspense fallback={<Loading />}> 
         <div className=' bg-white'>
             <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
@@ -93,8 +94,7 @@ const WorkHistoryPage = () => {
                 <p>{t("No work history available.")}</p>
             )}
         </div>
-        </>
-        
+        </Suspense>
     );
 };
 

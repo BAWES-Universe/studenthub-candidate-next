@@ -1,7 +1,7 @@
 "use client"
 // app/(dash)/assignment/page.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { workHistoryDetail } from '@/providers/logged-in/candidate.service';
 import { listWorkingDates } from '@/providers/logged-in/candidate-working-hour.service';
@@ -28,6 +28,7 @@ import { addDays, format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { DateRange } from 'react-day-picker';
+import Loading from '../loading';
 
 
 const CandidateAssignmentPage = () => {
@@ -161,7 +162,7 @@ const CandidateAssignmentPage = () => {
     //meta tags?  {history ? history.store.store_name : history.company.company_name}
 
     return (
-        <>
+        <Suspense fallback={<Loading />}>
             <div className=' bg-white'>
                 <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6">
 
@@ -257,7 +258,7 @@ const CandidateAssignmentPage = () => {
                 ) }
     
             </div>
-        </>
+        </Suspense>
     );
 };
 

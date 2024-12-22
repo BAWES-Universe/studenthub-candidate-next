@@ -12,7 +12,7 @@ import {
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { profile, updateObjective, updatePhoneDetail } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ import { FormTextarea } from "@/components/ui/form-textarea";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 export default function Objective() {
 
@@ -108,33 +109,33 @@ export default function Objective() {
   } 
 
   return (
-    <>
-        { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 48]}></OnboardProgress> }
+    <Suspense fallback={<Loading />}>
+      { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 48]}></OnboardProgress> }
 
-        <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
-          {t("What’s your objective?")}
-        </h5>
+      <h5 className="mt-[102px] mb-[0px] text-center text-[40px] font-bold leading-[56px]">
+        {t("What’s your objective?")}
+      </h5>
 
-        <p className="text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] mt-[8px]">
-          {t("Tell us a bit about what you hope to achieve")}
-        </p>
+      <p className="text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] mt-[8px]">
+        {t("Tell us a bit about what you hope to achieve")}
+      </p>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
-  
-            <FormTextarea
-              label=""
-              name="objective"
-              placeholder={t("Small brief about yourself")}
-              form={form as any}
-            />
- 
-            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
-            
-          </form>
-        </Form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
 
-        <OnboardFooter></OnboardFooter>
-    </>
+          <FormTextarea
+            label=""
+            name="objective"
+            placeholder={t("Small brief about yourself")}
+            form={form as any}
+          />
+
+          <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
+          
+        </form>
+      </Form>
+
+      <OnboardFooter></OnboardFooter>
+    </Suspense>
   );
 }

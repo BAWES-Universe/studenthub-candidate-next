@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
 import { resendVerificationEmail, verifyEmail } from "@/providers/auth.service";
 import { errorMessage } from "@/utils/common";
@@ -25,6 +25,7 @@ import { setIsProfileCompleted, setUser } from "@/store/slices/userSlice";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
  
 declare global {
   interface Window {
@@ -212,101 +213,102 @@ export default function VerifyEmailPage() {
   }
   
   return (
-    <>
-        { !sparams?.get('from-profile') && <OnboardProgress arrProgress={[22, 0, 0]}></OnboardProgress> }
+    <Suspense fallback={<Loading />}>
+      { !sparams?.get('from-profile') && <OnboardProgress arrProgress={[22, 0, 0]}></OnboardProgress> }
 
-        <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
-          {t('We’ve sent you a code on your email')}
-        </h5>
-        <p className="self-stretch text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] ">
-          {t("Please check your email address and type the code here")}    
-        </p>
+      <h5 className="mt-[102px] mb-[8px] text-center text-[40px] font-bold leading-[56px]">
+        {t('We’ve sent you a code on your email')}
+      </h5>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
-  
-            <div className="flex">
-            <FormField 
-                    control={form.control}
-                    name="c1"
-                    render={({ field }) => (
-                        <FormItem className="flex-col ms-[16px] me-[16px]">
-                            <FormControl>
-                                <Input
-                                onKeyUp={(e) => onKeyUp(e)}
-                                maxLength={1}
-                                className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
-                                {...field}  
-                                />
-                            </FormControl> 
-                        </FormItem>
-                    )}
-                    />
-                        <FormField 
-                    control={form.control}
-                    name="c2"
-                    render={({ field }) => (
-                        <FormItem className="flex-col ms-[16px] me-[16px]">
-                            <FormControl>
-                                <Input
-                                onKeyUp={(e) => onKeyUp(e)}
-                                maxLength={1}
-                                className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
-                                {...field}  
-                                />
-                            </FormControl> 
-                        </FormItem>
-                    )}
-                    />
-                        <FormField 
-                    control={form.control}
-                    name="c3"
-                    render={({ field }) => (
-                        <FormItem className="flex-col ms-[16px] me-[16px]">
-                            <FormControl>
-                                <Input
-                                onKeyUp={(e) => onKeyUp(e)}
-                                maxLength={1}
-                                className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
-                                {...field}  
-                                />
-                            </FormControl> 
-                        </FormItem>
-                    )}
-                    />
-                    <FormField 
-                    control={form.control}
-                    name="c4"
-                    render={({ field }) => (
-                        <FormItem className="flex-col ms-[16px] me-[16px]">
-                            <FormControl>
-                                <Input
-                                onKeyUp={(e) => onKeyUp(e)}
-                                maxLength={1}
-                                className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
-                                {...field}  
-                                />
-                            </FormControl> 
-                        </FormItem>
-                    )}
-                    />
+      <p className="self-stretch text-[#4B4B61] text-center text-base font-normal leading-6 mb-[40px] ">
+        {t("Please check your email address and type the code here")}    
+      </p>
 
-            </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
 
-            <p className="text-[color:var(--Neutral-95,#23233D)] text-sm font-normal leading-5">
-                {t("Didn’t receive a code?")}  &nbsp;
-                <a onClick={() => resendCode()} className="cursor-pointer no-underline text-primary">
-                  {t("Resend Code")}
-                </a>
-            </p>
+          <div className="flex">
+          <FormField 
+                  control={form.control}
+                  name="c1"
+                  render={({ field }) => (
+                      <FormItem className="flex-col ms-[16px] me-[16px]">
+                          <FormControl>
+                              <Input
+                              onKeyUp={(e) => onKeyUp(e)}
+                              maxLength={1}
+                              className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
+                              {...field}  
+                              />
+                          </FormControl> 
+                      </FormItem>
+                  )}
+                  />
+                      <FormField 
+                  control={form.control}
+                  name="c2"
+                  render={({ field }) => (
+                      <FormItem className="flex-col ms-[16px] me-[16px]">
+                          <FormControl>
+                              <Input
+                              onKeyUp={(e) => onKeyUp(e)}
+                              maxLength={1}
+                              className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
+                              {...field}  
+                              />
+                          </FormControl> 
+                      </FormItem>
+                  )}
+                  />
+                      <FormField 
+                  control={form.control}
+                  name="c3"
+                  render={({ field }) => (
+                      <FormItem className="flex-col ms-[16px] me-[16px]">
+                          <FormControl>
+                              <Input
+                              onKeyUp={(e) => onKeyUp(e)}
+                              maxLength={1}
+                              className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
+                              {...field}  
+                              />
+                          </FormControl> 
+                      </FormItem>
+                  )}
+                  />
+                  <FormField 
+                  control={form.control}
+                  name="c4"
+                  render={({ field }) => (
+                      <FormItem className="flex-col ms-[16px] me-[16px]">
+                          <FormControl>
+                              <Input
+                              onKeyUp={(e) => onKeyUp(e)}
+                              maxLength={1}
+                              className="text-center flex h-[72px] flex-col justify-center items-center gap-2.5 flex-[1_0_0] border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] px-6 py-5 rounded-2xl border-solid"
+                              {...field}  
+                              />
+                          </FormControl> 
+                      </FormItem>
+                  )}
+                  />
 
-            <SubmitButton disabled={!form.formState.isValid || loading || 
-              (form.watch('c1') == '' || form.watch('c2') == '' || form.watch('c3') == '' || form.watch('c4') == '') } loading={loading}></SubmitButton>
-            
-          </form>
-        </Form>
+          </div>
 
-        <OnboardFooter></OnboardFooter>
-    </>
+          <p className="text-[color:var(--Neutral-95,#23233D)] text-sm font-normal leading-5">
+              {t("Didn’t receive a code?")}  &nbsp;
+              <a onClick={() => resendCode()} className="cursor-pointer no-underline text-primary">
+                {t("Resend Code")}
+              </a>
+          </p>
+
+          <SubmitButton disabled={!form.formState.isValid || loading || 
+            (form.watch('c1') == '' || form.watch('c2') == '' || form.watch('c3') == '' || form.watch('c4') == '') } loading={loading}></SubmitButton>
+          
+        </form>
+      </Form>
+
+      <OnboardFooter></OnboardFooter>
+    </Suspense>
   );
 }

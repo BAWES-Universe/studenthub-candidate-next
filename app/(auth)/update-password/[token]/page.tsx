@@ -12,7 +12,7 @@ import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { errorMessage } from "@/utils/common";
 import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/store";
@@ -22,6 +22,7 @@ import { setCredentials } from "@/store/slices/authSlice";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading"
 
 
 declare let grecaptcha: any;
@@ -106,7 +107,7 @@ const formSchema = z.object({
   } 
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
         
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
           {t("Type your new password")}
@@ -128,6 +129,6 @@ const formSchema = z.object({
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

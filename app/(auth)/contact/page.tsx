@@ -1,8 +1,9 @@
 "use client"
 
 import { page, track } from "@/providers/analytics.service";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
 export default function ContactPage() {
 
@@ -17,6 +18,7 @@ export default function ContactPage() {
     }, []);
 
     return (
+        <Suspense fallback={<Loading />}>
         <div className="text-center ">
 
             <h5 className="mt-[82px] mb-[40px] text-[40px] font-bold leading-[56px]">
@@ -41,5 +43,6 @@ export default function ContactPage() {
             </p>
  
         </div>
+        </Suspense>
     );
 }
