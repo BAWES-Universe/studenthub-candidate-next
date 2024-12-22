@@ -61,6 +61,7 @@ const AccountStatus = () => {
         });
     };
 
+    //todo: test ui
     const viewCompanyDetails = () => {
         router.push(`/company/${user?.company?.company_id}`);
     };

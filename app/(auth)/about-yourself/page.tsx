@@ -54,6 +54,11 @@ export default function AboutYourself() {
 
     page('About Yourself Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/objective');
+
     return () => {
       track('page_exit', { page: 'About Yourself Page' });
     }

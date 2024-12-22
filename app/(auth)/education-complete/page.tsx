@@ -25,6 +25,8 @@ export default function EducationComplete() {
     
         document.addEventListener('keydown', handleKeyDown);
         
+        router.prefetch('/driver-license');
+        
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
          

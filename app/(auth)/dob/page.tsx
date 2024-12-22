@@ -54,6 +54,12 @@ export default function Name() {
 
     page('DOB Page');
 
+
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/gender');
+
     return () => {
         track('page_exit', { page: 'DOB Page' });
     }

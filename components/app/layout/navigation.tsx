@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { StoreState, useAppSelector } from "@/store/store";
-import { Bell, House } from "lucide-react";
-import Link from "next/link";
+import { setPath } from "@/store/slices/appSlice";
+import { StoreState, useAppDispatch, useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,18 +8,28 @@ import { useTranslation } from "react-i18next";
 export default function Navigation() {
 //todo: replace with next/router
 // typeof window !== undefined? window.location.pathname : 
-    const [path, setPath] = useState<string>("/home");
+
+    const { path } = useAppSelector((state: StoreState) => state.app);
+    const dispatch = useAppDispatch();
 
     const { t } = useTranslation();
     const router = useRouter();
 
     const open = (path: string) => {
         router.push(path)
-        setPath(path)
+        dispatch(setPath({
+            path: path
+        }));
     }
     
     const { pendingInvitations, totalUnreadActity } = useAppSelector((state: StoreState) => state.app);
     
+    useEffect(() => {
+        dispatch(setPath({
+            path: location.pathname
+        }));
+    }, []);
+
     return (
         <div className="xs:fixed sm:relative bottom-0  w-full xs:h-[78px] sm:h-[57px] pt-2 pb-4 bg-white shadow block ">
 

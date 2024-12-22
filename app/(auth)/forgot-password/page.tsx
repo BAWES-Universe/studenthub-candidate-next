@@ -53,6 +53,8 @@ export default function PreferredTime() {
 
     page('Forgot Password Page');
 
+    router.prefetch('/login');
+    
     return () => {
         track('page_exit', { page: 'Forgot Password Page' });
     }

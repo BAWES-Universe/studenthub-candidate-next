@@ -75,6 +75,7 @@ export default function RootLayout({
       router.prefetch("/payments");
       router.prefetch("/discounts");
       router.prefetch("/profile");
+      router.prefetch("/chat/[id]")
     }, 2000); //after 2 second
 
     return () => {

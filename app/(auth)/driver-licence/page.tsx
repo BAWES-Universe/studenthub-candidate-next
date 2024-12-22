@@ -37,6 +37,12 @@ export default function DriverLicence() {
     console.log('no haveLicence', haveLicence);
     setHaveLicence(user?.candidate_driving_license || 0);
 
+
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/personal-photo');
+
     return () => {
       track('page_exit', { page: 'Driver Licence Page' });
     }

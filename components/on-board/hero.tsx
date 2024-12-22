@@ -25,6 +25,11 @@ export function Hero() {
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    router.prefetch("/home");
+    router.prefetch("/name");
+  }, []);
+
   const loginByGoogle = () => {
     setGoogleLoginLoading(true);
 

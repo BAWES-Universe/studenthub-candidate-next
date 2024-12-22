@@ -1,6 +1,6 @@
 // components/App/Invitation.jsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,10 @@ const Invitation = ({ model }: { model: any }) => {
     const router = useRouter();
 
     const timeAgo = useTimeAgo(model.invitation_created_at, t);
+
+    useEffect(() => {
+        router.prefetch("/invitation/[id]")
+    }, []);
 
     const invitationDetail = () => {
         router.push(`/invitation/${model.invitation_uuid}`);

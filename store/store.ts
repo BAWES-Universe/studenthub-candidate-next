@@ -39,7 +39,8 @@ store.subscribe(() => {
     ...store.getState(),
     app: {
       ...store.getState().app,
-      canGoForward: false
+      canGoForward: false,
+      path: ""
     }
   };
   localStorage.setItem('state', 

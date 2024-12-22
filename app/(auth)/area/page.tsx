@@ -99,6 +99,11 @@ export default function AreaPage() {
 
     page('Area Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/personal-info-complete');
+
     return () => {
       track('page_exit', { page: 'Area Page' });
     }

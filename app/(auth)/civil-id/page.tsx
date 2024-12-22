@@ -24,6 +24,7 @@ import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 import { useTranslation } from "react-i18next";
+import { FormDateInput } from "@/components/ui/form-date";
 
 
 export default function PreferredTime() {
@@ -45,6 +46,12 @@ export default function PreferredTime() {
   useEffect(() => {
 
     page('Civil ID Page');
+
+
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/preferred-time');
 
     return () => {
       track('page_exit', { page: 'Civil ID Page' });
@@ -126,6 +133,7 @@ export default function PreferredTime() {
           router.push('/profile');
         else
           router.push('/preferred-time');
+
       } else {
          
         alertDialog({
@@ -136,11 +144,6 @@ export default function PreferredTime() {
     }).finally(() => {
       setLoading(false);
     });
-
-    if (params && params.get('from-profile'))
-      router.push('/profile');
-    else
-    router.push('/preferred-time');
   } 
 
   function resetFrontId() {
@@ -217,11 +220,11 @@ export default function PreferredTime() {
       dispatch(setUser({ user: user! }));
 
     //if got both values 
-    
+    /*
     if (params && params.get('from-profile'))
       router.push('/profile');
     else
-      router.push('/preferred-time');
+      router.push('/preferred-time');*/
     }
   }
 
@@ -395,11 +398,10 @@ export default function PreferredTime() {
             />
 { /* todo: have date field*/ }
 
-           <FormInput
+           <FormDateInput
               name="candidate_civil_expiry_date"
               label="Expiry Date"
               form={form as any}
-              type="date"
             />
  
             <SubmitButton disabled={!form.formState.isValid || loading } 

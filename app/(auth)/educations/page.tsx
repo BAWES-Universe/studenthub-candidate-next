@@ -67,6 +67,11 @@ export default function Educations() {
 
     page('Education Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/skills');
+
     return () => {
       track('page_exit', { page: 'Education Page' });
     }

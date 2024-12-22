@@ -91,6 +91,11 @@ export default function Video() {
 
     page('Video Page');
 
+    if (sparams && sparams.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/civil-id');
+
     setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
 
     //handle event to mark video processed

@@ -62,6 +62,11 @@ export default function PersonalPhoto() {
 
     page('Personal Photo Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/about-yourself');
+
     return () => {
         track('page_exit', { page: 'Personal Photo Page' });
     }
@@ -106,7 +111,7 @@ export default function PersonalPhoto() {
         if (params && params.get('from-profile'))
           router.push('/profile');
         else
-        router.push('/about-yourself');
+          router.push('/about-yourself');
       } else {
         alertDialog({
           title: t("Error"),

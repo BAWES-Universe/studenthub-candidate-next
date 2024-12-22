@@ -79,6 +79,11 @@ export default function Experiences() {
    
     page('Experience Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/education-complete');
+
     return () => {
         track('page_exit', { page: 'Experience Page' });
     }

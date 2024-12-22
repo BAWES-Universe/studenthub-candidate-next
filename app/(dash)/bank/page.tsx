@@ -79,6 +79,8 @@ const UpdateBankPage = () => {
 
     page('Update Bank Page');
 
+    router.prefetch('/payments');
+
     return () => {
         track('page_exit', { page: 'Update Bank Page' });
     }
@@ -132,6 +134,16 @@ const UpdateBankPage = () => {
   };
 
   return (
+    <>
+    <div className=' bg-white'>
+            <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
+
+                <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
+                { t('Bank')}
+                </h5>
+
+            </div>    
+        </div>
     <div className="max-w-4xl p-6 m-auto">
       
       <h3 className="mt-[52px] mb-[40px] text-center text-[24px] font-bold leading-[56px]">
@@ -162,6 +174,7 @@ const UpdateBankPage = () => {
         </Form>
            
     </div>
+    </>
   );
 };
 

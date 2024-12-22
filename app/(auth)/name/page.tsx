@@ -57,6 +57,11 @@ export default function Name() {
 
     page('Name Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/email');
+
     return () => {
         track('page_exit', { page: 'Name Page' });
     }

@@ -5,6 +5,7 @@ import { useAppSelector } from "@/store/store";
 import { calculateAge } from "@/utils/app";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export function PersonalDdetail()   {
@@ -13,6 +14,21 @@ export function PersonalDdetail()   {
     const { t, i18n } = useTranslation();
     const router = useRouter()
 
+    useEffect(() => {
+        router.prefetch("/about-yourself?from-profile=1");
+        router.prefetch("/objective?from-profile=1");
+        router.prefetch("/phone-number?from-profile=1");
+        router.prefetch("/email?from-profile=1");
+        router.prefetch("/preferred-time?from-profile=1");
+        router.prefetch("/civil-id?from-profile=1");
+        router.prefetch("/profile-url?from-profile=1");
+        router.prefetch("/dob?from-profile=1");
+        router.prefetch("/driver-licence?from-profile=1");
+        router.prefetch("/gender?from-profile=1");
+        router.prefetch("/nationality?from-profile=1");
+        router.prefetch("/area?from-profile=1");
+    }, []);
+    
     const updateBioClicked = async () => { 
         router.push('/about-yourself?from-profile=1', {
             scroll: true

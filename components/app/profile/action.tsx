@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "@/app/18n";
 import { removeProfile, updateJobSearchStatus } from "@/providers/logged-in/account.service";
 import { useAppSelector } from "@/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setUser } from "@/store/slices/userSlice";
 import { alertDialog } from "@/hooks/use-alert-dialog";
 
@@ -19,6 +19,10 @@ export function CandidateAction() {
     const { user } = useAppSelector((state) => state.user);
 
     const [updating, setUpdating] = useState(false);
+
+    useEffect(() => {
+        router.prefetch("/change-password");
+    }, []);
 
     const logoutClicked = () => {   
         dispatch(logout());

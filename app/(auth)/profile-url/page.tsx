@@ -54,6 +54,11 @@ export default function PreferredTime() {
 
     page('Profile URL Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/complete');
+
     return () => {
         track('page_exit', { page: 'Profile URL Page' });
     }
@@ -91,7 +96,7 @@ export default function PreferredTime() {
         if (params && params.get('from-profile'))
           router.push('/profile');
         else
-        router.push('/complete');
+          router.push('/complete');
       } else {
         alertDialog({
           title: t("Error"),

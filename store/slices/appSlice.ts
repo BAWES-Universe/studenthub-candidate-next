@@ -13,7 +13,8 @@ interface AppState {
   canGoForward: boolean,
   totalUnreadActity: number,
   totalUnreadMessages: number,
-  pendingInvitations: number
+  pendingInvitations: number,
+  path: string
 }
 
 const initialState: AppState = {
@@ -28,7 +29,8 @@ const initialState: AppState = {
   canGoForward: false,
   totalUnreadActity: 0,
   totalUnreadMessages: 0,
-  pendingInvitations: 0
+  pendingInvitations: 0,
+  path: ""
 };
 
 const appSlice = createSlice({
@@ -76,11 +78,14 @@ const appSlice = createSlice({
     },
     setPendingInvitations: (state, action: PayloadAction<{ pendingInvitations: number }>) => {
       state.pendingInvitations = action.payload.pendingInvitations;
-    }
+    },
+    setPath: (state, action: PayloadAction<{ path: string }>) => {
+      state.path = action.payload.path;
+    }, 
   },
 });
 
 export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, 
   setShowOneSignalPrompt, setCanGoForward, setTotalUnreadActity, setTotalUnreadMessages, 
-  setOneSignalStatus, setPendingInvitations, setPushNotificationAvailable } = appSlice.actions;
+  setOneSignalStatus, setPendingInvitations, setPushNotificationAvailable, setPath } = appSlice.actions;
 export default appSlice.reducer;

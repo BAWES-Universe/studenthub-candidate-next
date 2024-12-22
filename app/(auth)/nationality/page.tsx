@@ -63,6 +63,11 @@ export default function Nationality() {
 
     page('Nationality Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/area');
+
     return () => {
         track('page_exit', { page: 'Nationality Page' });
     }

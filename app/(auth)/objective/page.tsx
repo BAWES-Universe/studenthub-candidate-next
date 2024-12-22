@@ -52,6 +52,11 @@ export default function Objective() {
 
     page('Objective Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/video');
+
     return () => {
         track('page_exit', { page: 'Objective Page' });
     }

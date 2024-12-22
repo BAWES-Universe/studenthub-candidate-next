@@ -9,12 +9,18 @@ import {
   } from "@/components/ui/popover"
 import { CandidateAction } from "./action";
 import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
 
 export function Name() {
 
     const { user } = useAppSelector(state => state.user) as { user: Candidate };
     const router = useRouter();
 
+    useEffect(() => {
+        router.prefetch("/name?from-profile=1");
+        router.prefetch("/personal-photo?from-profile=1");
+    }, []);
+    
     const updateNameClicked = async () => {
         router.push('/name?from-profile=1', {
             scroll: true

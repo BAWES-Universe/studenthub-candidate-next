@@ -50,6 +50,11 @@ export default function Email() {
 
     page('Phone Number Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/dob');
+
     return () => {
         track('page_exit', { page: 'Phone Number Page' });
     }

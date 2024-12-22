@@ -52,6 +52,8 @@ export default function Email() {
 
     page('Login Page');
 
+    router.prefetch('/home');
+     
     return () => {
         track('page_exit', { page: 'Login Page' });
     }

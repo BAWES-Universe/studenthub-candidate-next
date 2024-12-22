@@ -55,6 +55,9 @@ export default function Email() {
 
     page('Email Page');
 
+    router.prefetch('/login');
+    router.prefetch('/verify-email/[email]');
+
     return () => {
         track('page_exit', { page: 'Email Page' });
     }

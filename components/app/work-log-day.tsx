@@ -2,12 +2,17 @@ import { CandidateWorkingDate } from "@/models/candidate-working-date";
 import { secondsToTime } from "@/utils/common";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingDate: CandidateWorkingDate}) {
 
     const {t } = useTranslation();
     const router = useRouter();
+
+    useEffect(() => {
+        router.prefetch("/work-log/log-hour-list/[date]");
+    })
 
     return (
 

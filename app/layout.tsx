@@ -99,6 +99,11 @@ export default function RootLayout({
     initializeApp();
     
     setMixpanel();
+
+    router.prefetch('/not-found');
+    router.prefetch('/no-internet');
+    router.prefetch('/server-error');
+
   }, []);
 
   async function initializeApp() {
@@ -533,7 +538,7 @@ export default function RootLayout({
   const { alertDialogs } = useAlertDialog();
 
   return (
-    <NoSSR>
+    
     <Provider store={store}>
         
       <html lang="en" dir={ i18n.language == "ar"? "rtl": "ltr" }>
@@ -639,6 +644,6 @@ export default function RootLayout({
         </body>
       </html>
     </Provider>
-    </NoSSR>
+   
   );
 }

@@ -38,6 +38,8 @@ const ChatListPage = () => {
  
         page('Chat List Page');
 
+        router.prefetch('/chat/[id]');
+
         return () => {
             track('page_exit', { page: 'Chat List Page' });
             subscription.unsubscribe();

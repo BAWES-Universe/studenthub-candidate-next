@@ -25,6 +25,8 @@ export default function PersonalInfoComplete() {
     
         document.addEventListener('keydown', handleKeyDown);
         
+        router.prefetch('/educations');
+
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
             track('page_exit', { page: 'Personal Info Page' });

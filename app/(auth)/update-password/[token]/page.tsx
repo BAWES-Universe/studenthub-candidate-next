@@ -14,7 +14,7 @@ import SubmitButton from "@/components/ui/submit-button";
 
 import { useEffect, useState } from "react";
 import { errorMessage } from "@/utils/common";
-import { useSearchParams, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/store";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
 import { updatePassword } from "@/providers/auth.service";
@@ -36,7 +36,7 @@ export default function UpdatePasswordPage() {
 
   const token: string = params?.token as string;
  
-  const sparams = useSearchParams();
+//  const sparams = useSearchParams();
 
 const { t } = useTranslation();
 
@@ -58,7 +58,9 @@ const formSchema = z.object({
   useEffect(() => {
 
     page('Update Password Page');
-
+ 
+      router.prefetch('/home');
+      
     return () => {
         track('page_exit', { page: 'Update Password Page' });
     }

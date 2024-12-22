@@ -52,6 +52,11 @@ export default function Name() {
   
     page('Gender Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/nationality');
+
     return () => {
         track('page_exit', { page: 'Gender Page' });
     }

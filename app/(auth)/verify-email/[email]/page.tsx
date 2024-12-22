@@ -77,6 +77,11 @@ export default function VerifyEmailPage() {
 
     page('Verify Email Page');
 
+    if (sparams && sparams.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/phone-number');
+
     return () => {
         track('page_exit', { page: 'Verify Email Page' });
     }

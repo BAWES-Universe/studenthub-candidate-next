@@ -54,6 +54,11 @@ export default function PreferredTime() {
 
     page('Preferred Time Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/complete');
+
     return () => {
         track('page_exit', { page: 'Preferred Time Page' });
     }

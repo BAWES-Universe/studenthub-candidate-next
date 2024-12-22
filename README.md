@@ -81,5 +81,26 @@ https://www.npmjs.com/package/zod#basic-usage
 - google signin deprecated, need to migrate, can try next.js popular auth.js with other option like linkedin, facebook 
  
 
+# design 
+
 https://www.figma.com/design/UmcngZ41ORf4DWnYRzqxFm/StudentHub-Components?node-id=219-7957&node-type=frame&m=dev
+
+# generate static site 
+
+Generate a Static Build
+Ensure your Next.js app uses Static Site Generation (SSG) or fully static content.
+Update the next.config.js file:
+
+`module.exports = {
+    output: 'export',
+};`
+
+This tells Next.js to export the app as static HTML.
+Run the build and export commands:
+
+`npm run build
+npx next export`
+
+This generates a out folder containing your static files.
+
 

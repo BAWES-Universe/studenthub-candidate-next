@@ -53,6 +53,11 @@ export default function Skills() {
 
     page('Skills Page');
 
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/experience');
+
     return () => {
         track('page_exit', { page: 'Skills Page' });
     }
@@ -93,7 +98,7 @@ export default function Skills() {
         if (params && params.get('from-profile'))
           router.push('/profile');
         else
-        router.push('/experience');
+          router.push('/experience');
       } else {
         alertDialog({
           title: t("Error"),

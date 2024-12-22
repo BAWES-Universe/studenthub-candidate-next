@@ -16,6 +16,7 @@ import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { setUser } from '@/store/slices/userSlice';
 import { setOneSignal$ } from '@/providers/event.service';
+import Link from 'next/link';
 
 
 const DashboardPage = () => {
@@ -72,6 +73,7 @@ const DashboardPage = () => {
     };
  
 
+    //todo: 
     const downloadCertificate = async (event: any) => {
       /*  const modal = await openModal(WorkHistoryPage, { candidate, workHistory });
         modal.onDidDismiss();*/
@@ -82,7 +84,7 @@ const DashboardPage = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4">
+        <div className="max-w-4xl mx-auto p-6">
              
             {loadingProfile && <div className="progress-bar">{t("Loading...")}</div>}
             {user && (
@@ -119,7 +121,11 @@ const DashboardPage = () => {
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight" dangerouslySetInnerHTML={{ 
                             __html: t('txt_interview_scheduled', { 
                                 value: user.totalInterviewScheduled }) }}></p>
-                            <Button variant={'outline'} onClick={() => router.push('/interview-list')} className="btn-bank-detail">View</Button>
+                            <Link href="/interview-list">
+                                <Button variant={'outline'} className="btn-bank-detail">
+                                    {t('View')}
+                                </Button>
+                            </Link>    
                         </CardContent>
                         </Card>
                     )}
@@ -139,10 +145,11 @@ const DashboardPage = () => {
                             </CardHeader>
                             <CardContent>    
                                 <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">You won’t be able to receive payments until we have your valid civil ID.</p>
-                                <Button variant={'outline'} className="btn-civil-detail" onClick={
-                                    () => router.push('/civil-id?from-profile=1')}>
+                                <Link href='/civil-id?from-profile=1'>
+                                <Button variant={'outline'} className="btn-civil-detail">
                                     {t("Upload Civil ID")}
                                 </Button>
+                                </Link>
                             </CardContent>
                         </Card>
                     )}
@@ -157,9 +164,11 @@ const DashboardPage = () => {
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
                                 {t("You won’t be able to receive payments until we have your bank information to process your transfers.")}
                             </p>
-                            <Button variant={'outline'} className="btn-bank-detail" onClick={() => router.push('/bank')}>
+                            <Link href='/bank'>
+                            <Button variant={'outline'} className="btn-bank-detail">
                                 {t("Enter my bank information")}
                             </Button>
+                            </Link>
                         </CardContent>
                         </Card>
                     )}
@@ -176,10 +185,11 @@ const DashboardPage = () => {
                             <p className="mt-[2px] mb-4 text-[#68687a] text-sm font-normal leading-tight">
                                 {t("While optional, an intro video makes your profile stand out to employers. It shows that you have the confidence required for the job and gives them the first impression they need to see you as something more than just a paper CV.")}
                             </p>
-                            <Button variant={'outline'} className="btn-video-recording" 
-                                onClick={() => router.push('/video?from-profile=1')}>
+                            <Link href="/video?from-profile=1">
+                            <Button variant={'outline'} className="btn-video-recording">
                                 {t("I’d like to start recording")}
                             </Button>
+                            </Link>
                         </CardContent>
                         </Card>
                     )}
@@ -191,9 +201,11 @@ const DashboardPage = () => {
                             <CardTitle className='font-bold'>{t("Working logs")}</CardTitle>
                         </CardHeader>
                         <CardContent> 
-                            <Button variant={'outline'} onClick={() => router.push('/work-log/log-date-list')} className="btn-video-recording">
-                                {t("Click here to view your working logs")}
-                            </Button>
+                            <Link href="/work-log/log-date-list">
+                                <Button variant={'outline'} className="btn-video-recording">
+                                    {t("Click here to view your working logs")}
+                                </Button>
+                            </Link>    
                         </CardContent>
                         </Card>
                     )}
@@ -204,9 +216,11 @@ const DashboardPage = () => {
                             <CardTitle className='font-bold'>{t("Wallet")}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <Button variant={'outline'} onClick={() => router.push('/wallet')} className="btn-video-recording">
+                            <Link href="/wallet">
+                            <Button variant={'outline'} className="btn-video-recording">
                                 {t("Click here to view your wallet balance")}
                             </Button>
+                            </Link>
                         </CardContent>
                     </Card>
 
@@ -243,9 +257,11 @@ const DashboardPage = () => {
                                     </CardContent>
                                 </Card>
                             ))}
-                            <Button variant={'outline'}onClick={downloadCertificate} className="download-btn">
+
+                            {/*
+                            <Button variant={'outline'} onClick={downloadCertificate} className="download-btn">
                                 {t("Download Certificates")}
-                            </Button>
+                            </Button>*/}
                         </div>
                     )}
                 </div>

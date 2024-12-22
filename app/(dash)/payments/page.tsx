@@ -12,6 +12,7 @@ import { setUser } from '@/store/slices/userSlice';
 import { useAppSelector } from '@/store/store';
 import { useAppDispatch } from '@/store/store';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -50,6 +51,8 @@ const PaymentsPage = () => {
 
         page('Payments Page');
 
+        router.prefetch('/payments/[id]')
+
         return () => {
             track('page_exit', { page: 'Payments Page' });
         }
@@ -84,7 +87,17 @@ const PaymentsPage = () => {
   }
  
     return (
-        <div className="max-w-4xl mx-auto p-4">
+        <>
+        <div className=' bg-white'>
+            <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
+
+                <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
+                { t('Payments')}
+                </h5>
+
+            </div>    
+        </div>
+        <div className="max-w-4xl mx-auto p-6">
             {loading && <div>{t("Loading...")}</div>}
             {user && (
                 <>
@@ -97,10 +110,11 @@ const PaymentsPage = () => {
                         <h3 className='mt-1'>{t("We'll be making payments to the following bank account")}</h3>
                     )}
 
-                    <Button className="btn mt-2 mb-4" onClick={() => router.push('/bank')}>
+                    <Link href="/bank">
+                    <Button className="btn mt-2 mb-4">
                         {t("Enter Bank Information")}
                     </Button>
-
+                    </Link>
                     {salaries.length > 0 && (
                         <div className="salaries">
                             
@@ -144,6 +158,7 @@ const PaymentsPage = () => {
                 </>
             )}
         </div>
+        </>
     );
 };
 

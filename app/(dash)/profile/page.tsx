@@ -49,6 +49,11 @@ const ProfilePage = () => {
         loadProfile();
         loadWorkHistoryData();
 
+        router.prefetch('/skills?from-profile=1');
+        router.prefetch('/educations?from-profile=1');
+        router.prefetch('/experience?from-profile=1');
+        router.prefetch('/video?from-profile=1');
+
         return () => {
             track('page_exit', { page: 'Profile Page' });
         }
