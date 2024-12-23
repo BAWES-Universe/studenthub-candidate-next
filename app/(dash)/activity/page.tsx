@@ -23,6 +23,7 @@ import NoItems from '@/components/common/no-items';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import Loading from './loading';
+import { Activity } from '@/components/app/activity';
 
 //todo: button to mark all as read
 
@@ -138,77 +139,8 @@ const ActivityPage = () => {
           </Button>
         )}
 
-      
         { candidateNotifications.map((candidateNotification: CandidateNotification) => (
-
-          <div className="mb-4" key={candidateNotification.cn_uuid}>
-              {
-              candidateNotification.type == 3 ? <WorkHourApproved 
-      onClick={() => markRead(candidateNotification)}
-      candidateNotification={candidateNotification}></WorkHourApproved>: null
-              } 
-        
-              {
-                  candidateNotification.type == 4 ? <WorkHourRejected 
-          onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></WorkHourRejected>: null 
-              }
-
-              {
-                  candidateNotification.type == 8 ? <WorkSessionApproved 
-          onClick={() => markRead(candidateNotification)}
-          candidateNotification={candidateNotification}></WorkSessionApproved>: null}
-            
-        {
-                  candidateNotification.type == 9 ? <WorkSessionRejected 
-          onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></WorkSessionRejected>: null }
-            
-        {
-                  candidateNotification.type == 0 ? <InvitationNotification 
-          onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></InvitationNotification>: null
-        }
-
-        {
-                  candidateNotification.type == 1 ? <Assigned 
-        onClick={() => markRead(candidateNotification)}
-          candidateNotification={candidateNotification}></Assigned>: null
-        }
-        
-        {
-                  candidateNotification.type == 2 ? <Unassigned 
-        onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></Unassigned>: null }
-
-        {
-                  candidateNotification.type == 5 ? <TransferInit 
-        onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></TransferInit>: null
-        }
-
-        {
-                  candidateNotification.type == 6 ? <TransferPaid 
-        onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></TransferPaid>: null
-        }
-
-        {
-                  candidateNotification.type == 7 ? <TransferUnpaid 
-        onClick={() => markRead(candidateNotification)}
-            candidateNotification={candidateNotification}></TransferUnpaid>: null
-        }
-
-        { /*
-                  candidateNotification.type == 10 ? <ion-card *ngSwitchDefault tappable
-        onClick={() => markRead(candidateNotification)}
-          candidateNotification={candidateNotification}> 
-          <ion-card-content>
-            {{ candidateNotification.message }}
-          </ion-card-content>
-        </ion-card>: null */ }
-    
-          </div>   
+          <Activity markRead={markRead} candidateNotification={candidateNotification} />
         ))}
         
         <Pager pagination={pagination} loadPage={loadPage} />
