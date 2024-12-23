@@ -34,8 +34,8 @@ export function CertificateComponent({ certificate }: { certificate: Certificate
             <div onClick={() => toggleSelection()} className={ `p-4 cursor-pointer self-stretch justify-start items-center gap-3 inline-flex ${isSelected? 'shadow-[0px_-1px_0px_0px_#E2E2E6_inset]': ''}` }>
                 <div className="grow shrink basis-0 h-12 justify-start items-start gap-3 flex">
                     { certificate.company && certificate.company.company_logo && <div className="w-12 h-12 relative">
-                        <div className="w-12 h-12 left-0 top-0 absolute bg-[#f4f6ff] rounded-xl"></div>
-                        <img className="w-8 h-8 left-[8px] top-[8px] absolute rounded-[44px]" 
+                        <div className="w-12 h-12 start-0 top-0 absolute bg-[#f4f6ff] rounded-xl"></div>
+                        <img className="w-8 h-8 start-[8px] top-[8px] absolute rounded-[44px]" 
                             src={process.env.NEXT_PUBLIC_CLOUDINARY_URL + certificate.company.company_logo }
                             onError={(e) => { if (certificate.company) {
                                 //certificate.company.company_logo = null
@@ -60,8 +60,8 @@ export function CertificateComponent({ certificate }: { certificate: Certificate
                     </div> }
 
                 </div>
-                { isSelected? <ChevronUp className="w-6 h-6 relative origin-top-left stroke-[#7d7d8d]" />:
-                    <ChevronDown className="w-6 h-6 relative origin-top-left stroke-[#7d7d8d]" /> }
+                { isSelected? <ChevronUp className="w-6 h-6 relative origin-top-start stroke-[#7d7d8d]" />:
+                    <ChevronDown className="w-6 h-6 relative origin-top-start stroke-[#7d7d8d]" /> }
             </div>
 
             {isSelected && <div className="p-4 rounded-lg clear-both">

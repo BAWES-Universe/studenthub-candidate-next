@@ -24,7 +24,7 @@ export default function FloatingLabelInput({ label, field}: FloatingLabelInputPr
   
   return (
     <FormItem className='peer relative flex flex-col items-start self-stretch border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] rounded-2xl border-solid'>
-      <FormLabel className="absolute left-5 top-6 text-base font-normal leading-6 text-[color:var(--Neutral-70,#7D7D8D)] transition-all duration-200 
+      <FormLabel className="absolute start-5 top-6 text-base font-normal leading-6 text-[color:var(--Neutral-70,#7D7D8D)] transition-all duration-200 
       peer-focus-visible:top-10 peer-focus:top-10 
       peer-focus-visible:-translate-y-10 peer-focus-visible:text-xs 
       peer-focus:-translate-y-10 peer-focus:text-xs 

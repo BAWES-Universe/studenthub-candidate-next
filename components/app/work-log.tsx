@@ -3,9 +3,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { ArrowRight } from 'lucide-react';
 import { secondsToTime } from '@/utils/common';
 import { format } from 'date-fns';
+import i18n from '@/app/18n';
 
 const WorkLog = ({ hour }: { hour: any }) => {
     const { t } = useTranslation();
@@ -39,7 +39,7 @@ const WorkLog = ({ hour }: { hour: any }) => {
                     <div className="text-[#4b4b61] text-sm font-normal leading-tight">
                     {format(hour.start_time || '', 'hh:mm a')} 
                     </div>
-                    <span className="mx-2">→</span>
+                    <span className={ i18n.language == 'ar'? "inline-block rotate-180 me-2": 'mx-2' }>→</span>
                     { /*<ArrowRight className='inline mx-2 w-6 h-6 relative'  /> */}
                     <div className="text-[#4b4b61] text-sm font-normal leading-tight">
                     {hour.end_time 

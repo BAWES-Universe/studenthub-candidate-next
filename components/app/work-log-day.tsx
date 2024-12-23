@@ -1,3 +1,4 @@
+import i18n from "@/app/18n";
 import { CandidateWorkingDate } from "@/models/candidate-working-date";
 import { secondsToTime } from "@/utils/common";
 import { format } from "date-fns";
@@ -64,7 +65,7 @@ export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingD
                     <div className="justify-end items-center gap-2 flex">
                         <div className="text-[#4b4b61] text-sm font-normal leading-tight">{format(candidateWorkingDate.start_time || '', 'hh:mm a')}</div>
                         <div className="w-6 h-6 relative">
-                            <span className="mx-2">→</span>
+                            <span className={ i18n.language == 'ar'? "inline-block rotate-180 me-2": 'mx-2' }>→</span>
                         </div>
                         <div className="text-[#4b4b61] text-sm font-normal leading-tight">
                             {candidateWorkingDate.end_time ? format(candidateWorkingDate.end_time, 'hh:mm a') : t("Now")}

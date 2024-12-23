@@ -1,5 +1,6 @@
+import i18n from "@/app/18n";
 import { CandidateWorkHistory } from "@/models/candidate-work-history";
-import { ChevronRight, ChevronRightCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronRightCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,8 +18,8 @@ export function Assignment({ history }: { history: CandidateWorkHistory }) {
             <div className="self-stretch justify-start items-center gap-3 inline-flex">
                 <div className="grow shrink basis-0 h-12 justify-start items-start gap-3 flex">
                     { history.company.company_logo && <div className="w-12 h-12 relative">
-                        <div className="w-12 h-12 left-0 top-0 absolute bg-[#f4f6ff] rounded-xl"></div>
-                        <img className="w-8 h-8 left-[8px] top-[8px] absolute rounded-[44px]" 
+                        <div className="w-12 h-12 start-0 top-0 absolute bg-[#f4f6ff] rounded-xl"></div>
+                        <img className="w-8 h-8 start-[8px] top-[8px] absolute rounded-[44px]" 
                             src={process.env.NEXT_PUBLIC_CLOUDINARY_URL + history.company.company_logo }
                             onError={(e) => { history.company.company_logo = null; }} /> 
                     </div> }
@@ -29,7 +30,8 @@ export function Assignment({ history }: { history: CandidateWorkHistory }) {
                         <div className="self-stretch text-[#3f5dca] text-sm font-medium leading-tight">{history.company.company_name}</div>
                     </div>
                 </div>
-                <ChevronRight className="w-6 h-6 relative origin-top-left stroke-[#7d7d8d]" />
+                { i18n.language == "ar"? <ChevronLeft className="w-6 h-6 relative origin-top-start stroke-[#7d7d8d]" />: 
+                    <ChevronRight className="w-6 h-6 relative origin-top-start stroke-[#7d7d8d]" /> }
             </div>
         </div>
     );

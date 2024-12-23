@@ -16,6 +16,7 @@ import './assets/css/datepicker.css'; // Import the default styles
 import { Button } from './button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/app/18n'
 
 
 interface FormInputProps {
@@ -33,7 +34,7 @@ export function FormDateInput({
   label,
   form,
   helper,
-  inputDir = "ltr",
+  inputDir = i18n.language == "ar"? "rtl": "ltr",
   onFocus,
   onChange
 }: FormInputProps) {
@@ -98,7 +99,7 @@ export function FormDateInput({
                     )}
                   />
                   { /*field.value && (
-                    <div className="absolute top-0 left-0 mt-2 ">
+                    <div className="absolute top-0 start-0 mt-2 ">
                       {format(field.value, 'PPP')}
                     </div>
                   )*/}
@@ -110,7 +111,7 @@ export function FormDateInput({
                 top-1/2 -translate-y-1/2 scale-100
                 text-[color:var(--Neutral-70,#7D7D8D)] text-base font-normal leading-6
                 
-                ${inputDir == "ltr"? 'left-[7px] peer-focus:left-[6px] peer-[&:not(:placeholder-shown)]:left-[6px] origin-[0]': 'right-[6px] peer-focus:right-[6px] peer-[&:not(:placeholder-shown)]:right-[6px] origin-[100%]'}
+                ${inputDir == "ltr"? 'start-[7px] peer-focus:start-[6px] peer-[&:not(:placeholder-shown)]:start-[6px] origin-[0]': 'end-[6px] peer-focus:end-[6px] peer-[&:not(:placeholder-shown)]:end-[6px] origin-[100%]'}
 
                 peer-focus:top-3.5 
                 
@@ -134,7 +135,7 @@ export function FormDateInput({
                 {t(label)}
             </FormLabel>
           </div>
-          <FormDescription dir="ltr" className='mt-[8px]'>
+          <FormDescription className='mt-[8px]'>
             { helper }
           </FormDescription>
           <FormMessage />

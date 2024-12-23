@@ -32,7 +32,7 @@ const InvitationNotification = ({ candidateNotification, onClick }: { candidateN
                 }
             </p>
             {isNew && (
-                <span className="unread w-3.5 h-3.5 bg-blue-500 absolute top-3 right-4 rounded-full"></span>
+                <span className="unread w-3.5 h-3.5 bg-blue-500 absolute top-3 end-4 rounded-full"></span>
             )}
         </div>
     );

@@ -110,7 +110,7 @@ export default function RootLayout({
         {children}
       </div>
       
-      <div className="fixed right-4 xs:bottom-16 sm:bottom-4" id="btn-chat">
+      <div className="fixed end-4 xs:bottom-16 sm:bottom-4" id="btn-chat">
         <Button className="btn-fab rounded-full p-4 w-10 h-10" onClick={startChatClicked}>
           {!startingChat ? (
             <MessagesSquare className="w-6" />

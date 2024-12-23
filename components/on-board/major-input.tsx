@@ -86,12 +86,12 @@ export default function MajorInput({ major_uuid, onSelect }: MajorInputProps) {
                         htmlFor={id}
 
                         className={
-                            `absolute left-[5px] z-10 bg-white px-4 transition-all duration-200
+                            `absolute start-[5px] z-10 bg-white px-4 transition-all duration-200
                             top-1/2 -translate-y-1/2 scale-100
                             text-[color:var(--Neutral-70,#7D7D8D)] text-base font-normal leading-6
                             
                             ${selectedMajor ?
-                                                'top-3.5 left-[0px] -translate-y-0 scale-75 text-[color:var(--Neutral-80,#68687A)] font-medium leading-4' : ''} 
+                                                'top-3.5 start-[0px] -translate-y-0 scale-75 text-[color:var(--Neutral-80,#68687A)] font-medium leading-4' : ''} 
                                 
                             `}
                     >

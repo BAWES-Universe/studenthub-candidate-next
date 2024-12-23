@@ -34,8 +34,8 @@
 }
 .react-datepicker--time-only .react-datepicker__time,
 .react-datepicker--time-only .react-datepicker__time-box {
-  border-bottom-left-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
+  border-bottom-start-radius: 0.3rem;
+  border-bottom-end-radius: 0.3rem;
 }
 
 .react-datepicker-popper {
@@ -58,7 +58,7 @@
   text-align: center;
   //background-color: #f0f0f0;
   border-bottom: 1px solid #aeaeae;
-  border-top-left-radius: 0.3rem;
+  border-top-start-radius: 0.3rem;
   padding: 8px 0;
   position: relative;
 }
@@ -68,10 +68,10 @@
   padding-right: 5px;
 }
 .react-datepicker__header--time:not(.react-datepicker__header--time--only) {
-  border-top-left-radius: 0;
+  border-top-start-radius: 0;
 }
 .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
-  border-top-right-radius: 0.3rem;
+  border-top-end-radius: 0.3rem;
 }
 
 .react-datepicker__year-dropdown-container--select,
@@ -247,14 +247,14 @@ h2.react-datepicker__current-month {
 .react-datepicker__time-container .react-datepicker__time {
   position: relative;
   background: white;
-  border-bottom-right-radius: 0.3rem;
+  border-bottom-end-radius: 0.3rem;
 }
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
   width: 85px;
   overflow-x: hidden;
   margin: 0 auto;
   text-align: center;
-  border-bottom-right-radius: 0.3rem;
+  border-bottom-end-radius: 0.3rem;
 }
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
   list-style: none;
@@ -625,8 +625,8 @@ h2.react-datepicker__current-month {
 .react-datepicker__year-option:first-of-type,
 .react-datepicker__month-option:first-of-type,
 .react-datepicker__month-year-option:first-of-type {
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
+  border-top-start-radius: 0.3rem;
+  border-top-end-radius: 0.3rem;
 }
 .react-datepicker__year-option:last-of-type,
 .react-datepicker__month-option:last-of-type,
@@ -635,8 +635,8 @@ h2.react-datepicker__current-month {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-bottom-left-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
+  border-bottom-start-radius: 0.3rem;
+  border-bottom-end-radius: 0.3rem;
 }
 .react-datepicker__year-option:hover,
 .react-datepicker__month-option:hover,

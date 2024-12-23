@@ -52,7 +52,7 @@ const CompanyPage = ({ company, dismiss }:CompanyPageProps) => {
     <div className="max-w-screen-lg">
       {company && (
         <>
-          <Button onClick={dismiss} variant={"ghost"} className="btn-close float-end fixed end-o right-0">
+          <Button onClick={dismiss} variant={"ghost"} className="btn-close float-end fixed end-o end-0">
             <X className='w-4 h-4'></X>
           </Button>
 

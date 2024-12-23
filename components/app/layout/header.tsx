@@ -4,11 +4,12 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { StoreState, useAppSelector } from "@/store/store";
  
-import { Bell, ChevronLeft } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import i18n from "@/app/18n";
 
 export default function Header() {
     const router = useRouter();
@@ -51,7 +52,8 @@ export default function Header() {
             { canGoBack && path != "/home" && 
                 <div className="xs:block sm:hidden px-6 py-4  bg-white">
                     <button onClick={() => router.back()} className="flex w-10 h-10 flex-col items-start gap-2.5 [background:var(--Neutral-20,#F5F5F7)] p-2 rounded-[20px]">
-                        <ChevronLeft className="stroke-[#7d7d8d]" />
+                      { i18n.language == "ar"? <ChevronRight className="stroke-[#7d7d8d]" />:  
+                        <ChevronLeft className="stroke-[#7d7d8d]" /> }
                     </button>
                 </div> }
     

@@ -4,7 +4,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Geolocation } from '@capacitor/geolocation'; // Assuming you're using Capacitor for geolocation
-import {  ChevronRight } from 'lucide-react';
+import {  ChevronLeft, ChevronRight } from 'lucide-react';
 import { secondsToTime } from '@/utils/common';
 import { CandidateWorkingHour } from '@/models/candidate';
 import { checkWorkStatus, startWork, stopWork, discardSession } from '@/providers/logged-in/account.service';
@@ -223,7 +223,9 @@ const TrackWorkPage = () => {
 
       <button onClick={() => setModalLogTimeIsOpen(true)} className="m-auto block text-center text-neutral-600 text-sm font-medium leading-5">
         {t("Manual Logging")}
-        <ChevronRight className="text-gray-600 text-xl inline" />
+        { i18n.language == "ar"? <ChevronLeft className="text-gray-600 text-xl inline" />: 
+          <ChevronRight className="text-gray-600 text-xl inline" /> }
+        
       </button>
 
       <div className="w-full max-w-[400px] mx-auto h-11 justify-start items-start gap-[52px] flex mt-8">

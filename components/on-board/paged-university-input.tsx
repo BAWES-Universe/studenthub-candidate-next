@@ -90,7 +90,7 @@ export default function PagedUniversityInput({ selectedUniversity, onSelect, nam
                     
                 { universityList.length > 0 ? (
                     
-                    <Card className="absolute bg-white top-full left-0 w-full mt-2
+                    <Card className="absolute bg-white top-full start-0 w-full mt-2
                     border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
                     border-gray-300 overflow-hidden z-[999999999]
                         ">

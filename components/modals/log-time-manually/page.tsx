@@ -113,9 +113,9 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
  
       <div className="fixed 
 
-        xs:bottom-[0] xs:w-full xs:left-0
+        xs:bottom-[0] xs:w-full xs:start-0
 
-        sm:top-[calc(50%-222px)] sm:left-[calc(50%-244px)] sm:w-[488px] sm:rounded-[30px]
+        sm:top-[calc(50%-222px)] sm:start-[calc(50%-244px)] sm:w-[488px] sm:rounded-[30px]
 
         h-[480px] bg-white xs:rounded-tl-[30px] xs:rounded-tr-[30px]">
  

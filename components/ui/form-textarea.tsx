@@ -13,6 +13,7 @@ import {
 import { UseFormReturn } from 'react-hook-form'
 import { Textarea } from './textarea'
 import { useTranslation } from 'react-i18next'
+import i18n from '@/app/18n'
 
 
 interface FormInputProps {
@@ -32,7 +33,7 @@ export function FormTextarea({
   form,
   helper,
   placeholder = " ",
-  inputDir = "ltr",
+  inputDir = i18n.language == "ar"? "rtl": "ltr",
   onFocus,
   autoComplete = "on"
 }: FormInputProps) {
@@ -73,7 +74,7 @@ export function FormTextarea({
               top-1/2 -translate-y-1/2 scale-100
               text-[color:var(--Neutral-70,#7D7D8D)] text-base font-normal leading-6
               
-              ${inputDir == "ltr"? 'left-[1px] peer-focus:left-[6px] peer-[&:not(:placeholder-shown)]:left-[6px] origin-[0]': 'right-[1px] peer-focus:right-[6px] peer-[&:not(:placeholder-shown)]:right-[6px] origin-[100%]'}
+              ${inputDir == "ltr"? 'start-[1px] peer-focus:start-[6px] peer-[&:not(:placeholder-shown)]:start-[6px] origin-[0]': 'end-[1px] peer-focus:end-[6px] peer-[&:not(:placeholder-shown)]:end-[6px] origin-[100%]'}
 
               peer-focus:top-3.5 
               
