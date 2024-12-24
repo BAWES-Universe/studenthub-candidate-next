@@ -200,7 +200,7 @@ const AppealDetailPage = () => {
                         </h5>
                         <div className="px-1.5 py-0.5 bg-[#edfcf3] rounded-md float-end gap-2.5 flex">
                             <div className="text-right text-[#28b563] text-sm font-medium font-['Inter'] leading-tight">
-                                {candidateWorkingHourAppeal.status == 0 && t("Submitted")}
+                                {candidateWorkingHourAppeal.status == 10 && t("Submitted")}
                                 {candidateWorkingHourAppeal.status == 1 && t("Awaiting Review")}
                                 {candidateWorkingHourAppeal.status == 2 && t("In Progress")}
                                 {candidateWorkingHourAppeal.status == 3 && t("Resolved")}
@@ -209,7 +209,7 @@ const AppealDetailPage = () => {
                         <div className='clearfix' />
                         <div className="self-stretch justify-start items-center gap-1 inline-flex">
                             <div className="grow shrink basis-0 text-[#4b4b61] text-sm font-normal font-['Inter'] leading-tight">
-                                {candidateWorkingHourAppeal.status == 0 &&
+                                {candidateWorkingHourAppeal.status == 10 &&
                                     t('Appeal received. Our team will review your case and mediate with the employer.')}
 
                                 {candidateWorkingHourAppeal.status == 1 &&

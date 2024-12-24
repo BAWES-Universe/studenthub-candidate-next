@@ -105,7 +105,7 @@ const WorkLog = ({ hour, onAppealClose }: { hour: any, onAppealClose: any | unde
                         </span>
                     </div>
                     <div className=" text-[#7d7d8d] text-xs font-normal leading-none">
-                        {hour.candidateWorkingHourAppeal.status == 0 && 
+                        {hour.candidateWorkingHourAppeal.status == 10 && 
                             t('Appeal received. Our team will review your case and mediate with the employer.') }
 
                         {hour.candidateWorkingHourAppeal.status == 1 && 
