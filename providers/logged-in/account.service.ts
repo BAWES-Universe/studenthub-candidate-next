@@ -110,6 +110,16 @@ import axios from "@/providers/AxiosService";
   }
 
   /**
+   * view salary detail
+   * @returns {Observable<any>}
+   */
+  export async function viewSalary(tc_id: number): Promise<any> {
+    const url = _accountEndpoint + '/salary/' + tc_id + '?expand=bank';
+    const response = await axios.get(url);
+    return response.data;
+  }
+
+  /**
    * Create
    * @param {oldPassword} string
    * @param {newPassword} string
@@ -176,7 +186,7 @@ import axios from "@/providers/AxiosService";
    * @param latitude 
    * @param longitude 
    */
-  export async function areaByLocation(latitude: number, longitude: number, area = null): Promise<any> {
+  export async function getAreaByLocation(latitude: number, longitude: number, area = null): Promise<any> {
     let url = `${_accountEndpoint}` + '/area-by-location?latitude=' + latitude + '&longitude=' + longitude;
 
     if(area)
@@ -186,6 +196,10 @@ import axios from "@/providers/AxiosService";
     return response.data;
   }
 
+  /**
+   * update intro
+   * @param intro string
+   */
   export async function updateIntro(intro: string): Promise<any> {
     const url = `${_accountEndpoint}` + '/update-intro';
     const response = await axios.post(url, {
@@ -312,6 +326,15 @@ import axios from "@/providers/AxiosService";
   }
   
   /**
+   * delete Resume 
+   */
+  export async function deleteResume(): Promise<any> {
+    const url = `${_accountEndpoint}` + '/remove-resume';
+    const response = await axios.delete(url);
+    return response.data;
+  }
+
+  /**
    * delete Video 
    */
   export async function deleteVideo(): Promise<any> {
@@ -377,6 +400,7 @@ import axios from "@/providers/AxiosService";
     const response = await axios.post(url, {
       civil_expiry_date: civil_expiry_date
     });
+    return response.data;
   }
 
   /**
@@ -388,6 +412,7 @@ import axios from "@/providers/AxiosService";
     const response = await axios.post(url, {
       driving_license: driving_license
     });
+    return response.data;
   }
 
   /**
@@ -399,50 +424,83 @@ import axios from "@/providers/AxiosService";
     const response = await axios.post(url, {
       candidate_mom_kuwaiti: candidate_mom_kuwaiti
     });
+    return response.data;
   }
 
+  /**
+   * update bank detail
+   * @param params 
+   */
   export async function updateBankDetail(params: any): Promise<any> {
     const url = `${_accountEndpoint}` + '/update-bank-detail';
     const response = await axios.post(url, params);
     return response.data;
   }
 
+  /**
+   * update phone number
+   * @param params 
+   */
   export async function updatePhoneDetail(params: any): Promise<any> {
     const url = `${_accountEndpoint}` + '/update-phone';
     const response = await axios.post(url, params);
     return response.data;
   }
 
+  /**
+   * update preferred time
+   * @param params 
+   */
   export async function updatePreferredTime(params: any): Promise<any> {
     const url = `${_accountEndpoint}` + '/update-preferred-time';
     const response = await axios.post(url, params);
     return response.data;
   }
 
+  /**
+   * update profile url
+   * @param params 
+   */
   export async function updateProfileUrl(params: any): Promise<any> {
     const url = `${_accountEndpoint}` + '/update-profile-url';
     const response = await axios.post(url, params);
     return response.data;
   }
 
+  /**
+   * discard session
+   */
   export async function discardSession(): Promise<any> {
     const url = `${_accountEndpoint}` + '/discard-session';
     const response = await axios.delete(url);
     return response.data;
   }
 
+  /**
+   * start work
+   * @param lat number
+   * @param long number
+   */
   export async function startWork(lat: number, long: number): Promise<any> {
     const url = `${_accountEndpoint}` + '/start-time';
     const response = await axios.post(url, { lat, long });
     return response.data;
   }
 
+  /**
+   * stop work
+   * @param lat number
+   * @param long number
+   */
   export async function stopWork(lat: number, long: number): Promise<any> {
     const url = `${_accountEndpoint}` + '/stop-time';
     const response = await axios.post(url, { lat, long });
     return response.data;
   }
 
+  /**
+   * check work status
+   */
   export async function checkWorkStatus(): Promise<any> {
     const url = `${_accountEndpoint}` + '/current-status';
     const response = await axios.post(url, {});

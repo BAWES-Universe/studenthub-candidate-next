@@ -1,9 +1,8 @@
-import { logout } from '@/store/slices/authSlice';
-import { RootState, useAppDispatch, useAppSelector } from '@/store/store'; 
+import { store } from '@/store/store'; 
 import axios from 'axios';
-import Router from 'next/router';
 //import { map } from 'zod';
 import { saveAs } from 'file-saver';
+import { error404$, error500$, internetOffline$, userLogout$ } from './event.service';
 //import { useRouter } from 'next/navigation'; 
 
 //https://axios-http.com/docs/req_config
@@ -21,15 +20,18 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 // Add a request interceptor
 axios.interceptors.request.use((config) => {  
+    
+    // const { isAuthenticated, token } = useAppSelector((state: RootState) => state.auth);
+   
+    const state = store.getState(); // Get the state directly from the store
 
-    const { isAuthenticated, token } = useAppSelector((state: RootState) => state.auth);
-    const { language, mixpanel_distinct_id } = useAppSelector((state: RootState) => state.app);
+    const { isAuthenticated, token } = state.auth; // Access auth state
+    const { language, mixpanel_distinct_id } = state.app; // Access app state
 
     if(isAuthenticated)
         config.headers['Authorization'] = 'Bearer ' + token;
 
     config.headers['Language'] = language;
-
     config.headers['Mixpanel-Distinct-ID'] = mixpanel_distinct_id;
 
     return config;
@@ -40,39 +42,47 @@ axios.interceptors.response.use(async (response) => {
 }, err => handleAxiosError(err));
 
 export async function handleAxiosError(err: any) {
+    
+    console.log("axios error:", err);
+
     const response = err.response;
     const errMsg = response.status ? `${response.status} - ${response.statusText}` : 'Server error';
 
     // Handle Bad Requests
     if (response.status === 400) {
-        Router.push('/404');   
+        error404$.next({});
+     //   Router.push('/404');   
     }
 
     // Handle No Internet Connection Error
     if (response.status == 0 || response.status == 504) {
-        Router.push('/no-internet');  
+        internetOffline$.next({});
+    //    Router.push('/no-internet');  
     }
     
-    if(!navigator.onLine) {
-        Router.push('/no-internet');  
-    }
+    /*if(!navigator.onLine) {
+        internetOffline$.next({});
+    //    Router.push('/no-internet');  
+    }*/
 
     // Handle Expired Session Error
     if (response.status === 401) { 
-        const dispatch = useAppDispatch();
-        dispatch(logout());
-        Router.push('/'); 
+        //const dispatch = useAppDispatch();
+        //dispatch(logout());
+        //    Router.push('/'); 
+        userLogout$.next({});
     }
 
     // Handle internal server error - 500  
     if (response.status === 500) {
-
-        Router.push('/500');   
+        error500$.next({});
+    //    Router.push('/500');   
     }
 
     // Handle page not found - 404 error 
     if (response.status === 404) {
-        Router.push('/404');   
+        error404$.next({});
+    //    Router.push('/404');   
     }
 
     /*if (error.status === 418) {
@@ -95,12 +105,10 @@ export async function handleAxiosError(err: any) {
         return empty();
     }*/
 
-    //console.error(JSON.stringify(response));
+    console.error(JSON.stringify(response));
 
     return Promise.reject(err);//errMsg
-
 }
-
 
 /**
    * Requests via PDF GET verb

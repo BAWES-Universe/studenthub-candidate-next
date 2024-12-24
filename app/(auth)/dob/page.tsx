@@ -12,70 +12,132 @@ import {
 import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
+import { Suspense, useEffect, useState } from "react";
+import { setUser } from "@/store/slices/userSlice";
+import { errorMessage } from "@/utils/common";
+import { profile, updateBirthDate } from "@/providers/logged-in/account.service";
+import { useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/store/store";
+import { useSearchParams, useRouter } from "next/navigation";
+import { page, track } from "@/providers/analytics.service";
+import { FormDateInput } from "@/components/ui/form-date";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
 
 export default function Name() {
+  const { t } = useTranslation();
+
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const params = useSearchParams();
   // 1. Define your form.
+
+  const formSchema = z.object({
+    candidate_birth_date: z.date().min(new Date(new Date().setFullYear(new Date().getFullYear() - 25)), {
+      message: t("Candidate age should be between 16 to 25."),
+    }).max(new Date(new Date().setFullYear(new Date().getFullYear() - 16)), {
+      message: t("Candidate age should be between 16 to 25."),
+    }),
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      candidate_birth_date: new Date(user?.candidate_birth_date || ""),
     },
   })
 
+  useEffect(() => {
+
+    page('DOB Page');
+
+
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/gender');
+
+    return () => {
+        track('page_exit', { page: 'DOB Page' });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+   //  form.setValue('phone', user?.candidate_phone || "");
+    //} else {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('candidate_birth_date', res.candidate_birth_date || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    
+    setLoading(true);
+
+    updateBirthDate(values.candidate_birth_date.toISOString()).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_birth_date: values.candidate_birth_date.toISOString()
+          } }));
+        }
+
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/gender');
+      } else {
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
-    <>
-        <OnboardProgress></OnboardProgress>
+    <Suspense fallback={<Loading />}>
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[55, 0, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-            When were you born?
+            {t("When were you born?")}
         </h5>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
-            <div className="flex">
-              <div className="flex-col ms-[16px] me-[16px]">
-                <FormInput 
-                  name="day"
-                  label="Day"
-                  form={form as any}
+            <FormDateInput
+                name='candidate_birth_date'
+                label='Select date'
+                form={form as any}
+                onChange={(date: any) => {
+                  console.log(date)
+                }}
                 />
-              </div>
-              <div className="flex-col ms-[16px] me-[16px]">
-                <FormInput 
-                  name="month"
-                  label="Month"
-                  form={form as any}
-                />
-              </div>
-              <div className="flex-col ms-[16px] me-[16px]">
-                <FormInput 
-                  name="year"
-                  label="Year"
-                  form={form as any}
-                />
-              </div>
-            </div>
-              
-            <SubmitButton></SubmitButton>  
+ 
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

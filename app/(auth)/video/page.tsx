@@ -9,56 +9,724 @@ import { z } from "zod"
 import {
   Form
 } from "@/components/ui/form"
-import { FormInput } from "@/components/ui/form-input";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { deleteResume, deleteVideo, profile, updatePhoneDetail, updateResume, updateVideo } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+import { uploadFileToTempS3 } from "@/providers/logged-in/aws.service";
+import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
+import { candidateVideoProcessed$ } from "@/providers/event.service";
+import { setCanGoForward } from "@/store/slices/appSlice";
+import { PlayCircle, SaveIcon, VideoIcon, X } from "lucide-react";
+import Spinner from "@/components/common/spinner";
+import Loading from "./loading";
+//import { Backdrop } from "@/components/common/backdrop";
 
 const formSchema = z.object({
     video: z.string({
       //  required_error: 'Please record or upload video.'
-    }),
+    }).nullable(),
     resume: z.string({
       //  required_error: 'Please upload front side of your national id.'
-    }),
+    }).nullable(),
 })
 
+
 export default function Video() {
+
+  const maxDuration = 30;
+  //let recordedChunks: any = [];
+//  let mediaRecorder: any; 
+
+  const player = useRef(null);
+  const videoInput = useRef(null);
+
+  const [format, setFormat] = useState('mp4');// webm
+  const [loading, setLoading] = useState(false);
+  const [removingVideo, setRemovingVideo] = useState(false);
+  const [removingResume, setRemovingResume] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingResume, setUploadingResume] = useState(false);
+
+  const [progress, setProgress] = useState(0);
+
+  const [recording, setRecording] = useState(false);
+  const [shouldStop, setShouldStop] = useState(true);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
+  const [stream, setStream] = useState<any>(null);
+  const [videoBlobUrl, setVideoBlobUrl] = useState<string>("");
+  const [countDown, setCountDown] = useState(0);
+  const [timer, setTimer] = useState(0);
+  //const [interval, setInterval] = useState();
+  const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
+  const [recordedChunks, setRecordedChunks] = useState<any>([]);
+  const [playingRecording, setPlayingRecording] = useState(false);
+  const [havePermission, setHavePermission] = useState(true);
+  const [isSafari, setIsSafari] = useState(false);
+ 
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const sparams = useSearchParams();
+
+  const { t } = useTranslation();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      video: user?.candidate_video,
+      resume: user?.candidate_resume, 
     },
   })
 
+  useEffect(() => {
+
+    page('Video Page');
+
+    if (sparams && sparams.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/civil-id');
+
+    setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
+
+    //handle event to mark video processed
+
+    candidateVideoProcessed$.subscribe((data : any) => {
+      if(user) {
+        dispatch(setUser({
+          user: {
+            ...user, 
+            candidate_video: data.candidate_video,
+            candidate_video_processed: data.candidate_video_processed
+          }
+        }));
+      }
+    });
+
+    if (navigator.mediaDevices) {
+      navigator.mediaDevices.enumerateDevices().then((devices) => {
+        setCameras(devices.filter((d) => d.kind === 'videoinput'));
+      });
+    }
+
+    // on hardware back, cancel recording
+
+    window.addEventListener('onpopstate', () => {
+ 
+      // stop recording on hardware back clicked
+
+      if (!uploadingVideo && !shouldStop) {
+        stopRecording();
+        return false;
+      }
+    });
+
+    return () => {
+      track('page_exit', { page: 'Video Page' });
+      //window.removeEventListener('onpopstate');
+      
+      window.onpopstate = (event) => { 
+        dispatch(setCanGoForward({canGoForward: true}));
+      }
+
+      //todo: 
+      if (!shouldStop) {
+        stopRecording();
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('video', res.candidate_video || "");
+        form.setValue('resume', res.candidate_resume || "");
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+  
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+   
+    if (sparams && sparams.get('from-profile'))
+      router.push('/profile');
+    else
+      router.push('/civil-id');
   } 
 
+  function onVideoError(){
+    form.setValue('video', "");
+  }
+
+  function removeVideo(){
+    setRemovingVideo(true);
+
+    deleteVideo().then(() => {
+      form.setValue('video', "");
+
+      dispatch(setUser({ user: {
+        ...user,
+        candidate_video: null
+      } }));
+    }).finally(() => {
+      setRemovingVideo(false);
+    });
+  }
+
+  function removeResume(){
+    setRemovingResume(true);
+
+    deleteResume().then(() => {
+      form.setValue('resume', "");
+
+      dispatch(setUser({ user: {
+        ...user,
+        candidate_resume: null
+      } }));
+
+    }).finally(() => {
+      setRemovingResume(false);
+    });
+  }
+
+  /**
+   * cancel file upload
+   *
+  function cancelUpload() {
+    setProgress(0);
+    setUploading(false);
+
+    if (currentTarget) {
+      currentTarget.abort();
+    }
+  }*/
+
+  /**
+   * toogle recorded video status
+   */
+  function togglePlayer() {
+
+    if(!player || !player.current) {
+      return false;
+    }
+
+    const ele = (player.current as HTMLVideoElement);
+
+    if (ele.paused == true) {
+      setPlayingRecording(true);
+      ele.play();
+    } else {
+      ele.pause();
+      ele.currentTime = 0;
+      setPlayingRecording(false);
+    }
+  }
+
+  function onRecodingPlayerEnded() {
+    setPlayingRecording(false);
+  }
+
+  /**
+   * save recording
+   */
+  function saveRecording() {
+
+    if(player && player.current) {
+      const ele = (player.current as HTMLVideoElement)
+      ele.muted = true;
+      ele.volume = 0;
+      ele.pause();
+    }
+ 
+    const file = new File([new Blob(recordedChunks, { type: 'video/' + format })], 
+      user?.candidate_id + '.' + format);
+ 
+    uploadVideoFile(file, {
+      duration: (maxDuration - timer) + '',
+    });
+  }
+
+  function validateVideoFile(file: any) {
+
+    return new Promise((resolve, reject) => {
+      try {
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+
+        video.onloadedmetadata = () => {
+
+          if (video.duration > maxDuration) {
+            reject(t('Video duration can not exceed 30 second limit'));
+          }
+
+          resolve(true);
+        };
+
+        video.onerror = () => {
+          reject(t('Invalid video. Please select a video file.'));
+        };
+
+        const type = file.type.split('/')[0];
+
+        if (type != 'video') {
+          reject(t('Invalid File format'));
+        }
+
+        video.src = window.URL.createObjectURL(file);
+
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  /**
+   * Upload video from browser
+   * @param event
+   */
+  async function browserVideoUpload(event: any) {
+
+    const fileList: FileList = event.target.files;
+ 
+    if (fileList.length == 0) {
+      return false;
+    }
+
+    validateVideoFile(fileList[0]).then(() => {
+      uploadVideoFile(fileList[0]);
+    }, err => {
+
+      alertDialog({
+        title: t("Error"),
+        description: err
+      });
+    });
+  }
+
+  function uploadVideoFile(file: any, metadata = {}) {
+
+    setUploadingVideo(true);
+
+    uploadFileToTempS3(file).then((res: any) => {
+      
+      updateVideo(res.Key).then((res: any) => {
+       
+        if (res.operation == 'success') {   
+
+          form.setValue('video', res.candidate_video);
+
+          setRecordedChunks([]);
+
+          setProgress(0);
+          
+          dispatch(setUser({ user: {
+            ...user,
+            candidate_video: res.candidate_video,
+            candidate_video_processed: res.candidate_video_processed
+          } }));
+
+        } else {
+          alertDialog({
+            title: t("Error"),
+            description: errorMessage(res.message),
+          });
+        }
+      }).finally(() => {
+        setUploadingVideo(false);
+      });
+      
+    }).catch((error) => {
+      // Handle upload error
+      console.error('Upload failed:', error);
+      setUploadingVideo(false);
+    })
+  }
+
+  /**
+   * start camera in mobile app
+   */
+  function startCamera(immediate = false) {
+    setHavePermission(true);
+
+    if (typeof MediaRecorder == 'undefined' || cameras.length == 0) {
+      if (videoInput && videoInput.current) {
+        const ele = videoInput.current as HTMLInputElement;
+        ele.click();
+      }
+    //} else if (this.platform.is('hybrid')) {
+    //  this.startCameraInMobile();
+    } else {
+      startCameraInBrowser(immediate);
+    }
+  }
+
+  useEffect(() => {
+ 
+      if(player && player.current) {
+
+        const blob = new Blob(recordedChunks, { 
+          //duration: (maxDuration - timer) + '',
+          type: 'video/' + format 
+        });
+        const url = URL.createObjectURL(blob);
+
+        setVideoBlobUrl(url);
+ 
+        /*const videoElement = document.getElementById('video');
+        videoElement.src = url;
+        videoElement.play();*/
+
+        const ele = player.current as HTMLVideoElement;
+        ele.muted = false;
+        ele.volume = 1;
+        ele.src = url
+        //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
+        ele.pause();//
+ 
+      }
+
+  }, [recordedChunks, format]);
+
+  useEffect(() => {
+
+    if (!mediaRecorder) {
+      return;
+    }
+
+    mediaRecorder.addEventListener('dataavailable', (e: any) => {
+ 
+      if (e.data.size > 0) {
+       // recordedChunks.push(e.data);
+        const newData = [...recordedChunks, e.data];
+        
+        setRecordedChunks(newData);//(chunks: any) => chunks.push(e.data));
+       // setFormat(e.data.type)
+      }
+    });
+
+    mediaRecorder.addEventListener('stop', () => {
+  
+      //this.candidate.tm = URL.createObjectURL(new Blob(recordedChunks));
+      // downloadLink.download = 'acetest.webm';
+
+      //const blob = new Blob([recordedChunks], { type: 'video/' . this.format });
+
+      //not triggering 
+      if(player && player.current && recordedChunks.length > 0) {
+        const ele = player.current as HTMLVideoElement;
+        ele.muted = false;
+        ele.volume = 1;
+        ele.src = URL.createObjectURL(new Blob(recordedChunks, { type: 'video/' + format }));
+        //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
+        //ele.play();
+ 
+      }
+
+      setRecording(false);
+
+      if (recordedChunks.length == 0) {
+        return false;
+      }
+
+      // no need to cancel recording on hardware back
+
+     // window.history.back();
+
+     //saving recorded video without preview as it's showing blank video 
+      saveRecording();
+
+    });
+  }, [mediaRecorder]);
+
+  useEffect(() => {
+    if (player && player.current) {
+      let ele = player.current as HTMLVideoElement;
+
+      if (!shouldStop && stream) {
+        ele.srcObject = stream;
+        ele.muted = true;
+        ele.onloadedmetadata = (e) => {
+          ele.play().catch(error => {
+            console.error('Error playing video:', error);
+          });
+        };
+      }
+    }
+  }, [shouldStop, player]);//shouldStop
+
+/*  useEffect(() => {
+    if(player && player.current) {
+      const ele = player.current as HTMLVideoElement;
+
+      if (!recording) {
+        ele.muted = false;
+        ele.volume = 1;
+        ele.src = URL.createObjectURL(new Blob(recordedChunks));
+        ele.pause();
+      }
+    }
+  }, [recording]);//shouldStop*/
+
+  /**
+   * start recording in mobile browser
+   */
+  function startCameraInBrowser(immediate = false) {
+
+    setRecordedChunks([]);
+    setStream(null);
+
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+      .then((stream) => {
+
+       // window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+        setStream(stream);
+
+        setShouldStop(false);
+
+        let options;
+
+        /*if (MediaRecorder.isTypeSupported('video/webm; codecs=vp9')) {
+            options = {mimeType: 'video/webm; codecs=vp9'};
+            this.format = "webm";
+        } else  */
+        if (MediaRecorder.isTypeSupported('video/mp4')) {
+          options = {mimeType: 'video/mp4', videoBitsPerSecond : 100000};
+          setFormat("mp4");
+        } else if (MediaRecorder.isTypeSupported('video/webm')) {
+          options = {mimeType: 'video/webm'};
+          setFormat("webm");
+        } else {
+          throw new Error("no suitable mimetype found for this device");
+        }
+         
+       // setRecordedChunks([]);
+
+        //mediaRecorder = new MediaRecorder(stream, options);
+        setMediaRecorder(new MediaRecorder(stream, options));
+
+        // show live feed
+
+       // setTimeout(() => {
+          if(player && player.current) {
+            const ele = player.current as HTMLVideoElement;
+            ele.srcObject = stream;
+            ele.muted = true;
+            ele.onloadedmetadata = (e) => {
+              ele.play();
+            };
+          }
+
+       // });
+
+        // this.mediaRecorder.start();
+
+        if(immediate) {
+          startCountDown();
+        }
+      })
+      .catch(async (err) => {
+
+        /*if(this.format == "webm") {
+          this.format = "mp4";
+          this.startCameraInBrowser(immediate);
+          return;
+        }*/
+
+        // in case error from recording
+
+        stopRecording();
+ 
+        setHavePermission(false);
+
+        alertDialog({
+          title: t("Error"),
+          description:  t('txt_recording_error', {
+            error: err.name
+          })
+        });
+      });
+  }
+
+  useEffect(() => {
+    if (countDown == 0 && recording) {
+      startRecording();
+      return;
+    }
+
+  }, [countDown, recording]);
+
+  useEffect(() => {
+   
+    /*if (countDown == 0 && recording) {
+      console.log("startRecording")
+      startRecording();
+      return;
+    }*/
+ 
+    setTimeout(() => {
+      if (countDown > 0) {
+        setCountDown(count => count - 1);
+      }
+    }, 1000);
+  }, [countDown]);
+
+  function startCountDown() {
+ 
+    // window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    setCountDown(3);
+    setRecording(true);
+  }
+
+  async function startRecording() {
+ 
+    //if had error on starting camera
+
+    if (!mediaRecorder) {
+ 
+      //this.fileInput.nativeElement.click();
+      stopRecording();
+
+      alertDialog({
+        title: t("Error"),
+        description: t('Error on starting recording')
+      });
+
+      return;
+    }
+
+    //if already recording
+
+    if(mediaRecorder.state == 'recording') {
+      return false;
+    }
+
+    // start timer
+
+    setTimer(maxDuration);
+  }
+
+  useEffect(() => {
+ 
+    if (!recording) {
+      return;
+    }
+
+    // start recorder after count down
+    if (timer == maxDuration) {
+      mediaRecorder?.start();
+    }
+
+    // on timeout stop recording
+
+    if (timer == 0 && recording) {
+      stopRecording();
+      return;
+    }
+
+    setTimeout(() => {
+      setTimer(timer => timer - 1);
+    }, 1000);
+  }, [timer]);
+
+  function cancelRecording() {
+    setRecordedChunks([]);
+
+    if(player && player.current) {
+      const ele = player.current as HTMLVideoElement;
+      ele.muted = true;
+      ele.volume = 0;
+      ele.src = '';
+      ele.pause();
+    }
+
+    setRecording(false);
+    setShouldStop(true);
+  }
+
+  /**
+   * stop recording in mobile browser
+   */
+  function stopRecording() {
+     
+    //setShouldStop(true);
+
+    /*if (interval) {
+      clearInterval(interval);
+     // this.interval = null;
+    }*/
+
+    if (mediaRecorder && mediaRecorder.state != 'inactive') {
+      mediaRecorder.stop();
+    } else {
+ 
+      /*setRecordedChunks([]);
+
+      if(player && player.current) {
+        const ele = player.current as HTMLVideoElement;
+        ele.muted = true;
+        ele.volume = 0;
+        ele.src = '';
+        ele.pause();
+      }
+
+      setRecording(false);
+      setShouldStop(true);*/
+    }
+
+    // stop camera
+    if (stream) {
+      stream.getTracks().forEach((track: any) => {
+        track.stop();
+      });
+    }
+  }
+
+  function onRecordingPlayerEnded() {
+    setPlayingRecording(false);
+  }
+
   return (
-    <>
-        <OnboardProgress></OnboardProgress>
+    <Suspense fallback={<Loading />}>
+        { !sparams?.get('from-profile') && <OnboardProgress arrProgress={[100, 100, 60]}></OnboardProgress> }
 
         <h5 className="text-[color:var(--Neutral-100,#0F0F2C)] text-center 
          text-[40px] font-bold leading-[56px] mt-[102px] mb-[38px]">
-            You’re almost there
+          { t("You’re almost there")}
         </h5>
-  { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
+  
+        { /**block-inline max-w-[313px] xs:max-w-full xs:w-full  */}
 
-       <div className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
-            { !form.getValues().video && <div className="xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
+       <div suppressHydrationWarning={true} className="flex flex-col sm:flex-row max-w-[640px]  min-h-[196px] m-auto mb-[24px]">
+            
+            { !form.getValues().video && <div className="relative xs:max-w-full sm:max-w-[313px]  flex-none text-center py-[24px] px-[46px] shrink-0 border-[color:var(--Neutral-30,#EEEEF0)] 
                 [background:var(--Neutral-10,#FAFAFA)] rounded-2xl border-[1.333px] border-dashed mb-[24px] sm:mb-0 sm:me-[24px]">
+
+              { shouldStop && recordedChunks.length == 0 && <>
 
                 <img src="/assets/icons/video.svg" className="m-auto"></img>   
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6 mt-[8px] mb-[4px] block">
-                    Introductory Video
+                    {t("Introductory Video")}
                     
                     <Popover>
                       <PopoverTrigger asChild>
@@ -68,37 +736,162 @@ export default function Video() {
                       </PopoverTrigger>
                       <PopoverContent className="w-[100%] p-[24px] max-w-[429px] text-[color:var(--Neutral-95,#23233D)] text-center text-base font-normal leading-6">
                         <p className="mb-[24px]">
-                        Introductory video enhances your chance of being selected among other candidates.</p>
+                        {t("Introductory video enhances your chance of being selected among other candidates.")}</p>
                       </PopoverContent>
 
                     </Popover>    
                 </h6> 
 
-                <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
-                Record a 30-second video introducing yourself
+                <p className={ `self-stretch ${havePermission ? 'text-[#4B4B61]': 'text-red-500'} text-center text-sm font-normal leading-5 mt-[4x] block` }>
+                  { havePermission? t("Record a 30-second video introducing yourself."):
+                    t("Missing required permission") }
                 </p>
 
-              <div className="mt-[16px] block">
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 ">
-                Record yourself
-                </a>
+                <div className="mt-[16px] block">
+                  
+                  { uploadingVideo? <p className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-normal leading-5 text-center">{t("Uploading...")}</p> :
+                  <>
 
-                <span className="text-xs font-medium">&nbsp;or&nbsp;</span> 
+                    <a onClick={() => startCameraInBrowser()} className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4 ">
+                      {t("Record yourself")}
+                    </a>
 
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4">
-                Upload video
-                </a>
-               </div>
+                    <span className="text-xs font-medium">&nbsp;or&nbsp;</span> 
+
+                    <a onClick={() => document.getElementById('videoUpload')?.click()}  className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)]  text-xs font-medium leading-4">
+                      {t("Upload video")}
+                    </a>
+                  </>
+                  }
+                </div>
+                </>}
+
+              { (!shouldStop || recordedChunks.length > 0) && <>
+
+                <video
+                  controls={true}
+                  ref={player}
+                  src={videoBlobUrl}
+                  id="player"
+                  //volume="0"
+                  onEnded={() => onRecordingPlayerEnded()}
+                  onClick={togglePlayer}
+                  className="h-auto w-full"
+                  
+                  autoPlay loop muted 
+                >
+                  <source src={videoBlobUrl} type={ "video/" + format } />
+      
+                </video>
+
+                {/* Play button if video recorded */}
+                {!playingRecording && countDown === 0 && recordedChunks.length > 0 && (
+                  <Button variant="ghost" className="btn-toggle-video absolute top-10 start-[calc(50%)]" onClick={togglePlayer}>
+                    <PlayCircle className="w-8" />
+                  </Button>
+                )}
+
+                {/* Countdown display */}
+                {countDown > 0 && <span className="txt-count-down absolute w-full h-full 
+                  bg-[#0f0f2c]/50 justify-center flex items-center top-0 start-0">
+                  {/*<Backdrop onClick={() => {}} />*/}
+                  <span className="text-white text-8xl">
+                  {countDown}
+                  </span>
+                </span>}
+
+                <div className="btn-wrapper mt-4">
+                  
+                  {countDown === 0 && !recording && (
+                    <>
+                        {recordedChunks.length === 0 && (
+                            <Button
+                              tabIndex={3}
+                              className="btn-start-recording me-4 mb-4"
+                              onClick={() => startCountDown()}
+                            >
+                              <VideoIcon /> {t('Start recording')}
+                            </Button>
+                        )}
+ 
+                        {recordedChunks.length > 0 && (
+                          <>
+                              <Button
+                                tabIndex={4}
+                                className="btn-start-recording  me-4 mb-4"
+                                onClick={() => saveRecording()}
+                                disabled={uploadingVideo}
+                              >
+                                { uploadingVideo ? <Spinner />: <><SaveIcon /> {t('Save')}</> }
+                              </Button>
+                            
+                              <Button
+                                tabIndex={3}
+                                className="btn-restart-recording  me-4 mb-4"
+                                onClick={() => startCamera(true)}
+                              >
+                                <VideoIcon /> {t('Re-take')}
+                              </Button>
+                          </>
+                        )}
+                         
+                        <Button
+                          tabIndex={5}
+                          className="btn-cancel-upload  me-4 mb-4"
+                          variant="outline"
+                          onClick={cancelRecording}
+                        >
+                          <X /> { t('Cancel')}
+                        </Button>
+                        
+                    </>
+                  )}
+
+                  { countDown === 0 && recording && (
+                    <Button
+                      tabIndex={3}
+                      variant={"destructive"}
+                      className="btn-stop-recording h-[60px] relative pt-6"
+                      onClick={stopRecording}
+                    >
+                      <b className="top-2 start-[55px] absolute">{t("Stop recording")}</b> <br />
+                      <span className="opacity-70">
+                        {t("Time elapsed")}: {timer} {t('seconds')}
+                      </span>
+                    </Button>
+                  )}
+                </div>
+              </>}
 
             </div> }
 
             { form.getValues().video && <div className="xs:max-w-full w-full sm:max-w-[313px]  flex-none 
                   rounded-2xl mb-[24px] sm:mb-0 sm:me-[24px]">
 
-                <img src="/assets/icons/logo.svg" className="w-full"></img>   
+                {/*<img src={ process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 'candidate-video/' +  form.getValues().video + '.jpg' } 
+                  onError={() => onVideoError()}
+                  className="w-full"></img>   */}
 
-                <Button variant={ "ghost"}  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
-                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    Remove 
+                <video
+                  controls={true}
+                  preload="none"
+                 muted
+                  id="saved-player"
+                  poster={ user?.candidate_video? 
+                    process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL + 
+                      'candidate-video/' + user.candidate_video + '.jpg': '' }
+                  //volume="0"
+                  className="h-auto w-full"
+                >
+                  { user?.candidate_video && <source src={  process.env.NEXT_PUBLIC_PERMANENT_BUCKET_URL 
+                    + 'candidate-video/' + user.candidate_video + '.mp4' }
+                        type="video/mp4" /> }
+                </video>
+
+                <Button variant={ "ghost"} onClick={() => removeVideo()} 
+                  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
+                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    
+                    { removingVideo ? t("Removing...") : t("Remove") } 
                 </Button>
             </div> }
             
@@ -109,15 +902,15 @@ export default function Video() {
 
                 <h6 className="self-stretch text-[color:var(--Neutral-95,#23233D)] text-center 
                     text-base font-semibold leading-6  mt-[8px] mb-[4px] block">
-                    CV or Portfolio
+                    {t("CV or Portfolio")}
                 </h6> 
 
                 <p className="self-stretch text-[#4B4B61] text-center text-sm font-normal leading-5 mt-[4x] block">
-                  Have a cool file to showcase your skills and experiences?
+                  {t("Have a cool file to showcase your skills and experiences?")}
                 </p>
 
-                <a className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block">
-                  Upload CV or Portfolio
+                <a onClick={() => document.getElementById('resumeUpload')?.click()} className="cursor-pointer text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center text-xs font-medium leading-4 mt-[16px] block">
+                { uploadingResume ? t("Uploading...") : t("Upload CV or Portfolio") }   
                 </a>
 
             </div> }
@@ -125,24 +918,78 @@ export default function Video() {
             { form.getValues().resume && <div className="xs:max-w-full sm:max-w-[313px] w-full flex-none 
                   rounded-2xl mb-[24px] sm:mb-0">
 
-                <img src="/assets/icons/logo.svg" className="w-full"></img>   
+                { /** TODO: show resume preview */ }
+                <img src="/assets/icons/cv.svg" className="w-full"></img>   
 
-                <Button variant={ "ghost"}  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
-                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>    Remove 
+                <Button variant={ "ghost"} onClick={() => removeResume()} 
+                  className="text-[color:var(--Neutral-70,#7D7D8D)] text-sm font-medium leading-5 text-center m-auto mt-[12px]">
+                    <img src="/assets/icons/trash.svg" className="w-[16px]"></img>   
+                    { removingResume ? t("Removing...") : t("Remove") } 
                 </Button>
             </div> }
-            
         </div> 
     
+        <input
+          type="file"
+          id="resumeUpload"
+          className="hidden"
+          accept="application/pdf"
+          onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                  setUploadingResume(true);
+
+                  uploadFileToTempS3(file).then((res: any) => {
+                    
+                    updateResume(res.Key).then((res: any) => { 
+                     
+                      if (res.operation == 'success') {   
+
+                        form.setValue('resume', res.candidate_resume);
+
+                        dispatch(setUser({ user: {
+                          ...user,
+                          candidate_resume: res.candidate_resume
+                        } }));
+                      } else {
+                          alertDialog({
+                            title: t("Error"),
+                            description: errorMessage(res.message),
+                          });
+                      }
+                    }).finally(() => {
+                      setUploadingResume(false);
+                    });
+                  }).catch((error) => {
+                    // Handle upload error
+                    console.error('Upload failed:', error);
+                    setUploadingResume(false);
+                  })
+              }
+          }}
+      />
+
+        <input
+          type="file"
+          id="videoUpload"
+          className="hidden"
+          ref={videoInput}
+          accept="video/*"
+          onChange={(e) => {
+            browserVideoUpload(e);
+          }}
+      />
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[16px] max-w-[650px] m-auto mb-[100px]">
-   
-            <SubmitButton></SubmitButton>  
+          {/**!form.formState.isValid ||  */}
+            <SubmitButton disabled={loading || uploadingVideo || uploadingResume} 
+              loading={loading || uploadingVideo || uploadingResume }></SubmitButton>
             
           </form>
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

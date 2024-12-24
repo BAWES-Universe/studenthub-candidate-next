@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input"
 import { FormControl, FormItem, FormLabel, FormMessage } from './form'
 import { ControllerRenderProps, FieldValues } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 
 interface FloatingLabelInputProps {
@@ -18,14 +19,17 @@ interface FloatingLabelInputProps {
  */
 
 export default function FloatingLabelInput({ label, field}: FloatingLabelInputProps) {
+
+  const { t } = useTranslation();
+  
   return (
     <FormItem className='peer relative flex flex-col items-start self-stretch border border-[color:var(--Neutral-30,#EEEEF0)] [background:var(--Neutral-0,#FFF)] rounded-2xl border-solid'>
-      <FormLabel className="absolute left-5 top-6 text-base font-normal leading-6 text-[color:var(--Neutral-70,#7D7D8D)] transition-all duration-200 
+      <FormLabel className="absolute start-5 top-6 text-base font-normal leading-6 text-[color:var(--Neutral-70,#7D7D8D)] transition-all duration-200 
       peer-focus-visible:top-10 peer-focus:top-10 
       peer-focus-visible:-translate-y-10 peer-focus-visible:text-xs 
       peer-focus:-translate-y-10 peer-focus:text-xs 
       ">
-        {label}
+        {t(label)}
       </FormLabel>
       <FormControl className='peer block m-0 border-none h-[72px] px-[20px] py-[24px]'>
         <Input 

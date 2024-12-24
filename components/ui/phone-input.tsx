@@ -93,20 +93,20 @@ const InputComponent = React.forwardRef<HTMLInputElement, React.ComponentProps<"
     </FormControl>
     <FormLabel
                     
-            className={`absolute left-[82px] z-10 bg-white px-4 transition-all duration-200
+            className={`absolute start-[82px] z-10 bg-white px-4 transition-all duration-200
             top-1/2 -translate-y-1/2 scale-100
             text-[color:var(--Neutral-70,#7D7D8D)] text-base font-normal leading-6
             
             
             peer-focus:top-3.5 
-            peer-focus:left-[63px] 
+            peer-focus:start-[63px] 
             peer-focus:-translate-y-0 peer-focus:scale-75
             peer-focus:text-[color:var(--Neutral-80,#68687A)] 
             peer-focus:font-medium 
             peer-focus:leading-4
             
             peer-[&:not(:placeholder-shown)]:top-3.5 
-            peer-[&:not(:placeholder-shown)]:left-[63px]
+            peer-[&:not(:placeholder-shown)]:start-[63px]
             peer-[&:not(:placeholder-shown)]:-translate-y-0
             peer-[&:not(:placeholder-shown)]:scale-75
             peer-[&:not(:placeholder-shown)]:text-[color:var(--Neutral-80,#68687A)] 

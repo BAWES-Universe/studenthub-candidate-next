@@ -1,25 +1,44 @@
-import { RootState, useAppSelector } from "@/store/store";
+import { RootState, store, useAppSelector } from "@/store/store";
 //import { Filesystem, Directory } from '@capacitor/filesystem';
 
 /**
  * Make date readable by Safari
  * @param date
  */
-export function toDate(date: string) {
+export function toDate(date: string | null | undefined) {
   if (date) {
     return new Date(date.replace(/-/g, '/'));
   }
 }
+
+// Helper function to convert seconds to time format
+export const secondsToTime = (value: number) => {
+  /*const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;*/
+
+  const hours = Math.floor(value / 3600);
+  const minutes = Math.floor((value % 3600) / 60);
+  const seconds = value % 60;
+
+  const hoursString = hours.toString().padStart(2, '0');
+  const minutesString = minutes.toString().padStart(2, '0');
+  const secondsString = seconds.toString().padStart(2, '0');
+
+  return `${hoursString}:${minutesString}:${secondsString}`;
+};
 
 /**
  * Return content based on language selected
  * @param enContent
  * @param arContent
  */
-export function langContent(enContent: string, arContent: string) {
+export function langContent(enContent: string = "", arContent: string = "") {
 
-  const { language } = useAppSelector((state: RootState) => state.app);
+  const state = store.getState(); // Get the state directly from the store
 
+  const { language } = state.app;  
+   
   if (language == 'ar' && arContent) {
     return arContent;
   }
@@ -118,6 +137,8 @@ export function blobToBase64(blob: Blob) {
         return 'other';
     }
   } 
+
+  
 /*
 export async function fileWrite(blob: Blob, filename: string) {
     try {

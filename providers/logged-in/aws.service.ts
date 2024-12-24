@@ -1,7 +1,9 @@
+"use client"
+
 import * as AWS from 'aws-sdk';
 import axios from "../AxiosService";
-import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
-import { setTempBucket } from '@/store/slices/appSlice';
+import { store } from '@/store/store';
+//import { setTempBucket } from '@/store/slices/appSlice';
 //import { ManagedUpload } from 'aws-sdk/clients/s3';
 
     /**
@@ -17,14 +19,14 @@ import { setTempBucket } from '@/store/slices/appSlice';
     /**
      * @param config 
      */
-    function setConfig() {
-        const dispatch = useAppDispatch();
+    export async function setAWSConfig() {
+        //const dispatch = useAppDispatch();
 
-        getConfig().then(config => {
+        return await getConfig().then(config => {
              
-            dispatch(setTempBucket({
+            /*dispatch(setTempBucket({
                 temp_bucket: config.bucket
-            }));
+            }));*/
 
             // Create credentials object
             const credentials = new AWS.Credentials({
@@ -45,14 +47,23 @@ import { setTempBucket } from '@/store/slices/appSlice';
      * @param { File } file
      * @returns { Observable<any> }
      */
-    export function uploadFile(file: File, metadata = {}): Promise<any> {
+    export function uploadFileToTempS3(file: File, metadata = {}): Promise<any> {
         
         /*const maxUploadSize = 18874368; // 18 MB
         const maxImageUploadSize = 5000000; // 5 MB //https://sentry.io/organizations/pogi/issues/1885937107/?project=168200&query=is%3Aunresolved&statsPeriod=14d
     
         const txtMaxUploadSize = '18MB';*/
 
-        const { temp_bucket } = useAppSelector((state: RootState) => state.app);
+        const state = store.getState(); // Get the state directly from the store
+
+        let { temp_bucket } = state.app;  
+        // Check if temp_bucket is defined and not empty
+    if (!temp_bucket) {
+        //console.error("Error: temp_bucket is not defined or is empty.");
+        //throw new Error("Bucket name is required for S3 upload.");
+
+        temp_bucket = "studenthub-public-anyone-can-upload-24hr-expiry";
+    }
 
         let s3 = new AWS.S3({
             apiVersion: '2006-03-01'
@@ -67,6 +78,8 @@ import { setTempBucket } from '@/store/slices/appSlice';
         }
 
         let key = prefix + "-" + Date.now() + "." + extension;
+
+        console.log(file, key, temp_bucket);
 
         let params = {
             Body: file, // the actual file file

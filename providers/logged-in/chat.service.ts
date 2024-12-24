@@ -26,8 +26,8 @@ export async function listChats(page: number = 1, filters: any): Promise<any> {
   return response;
 }
 
-export async function messages(chat_uuid: string, page: number = 1, last_index: number | null = null): Promise<any> {
-  let url = _chatEndpoint + '/messages/' + chat_uuid + "?page=" + page;
+export async function getMessages(chat_uuid: string, page: number = 1, last_index: number | null = null): Promise<any> {
+  let url = _chatEndpoint + '/messages/' + chat_uuid + "?per-page=5&page=" + page;
 
   if (last_index) {
     url += "&last_index=" + last_index;
@@ -37,7 +37,7 @@ export async function messages(chat_uuid: string, page: number = 1, last_index: 
   return response;
 }
 
-export async function newMessages(chat_uuid: string, last_index: number | null = null): Promise<any> {
+export async function getNewMessages(chat_uuid: string, last_index: number | null = null): Promise<any> {
   let url = _chatEndpoint + '/new-messages/' + chat_uuid;
 
   if (last_index) {
@@ -54,7 +54,7 @@ export async function unreadCount(): Promise<any> {
   return response.data;
 }
 
-export async function view(chat_uuid: string): Promise<any> {
+export async function viewChat(chat_uuid: string): Promise<any> {
   let url = _chatEndpoint + '/' + chat_uuid + "?expand=staff,contact,company,store"
   const response = await axios.get(url);
   return response.data;
@@ -70,7 +70,7 @@ export async function startChat(): Promise<any> {
   return response.data;
 }
 
-export async function sendMessage(chat_uuid: string, message: string): Promise<any> {
+export async function postChatMessage(chat_uuid: string, message: string): Promise<any> {
   let url = _chatEndpoint + '/send-message'
   const response = await axios.post(url, {
     chat_uuid,

@@ -6,12 +6,46 @@ import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
 import appReducer from './slices/appSlice';
 
-export const store = configureStore({
+export type StoreState = {
+  auth: ReturnType<typeof authReducer>;
+  user: ReturnType<typeof userReducer>;
+  app: ReturnType<typeof appReducer>;
+}
+
+const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem('state')
+    if (!serializedState) 
+      return undefined
+    return JSON.parse(serializedState)
+  } catch (err) {
+    return undefined
+  }
+}
+
+export const store = configureStore<StoreState>({
+  preloadedState: loadState(),
   reducer: {
     auth: authReducer,
     user: userReducer,
     app: appReducer,
   },
+});
+
+// Save to local storage
+store.subscribe(() => {
+   
+  const state = {
+    ...store.getState(),
+    app: {
+      ...store.getState().app,
+      canGoForward: false,
+      path: ""
+    }
+  };
+  localStorage.setItem('state', 
+    JSON.stringify(state)
+  ) 
 });
 
 // Types for hooks

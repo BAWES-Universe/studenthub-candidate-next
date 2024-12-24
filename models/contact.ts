@@ -1,3 +1,3 @@
 export class Contact {
-    contact_name: string;
+    contact_name?: string;
 }

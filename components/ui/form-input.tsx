@@ -11,8 +11,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { UseFormReturn } from 'react-hook-form'
-import { Textarea } from './textarea'
- 
+import { useTranslation } from 'react-i18next'
+import i18n from '@/app/18n'
+
 
 interface FormInputProps {
   name: string,
@@ -20,7 +21,10 @@ interface FormInputProps {
   form: UseFormReturn,
   type?: string,
   helper?: string,
-  inputDir?: string
+  inputDir?: string,
+  onFocus?: () => void,
+  onChange?: () => void,
+  autoComplete?: string
 }
 
 export function FormInput({
@@ -29,17 +33,22 @@ export function FormInput({
   form,
   type = "text",
   helper,
-  inputDir = "ltr"
+  inputDir = i18n.language == "ar"? "rtl": "ltr", 
+  onFocus,
+  onChange,
+  autoComplete = "on"
 }: FormInputProps) {
   const id = useId()
+
+  const { t } = useTranslation();
 
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field, fieldState }) => (
-        <FormItem className="relative">
-          <div className="relative">
+        <FormItem className="relative ">
+          <div className="relative ">
           <FormControl>
              
             <Input
@@ -48,8 +57,11 @@ export function FormInput({
               id={id}
               type={type}
               placeholder=" "  // Empty space needed for peer styling
-
-              className={`peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
+              onFocus={onFocus}
+              onKeyUp={onChange}
+             // onChange={onChange}
+              autoComplete={autoComplete}
+              className={`bg-white peer h-[72px] py-[16px] px-[24px] border-gray-300 w-full 
                 border-[color:var(--Neutral-30,#EEEEF0)] rounded-2xl text-[#23233D]
                 placeholder-transparent focus:ring-1
                 focus:pt-[32px]
@@ -62,11 +74,12 @@ export function FormInput({
           <FormLabel 
             htmlFor={id}
             dir={inputDir}
-            className={`absolute z-10 bg-white px-[24px] transition-all duration-200
+            className={`absolute z-2 bg-white px-[24px] transition-all duration-200
               top-1/2 -translate-y-1/2 scale-100
               text-[color:var(--Neutral-70,#7D7D8D)] text-base font-normal leading-6
               
-              ${inputDir == "ltr"? 'left-[1px] peer-focus:left-[6px] peer-[&:not(:placeholder-shown)]:left-[6px] origin-[0]': 'right-[1px] peer-focus:right-[6px] peer-[&:not(:placeholder-shown)]:right-[6px] origin-[100%]'}
+              ${inputDir == "ltr" ? 'start-[1px] peer-focus:start-[6px] peer-[&:not(:placeholder-shown)]:start-[6px] origin-[0]': 
+                'start-[1px] peer-focus:start-[6px] peer-[&:not(:placeholder-shown)]:start-[6px] origin-[100%]'}
 
               peer-focus:top-3.5 
               
@@ -84,10 +97,10 @@ export function FormInput({
 
               ${fieldState.error ? 'text-destructive' : 'text-gray-500 peer-focus:text-primary'}`}
           >
-            {label}
+            {t(label)}
           </FormLabel>
           </div>
-          <FormDescription dir="ltr" className='mt-[8px]'>
+          <FormDescription className='mt-[8px]'>
             { helper }
           </FormDescription>
           <FormMessage />

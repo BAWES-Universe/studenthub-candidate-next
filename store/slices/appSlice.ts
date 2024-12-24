@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import mixpanel from "mixpanel-browser";
+//import mixpanel from "mixpanel-browser";
 
 interface AppState {
   language: string;
@@ -7,16 +7,30 @@ interface AppState {
   temp_bucket: string;
   utm_uuid: string;
   currentLocation: any;
-  showOneSignalPrompt: boolean
+  showOneSignalPrompt: boolean,
+  oneSignalStatus: boolean,
+  pushNotificationAvailable: boolean,
+  canGoForward: boolean,
+  totalUnreadActity: number,
+  totalUnreadMessages: number,
+  pendingInvitations: number,
+  path: string
 }
 
 const initialState: AppState = {
   language: "ar",
   mixpanel_distinct_id: null,//mixpanel.get_distinct_id()
-  temp_bucket: "",
+  temp_bucket: "studenthub-public-anyone-can-upload-24hr-expiry",
   utm_uuid: "",
   currentLocation: null,
-  showOneSignalPrompt: true
+  showOneSignalPrompt: true,
+  oneSignalStatus: false,
+  pushNotificationAvailable: false,
+  canGoForward: false,
+  totalUnreadActity: 0,
+  totalUnreadMessages: 0,
+  pendingInvitations: 0,
+  path: ""
 };
 
 const appSlice = createSlice({
@@ -24,7 +38,13 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     setLanguage: (state, action: PayloadAction<{ language: string }>) => {
+
       state.language = action.payload.language;
+      //i18n.changeLanguage(action.payload.language);
+
+      document.getElementsByTagName('html')[0].setAttribute('dir', 
+        (action.payload.language == 'ar') ? 'rtl' : 'ltr');
+
     },
     setTempBucket: (state, action: PayloadAction<{ temp_bucket: string }>) => {
       state.temp_bucket = action.payload.temp_bucket;
@@ -35,12 +55,37 @@ const appSlice = createSlice({
     setCurrentLocation: (state, action: PayloadAction<{ currentLocation: any }>) => {
       state.currentLocation = action.payload.currentLocation;
     },
+    // if active/ inactive etc
+    setOneSignalStatus: (state, action: PayloadAction<{ oneSignalStatus: boolean }>) => {
+      state.oneSignalStatus = action.payload.oneSignalStatus;
+    },
+    // to show prompt to enable 
     setShowOneSignalPrompt: (state, action: PayloadAction<{ showOneSignalPrompt: boolean }>) => {
       state.showOneSignalPrompt = action.payload.showOneSignalPrompt;
     },
-
+    // if browser support notification 
+    setPushNotificationAvailable: (state, action: PayloadAction<{ pushNotificationAvailable: boolean }>) => {
+      state.pushNotificationAvailable = action.payload.pushNotificationAvailable;
+    },
+    setCanGoForward: (state, action: PayloadAction<{ canGoForward: boolean }>) => {
+      state.canGoForward = action.payload.canGoForward;
+    },
+    setTotalUnreadActity: (state, action: PayloadAction<{ totalUnreadActity: number }>) => {
+      state.totalUnreadActity = action.payload.totalUnreadActity;
+    },
+    setTotalUnreadMessages: (state, action: PayloadAction<{ totalUnreadMessages: number }>) => {
+      state.totalUnreadMessages = action.payload.totalUnreadMessages;
+    },
+    setPendingInvitations: (state, action: PayloadAction<{ pendingInvitations: number }>) => {
+      state.pendingInvitations = action.payload.pendingInvitations;
+    },
+    setPath: (state, action: PayloadAction<{ path: string }>) => {
+      state.path = action.payload.path;
+    }, 
   },
 });
 
-export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, setShowOneSignalPrompt } = appSlice.actions;
+export const { setLanguage, setTempBucket, setCampaignId, setCurrentLocation, 
+  setShowOneSignalPrompt, setCanGoForward, setTotalUnreadActity, setTotalUnreadMessages, 
+  setOneSignalStatus, setPendingInvitations, setPushNotificationAvailable, setPath } = appSlice.actions;
 export default appSlice.reducer;

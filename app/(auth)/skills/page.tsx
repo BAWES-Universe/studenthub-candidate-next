@@ -11,19 +11,38 @@ import {
 } from "@/components/ui/form"
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { profile, updateSkills } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+import { CandidateSkill } from "@/models/candidate.skill";
+import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
-const formSchema = z.object({
-  skills: z.array(z.string()).min(1, {
-    message: "Please add at least one skill"
-  })
-})
 
 export default function Skills() {
 
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const params = useSearchParams();
   const [skills, setSkills] = useState<string[]>([]);
    
+  const { t } = useTranslation();
+
   // 1. Define your form.
+
+  const formSchema = z.object({
+    skills: z.array(z.string()).min(1, {
+      message: t("Please add at least one skill")
+    })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,13 +50,66 @@ export default function Skills() {
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-  } 
+  useEffect(() => {
 
+    page('Skills Page');
+
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/experience');
+
+    return () => {
+        track('page_exit', { page: 'Skills Page' });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        const skills = res.candidate_skills.map(
+          (skill: CandidateSkill) => skill.skill);
+        form.setValue('skills', skills);
+        setSkills(skills)
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    
+    setLoading(true);
+
+    updateSkills(values).then(res => {
+      if (res.operation == 'success') {
+
+        if (user) {
+          dispatch(setUser({ user: {
+            ...user,
+            candidateSkills: res.skills
+          } }));
+        }
+
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/experience');
+      } else {
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
+  } 
 
   function removeSkill(skillToRemove: string) {
     const newSkills = skills.filter(skill => skill !== skillToRemove)
@@ -69,15 +141,15 @@ export default function Skills() {
  
 
   return (
-    <>
-        <OnboardProgress></OnboardProgress>
+    <Suspense fallback={<Loading />}>
+        { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 50, 0]}></OnboardProgress> }
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          What’s your skills?
+          {t("What’s your skills?")}
         </h5>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=" max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className=" max-w-[560px] m-auto mb-[100px]">
             
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2 p-4 min-h-[70px] w-full rounded-2xl border border-input bg-white">
@@ -108,43 +180,43 @@ export default function Skills() {
               />
             </div>
             <p className="mt-2 text-sm text-[var(--Neutral-70,#7D7D8D)]">
-              Type " , " or press ↵ Enter after a skill to submit it
+              {t("Type \" , \" or press ↵ Enter after a skill to submit it")}
             </p>
           </div>
 
             <p className="mt-[16px] mb-[8px] self-stretch text-[color:var(--Neutral-100,#0F0F2C)] text-sm font-medium leading-5">
-              Suggestions:
+              {t("Suggestions")}:
             </p>
              
             <div className="block">
             <span 
-              onClick={ () => addSkills('Communication') } 
+              onClick={ () => addSkills(t('Communication')) } 
               className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
               text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
-                Communication
+                {t("Communication")}
             </span>
 
             <span 
-              onClick={ () => addSkills('Problem Solving') } 
+              onClick={ () => addSkills(t('Problem Solving')) } 
               className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
               text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
-                Problem Solving
+                {t("Problem Solving")}
             </span>
 
             <span 
-              onClick={ () => addSkills('Time Management') } 
+              onClick={ () => addSkills(t('Time Management')) } 
               className="cursor-pointer inline me-[8px] items-center gap-1 [background:var(--Neutral-10,#FAFAFA)] px-3 py-2 rounded-[18px]
               text-[color:var(--Neutral-80,#68687A)] text-sm font-medium leading-5">
-                Time Management
+                {t('Time Management')}
             </span>
             </div> 
 
-            <SubmitButton disabled={ skills.length == 0 }></SubmitButton>  
+            <SubmitButton disabled={ skills.length == 0 || loading} loading={loading}></SubmitButton>
             
           </form>
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+    </Suspense>
   );
 }

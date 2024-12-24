@@ -1,6 +1,7 @@
 "use client"
 
 import { OnboardProgress } from "@/components/on-board/progress";
+import { NextPageContext } from 'next'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
@@ -14,20 +15,46 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 
-const formSchema = z.object({
-  experiences: z.array(z.object({
-    jobTitle: z.string().min(1, 'Job title is required'),
-    employer: z.string().min(1, 'Employer name is required'),
-    startYear: z.string().min(1, 'Start year is required'),
-    endYear: z.string() //.min(1, 'End year is required'),
-  }))
-})
-
+import { Suspense, useEffect, useState } from "react";
+import { profile } from "@/providers/logged-in/account.service";
+import { errorMessage } from "@/utils/common";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setUser } from "@/store/slices/userSlice";
+import { saveExperience } from "@/providers/logged-in/candidate-experience.service";
+import { useTranslation } from "react-i18next";
+import { page, track } from "@/providers/analytics.service";
+import { alertDialog } from "@/hooks/use-alert-dialog";
+import Loading from "./loading";
+ 
 export default function Experiences() {
+
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const { t } = useTranslation();
+  const params = useSearchParams();
+  let formattedExperiences: any[] = [];
+
+  const formSchema = z.object({
+    experiences: z.array(z.object({
+      candidate_experience_id: z.any().nullable(),
+      experience: z.string().max(128).min(1, t('Job title is required')),
+      employer: z.string().max(128).nullable().optional(),
+      start_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional(),
+      end_year: z.coerce.number().min(1900).max((new Date()).getFullYear()).nullable().optional()
+    }))
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      experiences: [{ jobTitle: '', employer: '', startYear: '', endYear: '' }]
+      experiences: formattedExperiences || [
+        { candidate_experience_id: "", experience: '', employer: "", 
+          start_year: undefined, end_year: undefined }
+      ]
     },
   })
 
@@ -38,54 +65,123 @@ export default function Experiences() {
     name: 'experiences', // Name of the field array
   });
 
+  useEffect(() => {
+     
+    formattedExperiences = user?.candidateExperiences?.map(exp => ({
+      candidate_experience_id: exp.candidate_experience_id || "",
+      experience: exp.experience,
+      employer: exp.employer || "",
+      start_year: exp.start_year || undefined,
+      end_year: exp.end_year || undefined,
+    })) || [];
+  
+    form.setValue('experiences', formattedExperiences);
+    form.trigger();
+   
+    page('Experience Page');
+
+    if (params && params.get('from-profile'))
+      router.prefetch('/profile');
+    else
+      router.prefetch('/education-complete');
+
+    return () => {
+        track('page_exit', { page: 'Experience Page' });
+    }
+  }, []);
+
+  useEffect(() => {
+    
+    if (!user) {
+      setLoading(true);
+
+      profile().then(res => {
+        dispatch(setUser({ user: res }));
+        form.setValue('experiences', res.candidateExperiences || []);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+
+    setLoading(true);
+
+    saveExperience(values.experiences).then(res => {
+      
+      if (res.operation == 'success') {
+
+        if (user) {
+          dispatch(setUser({ user: {
+            ...user,
+            candidateExperiences: res.candidateExperiences
+          } }));
+        }
+
+        if (params && params.get('from-profile'))
+          router.push('/profile');
+        else
+          router.push('/education-complete');
+      } else {
+        alertDialog({
+          title: t("Error"),
+          description: errorMessage(res.message),
+        });
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   } 
 
   return (
+    <Suspense fallback={<Loading />}>
     <div className="mb-[100px]">
-      <OnboardProgress />
+      { !params?.get('from-profile') && <OnboardProgress arrProgress={[100, 75, 0]}></OnboardProgress> }
 
       <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-        Do you have any work experience?
+        { t("Do you have any work experience?")}
       </h5>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[650px] m-auto mb-[100px]">
           {fields?.map((field: { id: string }, index: number) => (
             <div key={field.id} className="space-y-4">
               <FormInput
-                name={`experiences.${index}.jobTitle`}
-                label="Job Title"
+                name={`experiences.${index}.experience`}
+                label={ t("Job Title") }
                 form={form as any}
               />
 
-              <div className="flex">
-                <div className="flex-col me-[16px]">
+              <div className="sm:flex">
+                <div className="xs:w-full sm:w-[318px] me-[16px]">
                 <FormInput
                     name={`experiences.${index}.employer`}
-                    label="Employer"
+                    label={ t("Employer") }
                     form={form as any}
                 />
                 </div>  
+
+            <div className="flex xs:mt-[16px] sm:mt-0">
                 <div className="flex-col me-[16px]">
                 <FormInput
-                    name={`experiences.${index}.startYear`}
-                    label="Start Year"
+                    name={`experiences.${index}.start_year`}
+                    label={ t("Start Year") }
                     form={form as any}
                     type="number"
                 />
                 </div>  
+
                 <div className="flex-col">
                 <FormInput
-                    name={`experiences.${index}.endYear`}
-                    label="End Year"
+                    name={`experiences.${index}.end_year`}
+                    label={ t("End Year") }
                     form={form as any}
                     type="number"
                 />
                 </div>  
               </div>
-
+              </div>
               {fields.length > 1 && (
                 
                     <Button
@@ -94,7 +190,7 @@ export default function Experiences() {
                         onClick={() => remove(index)}
                         className="text-red-500"
                         >
-                        Remove 
+                        { t("Remove") }
                     </Button>)
                }
 
@@ -108,18 +204,20 @@ export default function Experiences() {
           <Button
             variant={'ghost'}
             type="button"
-            onClick={() => append({ jobTitle: '', employer: '', startYear: '', endYear: '' })}
+            onClick={() => append({ candidate_experience_id: "", experience: '', employer: '', start_year: undefined, end_year: undefined })}
             className="text-[color:var(--Primary-Main,#4C70F2)] text-sm font-medium leading-5"
           >
             
-            <img src="/assets/icons/plus.svg" /> Add experience
+            <img src="/assets/icons/plus.svg" /> { t("Add experience") }
           </Button>
 
-          <SubmitButton />
+          { /**!form.formState.isValid || */}
+          <SubmitButton disabled={ loading } loading={loading}></SubmitButton>
         </form>
       </Form>
 
       <OnboardFooter />
     </div>
+    </Suspense>
   )
 }

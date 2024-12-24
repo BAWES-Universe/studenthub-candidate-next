@@ -8,10 +8,11 @@ const _workingHourEndpoint = '/candidate-working-hours';
    * Return working dates
    * @returns {Observable<any>}
    */
-export async function listWorkingDates(page: number, params = '&expand=company,dateListByCandidate'): Promise<any> {
-  const url = _workingHourEndpoint + '/date?page=' + page + params;
+export async function listWorkingDates(page: number, params = '&expand=store,store.company'): Promise<any> {
+  const url = _workingHourEndpoint + `/working-dates?page=${page}&expand=${params}`;
+  //const url = _workingHourEndpoint + '/date?page=' + page + params;
   const response = await axios.get(url);
-  return response.data;
+  return response;
 }
 
 /**
@@ -30,7 +31,7 @@ export async function addWorkingHour(model: CandidateWorkingHour): Promise<any> 
  * @param date
  */
 export async function workingDateDetail(date: string): Promise<any> {
-  const url = `${_workingHourEndpoint}/date/${date}?expand=company,dateListByCandidate`;
+  const url = `${_workingHourEndpoint}/date-detail/${date}`;
   const response = await axios.get(url);
   return response.data;
 }
@@ -50,8 +51,31 @@ export async function workingDateStats(date: string): Promise<any> {
  * Return working hours
  * @returns {Observable<any>}
  */
-export async function listHours(page: number, param = null): Promise<any> {
-  const url = _workingHourEndpoint + `/hour?page=${page}&expand=store,store.company${param}`;
+export async function listHours(page: number, param: string = ""): Promise<any> {
+  const url = _workingHourEndpoint + `/hour?page=${page}&expand=candidateWorkingHourAppeal,candidateWorkLogFeedback,candidateWorkLogFeedback.store,store,store.company${param}`;
   const response = await axios.get(url);
+  return response;
+}
+
+/**
+ * @param id 
+ * @returns 
+ */
+export async function getWorkingHourAppeal(id: string): Promise<any> {
+  const url = _workingHourEndpoint + `/appeal/${id}?expand=correctedHours,originalHour,candidateWorkingDate`;
+  const response = await axios.get(url);
+  return response.data;
+}
+
+/**
+ * @param id 
+ * @param reason 
+ * @returns 
+ */
+export async function postWorkingHourAppeal(id: string, reason: string): Promise<any> {
+  const url = _workingHourEndpoint + `/appeal/${id}`;
+  const response = await axios.post(url, {
+    reason: reason
+  });
   return response.data;
 }

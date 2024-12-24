@@ -1,6 +1,6 @@
 import { Ticket } from "@/models/ticket";
 import { TicketComment } from "@/models/ticket_comment";
-import axios from "axios";
+import axios from "../AxiosService";
 
 const _ticketEndpoint = '/tickets';
 

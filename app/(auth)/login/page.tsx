@@ -15,15 +15,14 @@ import SubmitButton from "@/components/ui/submit-button";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { basicAuth } from "@/providers/auth.service";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { setIsProfileCompleted } from "@/store/slices/userSlice";
-import { useRouter } from 'next/navigation'; 
- 
+import { useSearchParams, useRouter } from 'next/navigation'; 
+import Link from "next/link";
+import { page, track } from "@/providers/analytics.service";
+import { useTranslation } from "react-i18next";
+import Loading from "./loading";
 
-const formSchema = z.object({
-  email: z.string().email('Please enter valid email address'),
-  password: z.string().min(4, { message: "Password must be at least 4 characters long" })
-})
 
 export default function Email() {
 
@@ -33,6 +32,15 @@ export default function Email() {
 
   const [loading, setLoading] = useState(false);
 
+  const params = useSearchParams();
+
+  const { t } = useTranslation();
+
+  const formSchema = z.object({
+    email: z.string().email(t('Please enter valid email address')),
+    password: z.string().min(4, { message: t("Password must be at least 4 characters long") })
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,12 +49,23 @@ export default function Email() {
     },
   })
 
+  useEffect(() => {
+
+    page('Login Page');
+
+    router.prefetch('/home');
+     
+    return () => {
+        track('page_exit', { page: 'Login Page' });
+    }
+  }, []);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
 
     setLoading(true);
 
     basicAuth(values.email, values.password).then(res => {
-
+ 
       // After successful login
       dispatch(setCredentials({
         token: res.token
@@ -59,7 +78,7 @@ export default function Email() {
       //todo: set language based on saved preference?
       //language_pref
 
-      router.push('/');
+      router.push('/home');
     }).catch(err => {
      // alert("err:" + err);
     }).finally(() => {
@@ -68,15 +87,15 @@ export default function Email() {
   } 
 
   return (
-    <>
-        <OnboardProgress></OnboardProgress>
+    <Suspense fallback={<Loading />}>
+    <div className="bg-[#fff]">
 
         <h5 className="mt-[102px] mb-[40px] text-center text-[40px] font-bold leading-[56px]">
-          What is your email address?
+          {t("What is your email address?")}
         </h5>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[560px] m-auto mb-[100px]">
   
           <FormInput
               name="email"
@@ -91,13 +110,18 @@ export default function Email() {
               form={form as any}
               type="password"
             />
- 
-            <SubmitButton disabled={!form.formState.isValid || loading }></SubmitButton>  
+            <Link href="/forgot-password">
+              {t("Forgot Password?")}
+            </Link>
+
+            <SubmitButton disabled={!form.formState.isValid || loading } loading={loading}></SubmitButton>
             
           </form>
         </Form>
 
         <OnboardFooter></OnboardFooter>
-    </>
+
+    </div>
+    </Suspense>
   );
 }
