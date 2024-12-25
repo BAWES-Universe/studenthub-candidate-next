@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { ca } from 'date-fns/locale';
 import { format } from 'date-fns';
 
 const WorkHourApproved = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
@@ -60,7 +59,13 @@ const WorkHourApproved = ({ candidateNotification, onClick }: { candidateNotific
                         </span>
                     </div>
                 </div> */}
+                    
+                {isNew && (
+                    <span className="w-3.5 h-3.5 bg-blue-600 rounded-full absolute top-3 end-4"></span>
+                )}
             </div>
+
+                 
         </div>
     );
 };

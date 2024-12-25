@@ -1,20 +1,20 @@
 "use client"
 // app/(dash)/log-hour-list/page.tsx
 
-import { useEffect, useState, useRef, Suspense, act } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { format } from 'date-fns'; // For date formatting
 import { useParams } from 'next/dist/client/components/navigation';
-import { getWorkingHourAppeal, listHours } from '@/providers/logged-in/candidate-working-hour.service';
+import { getWorkingHourAppeal, listHours, markAppealUpdateRead } from '@/providers/logged-in/candidate-working-hour.service';
 import { page, track } from '@/providers/analytics.service';
 import WorkLog from '@/components/app/work-log';
-import Pager from '@/components/common/pager';
 import Loading from './loading';
 import { WorkLogDayStats } from '@/components/app/work-log-day-stats';
-import { Activity } from '@/components/app/activity';
 import { CandidateNotification } from '@/models/candidate-notification';
 import { listNotifications, markNotificationRead } from '@/providers/logged-in/candidate-notification.service';
-import { alertCount$ } from '@/providers/event.service';
+
+import { WorkHourAppealUpdate } from '@/components/app/work-hour-appeal-update';
+import { CandidateWorkingHourAppealUpdate } from '@/models/candidate-working-hour-appeal-updates';
 
 const AppealDetailPage = () => {
     const { id } = useParams() as { id: string }; // Get date from URL parameters
@@ -46,7 +46,7 @@ const AppealDetailPage = () => {
 
         loadDetail();
       //  loadData();
-        loadActivity(1);
+      //  loadActivity(1);
 
         return () => {
             track('page_exit', { page: 'Appeal Detail Page' });
@@ -55,7 +55,7 @@ const AppealDetailPage = () => {
 
     useEffect(() => {
 
-        alertCount$.subscribe((
+        /*alertCount$.subscribe((
             counts: any
         ) => {
             if (!counts)
@@ -66,7 +66,7 @@ const AppealDetailPage = () => {
             }
 
             setTotalUnreadActivity(counts.totalUnreadActivity);
-        });
+        });*/
 
     }, []);
 
@@ -115,7 +115,6 @@ const AppealDetailPage = () => {
         return "&expand=candidateWorkingHour&appeal_uuid=" + id;
     }
 
-
     const loadActivityPage = (page: number) => {
 
         if (page > activityPagination.total_pages || page < 1) {
@@ -156,6 +155,12 @@ const AppealDetailPage = () => {
 
         await markNotificationRead(notification.cn_uuid);
     };
+
+    async function markUpdateAsRead(update: CandidateWorkingHourAppealUpdate) {
+        update.is_new = false;
+
+        await markAppealUpdateRead(update.appeal_update_uuid);
+    }
 
     return (
         <Suspense fallback={<Loading />}>
@@ -243,7 +248,7 @@ const AppealDetailPage = () => {
 
                 </>}
 
-                {/*loading && <div className="progress-bar">{t("Loading...")}</div>*/}
+                {/*loading && <div className="progress-bar">{t("Loading...")}</div>
 
                 {activityPagination.total_activity > 0 && (
                     <div className="session-wrapper">
@@ -259,7 +264,15 @@ const AppealDetailPage = () => {
                         <Pager pagination={activityPagination} loadPage={loadActivityPage} />
 
                     </div>
-                )}
+                )}*/}
+
+                { 
+                candidateWorkingHourAppeal && candidateWorkingHourAppeal.candidateWorkingHourAppealUpdates && 
+                candidateWorkingHourAppeal.candidateWorkingHourAppealUpdates.map((update: any) => (
+                    <WorkHourAppealUpdate onClick={() => markUpdateAsRead(update)} candidateWorkingHourAppealUpdate={update} />
+                 ))
+                }
+                
             </div>
         </Suspense>
     );

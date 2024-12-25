@@ -39,6 +39,10 @@ const Assigned = ({ candidateNotification, onClick }: { candidateNotification: C
                     {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
                     <span className={`w-3.5 h-3.5 bg-blue-500 rounded-full absolute top-3 end-4 ${isNew ? 'block' : 'hidden'}`}></span>
                 </p>
+   
+                {isNew && (
+                    <span className="w-3.5 h-3.5 bg-blue-600 rounded-full absolute top-3 end-4"></span>
+                )}
             </div>
         </div>
     );

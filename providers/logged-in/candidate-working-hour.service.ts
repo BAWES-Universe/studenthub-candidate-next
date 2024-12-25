@@ -62,7 +62,7 @@ export async function listHours(page: number, param: string = ""): Promise<any> 
  * @returns 
  */
 export async function getWorkingHourAppeal(id: string): Promise<any> {
-  const url = _workingHourEndpoint + `/appeal/${id}?expand=correctedHours,originalHour,candidateWorkingDate`;
+  const url = _workingHourEndpoint + `/appeal/${id}?expand=correctedHours,originalHour,candidateWorkingDate,candidateWorkingHourAppealUpdates,candidateWorkingHourAppealUpdates.createdBy`;
   const response = await axios.get(url);
   return response.data;
 }
@@ -76,6 +76,13 @@ export async function postWorkingHourAppeal(id: string, reason: string): Promise
   const url = _workingHourEndpoint + `/appeal/${id}`;
   const response = await axios.post(url, {
     reason: reason
+  });
+  return response.data;
+}
+
+export async function markAppealUpdateRead(appeal_update_uuid: string): Promise<any> {
+  const url = _workingHourEndpoint + `/mark-read-appeal-update/${appeal_update_uuid}`;
+  const response = await axios.patch(url, {
   });
   return response.data;
 }

@@ -7,9 +7,10 @@ import { format } from 'date-fns';
 
 const WorkHourRejected = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
+    const [isNew, setIsNew] = React.useState(candidateNotification.is_new);
 
     return (
-        <div onClick={onClick} className={`ion-card rounded-lg shadow-md bg-white relative`}>
+        <div onClick={() => onClick() && setIsNew(false)} className={`ion-card rounded-lg shadow-md bg-white relative`}>
             <div className="ion-card-content p-4 flex flex-col">
                 <h5 className="text-gray-900 font-semibold text-lg">{t("Work Hour Rejected")}</h5>
                 <p className="txt-meta text-gray-500 text-sm">
@@ -68,7 +69,12 @@ const WorkHourRejected = ({ candidateNotification, onClick }: { candidateNotific
                         </span>
                     </div>
                 </div> */}
+
+                {isNew && (
+                    <span className="w-3.5 h-3.5 bg-blue-600 rounded-full absolute top-3 end-4"></span>
+                )}
             </div>
+                    
         </div>
     );
 };
