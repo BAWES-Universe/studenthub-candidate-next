@@ -91,6 +91,19 @@ export default function Navigation() {
                         </div>
                     </div>
 
+                    <div onClick={() => open("/jobs")} className="cursor-pointer grow shrink basis-0 xs:flex-col sm:flex-row justify-center items-center gap-0.5 inline-flex">
+                                
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        { path == "/jobs" && <rect width="36" height="36" rx="10" fill="#F5F7FF"/> }
+                        <rect x="8.5" y="13.1667" width="19" height="14.3333" rx="3" stroke={path == "/jobs" ? '#4C70F2' : '#7d7d8d'} stroke-width="2"/>
+                        <path d="M13.3333 13.3334C13.3333 10.7561 15.4227 8.66675 18 8.66675C20.5773 8.66675 22.6667 10.7561 22.6667 13.3334" 
+                            stroke={path == "/jobs" ? '#4C70F2' : '#7d7d8d'} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+        
+                        <div className={`sm:mt-3 sm:ms-2 self-stretch text-center ${path == "/jobs" ? 'text-[#4c6ff2]' : 'text-[#7d7d8d]'} text-xs font-semibold leading-none`}>
+                            {t('Jobs')}
+                        </div>
+                    </div>
 
                     <div onClick={() => open("/discounts")} className="cursor-pointer grow shrink basis-0 xs:flex-col sm:flex-row justify-center items-center gap-0.5 inline-flex">
                         <svg className={`rounded-[10px] ${path == "/discounts" ? 'bg-[#f4f6ff]' : ''}`} width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
