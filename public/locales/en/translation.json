@@ -1,4 +1,7 @@
 {
+    "txt_available_from_to": "Opportunity available from {{ from}} to {{ to}}.",
+    "txt_available_from": "Opportunity available from {{ from}}.",
+    "txt_available_to": "Opportunity available till {{ to}}.",
     "txt_rejected_on": "Rejected on {{ value }}",
     "txt_session_rejected" : "Your Session ({{ start_time }} - {{ end_time }}) has been rejected for {{ date }}",
     "txt_session_approved": "Your Session ({{ start_time }} - {{ end_time }}) has been approved for {{ date }}",

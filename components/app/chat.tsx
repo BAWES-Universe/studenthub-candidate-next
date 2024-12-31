@@ -7,7 +7,7 @@ export function ChatComponent( { chat, onClick, onLogoError }: { chat: Chat, onC
 
     const { t} = useTranslation();
 
-    const timeAgo = useTimeAgo(chat.created_at || '', t);
+    const { timeAgo } = useTimeAgo(chat.created_at || '', t);
      
     return (
         <div className="bg-white shadow-md rounded-lg p-4 mb-2 cursor-pointer relative" onClick={onClick}>

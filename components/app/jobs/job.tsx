@@ -1,49 +1,75 @@
+import { Job } from "@/models/job";
+import JobSkills from "@/models/job-skills";
+import { useTimeAgo } from "@/utils/app";
+import { useTranslation } from "react-i18next";
+import { dateTimeFormat, langContent } from "@/utils/common";
+
+import Link from "next/link";
+
 interface IJobComponent {
-    job: any
+    job: Job;
 }
 
-export default function Job({ job }: IJobComponent) {
+export default function JobComponent({ job }: IJobComponent) {
+
+    const { t } = useTranslation();
+
+    const {timeAgo} = useTimeAgo(job.created_at, t);
+
     return (
-        <div className="w-full mb-2.5  bg-white rounded-lg shadow-[0px_2px_4px_0px_rgba(0,0,0,0.10)] flex-col justify-start items-start inline-flex overflow-hidden">
+        <Link href={`/jobs/${job.job_uuid}`}>
+        <div className="w-full mb-2.5  bg-white rounded-lg shadow-[0px_2px_4px_0px_rgba(0,0,0,0.10)] flex-col justify-start items-start inline-flex">
             <div className="self-stretch p-4 bg-white shadow-[inset_0px_-1px_0px_0px_rgba(226,226,230,1.00)] flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-start items-center gap-1 inline-flex">
                     <div className="grow shrink basis-0 h-6 justify-start items-center gap-1 flex">
-                        <div className="grow shrink basis-0 text-[#22223d] text-lg font-bold font-['Inter'] leading-normal">Sales Associate</div>
+                        <div className="grow shrink basis-0 text-[#22223d] text-lg font-bold leading-normal">
+                            { langContent(job.position, job.position_ar) }</div>
                     </div>
                     
-                    <div className="h-7 px-2 py-1 bg-[#d9f4e4] rounded-lg justify-start items-start gap-2.5 inline-flex">
-                        <div className="text-right text-[#219653] text-sm font-semibold font-['Inter'] leading-tight">Applied</div>
-                    </div>
-
-                    <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center gap-2.5 flex">
-                        <div className="text-[#68687a] text-sm font-medium font-['Inter'] leading-tight">
-                            No Longer Available
+                    { job.jobInterest && <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center gap-2.5 flex">
+                        <div className="text-[#219653]  text-sm font-medium leading-tight">
+                            { t('Applied') }
                         </div>
-                    </div>
+                    </div> }
 
+                    { job.status == 1 && !job.is_available && <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center gap-2.5 flex">
+                        <div className="text-[#68687a]  text-sm font-medium leading-tight">
+                            { t('No Longer Available') }
+                        </div>
+                    </div> }
+
+                    { /*job.is_available */}
                     <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center gap-2.5 flex">
-                        <div className="text-[#68687a] text-sm font-medium font-['Inter'] leading-tight">2d ago</div>
+                        
+                        { job.is_available && job.status == 1 && <div className="text-[#68687a] text-sm font-medium leading-tight">
+                            { timeAgo }
+                        </div> }
+
+                        { job.is_available && job.status == 2 && <div className="text-[#68687a] text-sm font-medium leading-tight">
+                        { t("Closed") }
+                        </div> }
+
+                        { job.is_available && job.status == 10 && <div className="text-[#68687a] text-sm font-medium leading-tight">
+                        { t("Draft") }
+                        </div> }
                     </div>
 
                 </div>
-                <div className="self-stretch text-[#22223d] text-sm font-normal font-['Inter'] leading-tight">Would you be interested to work as a sales associate for a perfume brand in Marina Mall, Salmiya?</div>
-               
-                <div className="self-stretch justify-start items-center gap-2 block">
-                    <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center me-2.5 mb-2.5 gap-2.5 inline-block">
-                        <div className="text-[#68687a] text-sm font-semibold font-['Inter'] leading-tight">Communication</div>
-                    </div>
-                    <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center me-2.5 mb-2.5 gap-2.5 inline-block">
-                        <div className="text-[#68687a] text-sm font-semibold font-['Inter'] leading-tight">Presentable</div>
-                    </div>
-                    <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center me-2.5 mb-2.5 gap-2.5 inline-block">
-                        <div className="text-[#68687a] text-sm font-semibold font-['Inter'] leading-tight">Negotiation</div>
-                    </div>
-                    <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center me-2.5 mb-2.5 gap-2.5 inline-block">
-                        <div className="text-[#68687a] text-sm font-semibold font-['Inter'] leading-tight">Bilingual</div>
-                    </div>
-                </div>
 
-                <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
+                { job.description && <div className="self-stretch text-[#22223d] text-sm font-normal leading-tight">
+                    { langContent(job.description, job.description_ar) }
+                </div> }
+                
+                {job.jobSkills && job.jobSkills.length > 0 && <div className="self-stretch justify-start items-center gap-2 block">
+                    { job.jobSkills.map((jobSkill: JobSkills) => <div className="px-3 py-1.5 bg-[#f5f5f7] rounded-lg justify-center items-center me-2.5 mb-2.5 gap-2.5 inline-block">
+                        <div className="text-[#68687a] text-sm font-semibold leading-tight">
+                            { langContent(jobSkill.skill, jobSkill.skill_ar) }
+                        </div>
+                    </div> )}
+                </div> }
+
+                { (job.available_from || job.available_to) && <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
+                    
                     <div className="w-6 h-6 relative">
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="1" y="1" width="16" height="16" rx="8" stroke="#23233D" stroke-width="2"/>
@@ -51,10 +77,27 @@ export default function Job({ job }: IJobComponent) {
                         </svg>
                     </div>
                     
-                    <div className="grow shrink basis-0 text-[#22223d] text-sm font-medium font-['Inter'] leading-tight">
-                        Opportunity available till 23 December.
-                    </div>
-                </div>
+                    { job.available_from && job.available_to && <div className="relative top-[-3px] grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                        { t("txt_available_from_to", { 
+                            from: dateTimeFormat(job.available_from, 'dd MMMM'), 
+                            to: dateTimeFormat(job.available_to, 'dd MMMM') 
+                        })
+                        } 
+                    </div> }
+                    
+                    { job.available_from && !job.available_to && <div className="relative top-[-3px] grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                        { t("txt_available_from", { 
+                            value: dateTimeFormat(job.available_from, 'dd MMMM')
+                        })} 
+                    </div> }
+                
+                    { !job.available_from && job.available_to && <div className="relative top-[-3px] grow shrink basis-0 text-[#22223d] text-sm font-medium leading-tight">
+                        { t("txt_available_to", { 
+                            value: dateTimeFormat(job.available_to, 'dd MMMM')
+                        })
+                        } 
+                    </div> }
+                </div> }
             </div>
 
             <div className="self-stretch h-12 p-3 flex-col justify-center items-start gap-[18px] flex">
@@ -68,21 +111,33 @@ export default function Job({ job }: IJobComponent) {
                             </svg>
                         </div>
                         
-                        <div className="text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">
-                            1.7 KD / hour</div>
+                        { job.compensation_type == 'MONTHLY_SALARY' && <div className="text-[#4b4b61] text-sm font-medium leading-tight">
+                            { job.compensation_amount } KD / { t("month") }
+                        </div> }
+
+                        { job.compensation_type == 'HOURLY' && <div className="text-[#4b4b61] text-sm font-medium leading-tight">
+                            { job.compensation_amount } KD / { t("hour") }
+                        </div> }
+
+                        { job.compensation_type == 'FIXED_PRICE' && <div className="text-[#4b4b61] text-sm font-medium leading-tight">
+                            { job.compensation_amount } KD 
+                        </div> }
                     </div>
-                    <div className="justify-start items-center gap-1 flex">
+                    { job.area && <div className="justify-start items-center gap-1 flex">
                             
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 8.00269C10.8954 8.00269 9.99998 8.89794 9.99998 10.0023C9.99998 11.1066 10.8954 12.0019 12 12.0019C13.1045 12.0019 14 11.1066 14 10.0023C14 8.89794 13.1045 8.00269 12 8.00269Z" fill="#23233D"/>
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M8.49998 17.4697C9.20083 18.306 9.94688 19.1029 10.7346 19.8567C11.4446 20.5361 12.5554 20.5361 13.2654 19.8567C14.0531 19.1029 14.7991 18.306 15.4999 17.4697C17.0999 15.5591 19 12.7137 19 10.0023C19.0058 8.14504 18.2684 6.36263 16.9519 5.05229C14.95 3.04894 11.9379 2.44923 9.32105 3.533C6.70424 4.61677 4.99858 7.1704 5 10.0023C5 12.7137 6.89999 15.5591 8.49998 17.4697ZM6.99999 10.0023C7.0033 7.24278 9.23993 5.0066 12 5.0033C14.76 5.0066 16.9966 7.24278 16.9999 10.0023C16.9999 11.167 16.4729 13.1856 13.966 16.19C13.555 16.6793 13.1276 17.1543 12.6844 17.6143C12.3096 18.0032 11.6905 18.0031 11.316 17.6138C10.8729 17.153 10.4456 16.6772 10.035 16.187C7.52699 13.1866 6.99999 11.168 6.99999 10.0023Z" fill="#23233D"/>
-                            </svg>
+                        </svg>
 
-
-                        <div className="text-[#4b4b61] text-sm font-medium font-['Inter'] leading-tight">Salmiya</div>
-                    </div>
+                        <div className="text-[#4b4b61] text-sm font-medium leading-tight">
+                            { langContent(job.area.area_name_en, job.area.area_name_ar)}
+                        </div>
+                    </div> }
                 </div>
             </div>
+
         </div>
+        </Link>
     );
 }

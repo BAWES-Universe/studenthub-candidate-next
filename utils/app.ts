@@ -78,7 +78,6 @@ export const useTimeAgo = (value: string, t: any) => {
 
   const updateTimeAgo = () => {
       
-    console.log("updateTimeAgo", value);
     if (Number.isNaN(seconds)) {
       setTimeAgo('');
       return;
@@ -142,7 +141,7 @@ export const useTimeAgo = (value: string, t: any) => {
     }
   };
 
-  return timeAgo;
+  return { timeAgo, setTimeAgo };
 };
  
  export const timeSpent = (value: number) => {

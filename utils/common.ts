@@ -1,6 +1,14 @@
 import { RootState, store, useAppSelector } from "@/store/store";
 //import { Filesystem, Directory } from '@capacitor/filesystem';
 
+import { enUS, ar } from "date-fns/locale";
+import i18n from "@/app/18n";
+import { format } from "date-fns";
+
+export function dateTimeFormat(value: string, dateFormat: string): string {
+  return format(value, dateFormat, { locale: i18n.language == 'en' ? enUS : ar })
+}
+
 /**
  * Make date readable by Safari
  * @param date

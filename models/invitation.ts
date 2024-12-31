@@ -1,5 +1,6 @@
 import { Candidate } from './candidate';
 import { Company } from './company';
+import { JobInterest } from './job-interest';
 import { Request } from './request';
 import {Suggestion} from "./suggestion";
 
@@ -7,6 +8,7 @@ export class Invitation {
     invitation_uuid?: string;
     candidate_id?: number;
     request_uuid?: string;
+    job_interest_uuid?: string;
     invitation_status?: number;// (1-Invited , 2- rejected, 3- accepted)
     invitation_app_seen_at?: string;
     invitation_email_seen_at?: string;
@@ -20,4 +22,5 @@ export class Invitation {
     suggestion?: Suggestion;
     note?: any;
     reply?: any;
+    jobInterest?: JobInterest;
 }

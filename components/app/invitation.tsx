@@ -13,7 +13,7 @@ const Invitation = ({ model }: { model: any }) => {
     const { t, i18n } = useTranslation();
     const router = useRouter();
 
-    const timeAgo = useTimeAgo(model.invitation_created_at, t);
+    const {timeAgo} = useTimeAgo(model.invitation_created_at, t);
 
     useEffect(() => {
         router.prefetch("/invitation/[id]")
