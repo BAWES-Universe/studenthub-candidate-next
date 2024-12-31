@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev:inspect": "NODE_OPTIONS='--inspect' next dev --turbopack",
-    "dev": "cp .env.local .env && next dev",
+    "dev": "next dev",
     "build:dev": "cp .env.development .env && next build",
     "build": "next build",
     "start": "next start",
