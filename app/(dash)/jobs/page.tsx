@@ -16,6 +16,7 @@ export default function JobsPage() {
 
     const [loading, setLoading] = useState(false);
     const [segment, setSegment] = useState('jobs');
+    const [query, setQuery] = useState('');
 
     const router = useRouter();
 
@@ -39,13 +40,17 @@ export default function JobsPage() {
 
     useEffect(() => {   
         loadData();
-    },[segment]);
+    },[segment, query]);
 
     const loadData = async (page = 1) => {
         setLoading(true);
 
-        const params = segment == 'jobs' ? "" : '&applied=true';
-
+        let params = "&q=" + query;
+        
+        if(segment == 'applications') {
+            params += '&applied=true';
+        }
+        
         const response = await listJobs(page, params);
          
         setJobs(response.data);
@@ -122,8 +127,7 @@ export default function JobsPage() {
                     <input type="text"  placeholder={ t("Search by job positions...") }
                         onChange={async (e) => {
                             await sleep(700)
-                            const value = e.target.value;
-                            //loadData(value);
+                            setQuery(e.target.value);
                         }}
                         className="focus:outline-0 focus:ring-0 w-full self-stretch h-10 gap-2.5 ps-10 pe-4 py-2.5 bg-white rounded-lg text-slate-400 text-sm font-normal leading-tight" />
 
