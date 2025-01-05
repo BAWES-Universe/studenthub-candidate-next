@@ -104,3 +104,83 @@ npx next export`
 This generates a out folder containing your static files.
 
 
+# prisma 
+
+## init 
+
+`npx prisma`
+
+## Usage
+
+  `npx prisma [command]`
+
+### Commands
+
+       init  Set up Prisma for your app
+   generate  Generate artifacts (e.g. Prisma Client)
+         db  Manage your database schema and lifecycle
+    migrate  Migrate your database
+     studio  Browse your data with Prisma Studio
+   validate  Validate your Prisma schema
+     format  Format your Prisma schema
+    version  Displays Prisma version info
+      debug  Displays Prisma debug info
+
+### Flags
+
+  --preview-feature   Run Preview Prisma commands
+  --help, -h          Show additional information about a command
+
+## init from existing db 
+- npx prisma db pull
+- npx prisma generate - generate Prisma Client.
+
+
+*** WARNING ***
+
+The following models were ignored as they do not have a valid unique identifier or id. This is currently not supported by Prisma Client:
+  - "candidate_eval_dept_ques"
+  - "candidate_evaluation_answer"
+
+These objects have comments defined in the database, which is not yet fully supported. Read more: https://pris.ly/d/database-comments
+  - Type: "field", name: "campaign.utm_source"
+  - Type: "field", name: "campaign.utm_medium"
+  - Type: "field", name: "campaign.utm_campaign"
+  - Type: "field", name: "campaign.utm_content"
+  - Type: "field", name: "campaign.utm_term"
+  - Type: "field", name: "campaign.total_revenue"
+  - Type: "field", name: "candidate.candidate_gender"
+  - Type: "field", name: "candidate.candidate_driving_license"
+  - Type: "field", name: "candidate.candidate_preferred_time"
+  - Type: "model", name: "candidate_eval_dept_ques"
+  - Type: "field", name: "candidate_eval_dept_ques.dept_id"
+  - Type: "model", name: "candidate_eval_ques"
+  - Type: "field", name: "candidate_eval_ques.ceq_uuid"
+  - Type: "field", name: "candidate_evaluation.can_eval_uuid"
+  - Type: "field", name: "candidate_evaluation.dept_id"
+  - Type: "field", name: "candidate_evaluation_answer.can_eval_uuid"
+  - Type: "field", name: "chat_message.status"
+  - Type: "field", name: "company.staff_id"
+  - Type: "field", name: "company.company_bonus_commission"
+  - Type: "field", name: "company_request.status"
+  - Type: "field", name: "exam_question.question_type"
+  - Type: "field", name: "invitation.invitation_status"
+  - Type: "field", name: "invitation.job_interest_uuid"
+  - Type: "field", name: "job.gender"
+  - Type: "field", name: "job.status"
+  - Type: "field", name: "job_interest.status"
+  - Type: "field", name: "major.data_source"
+  - Type: "field", name: "monthly_salary_contract.salary_day"
+  - Type: "field", name: "request.company_id"
+  - Type: "field", name: "request.contact_uuid"
+  - Type: "field", name: "request.request_position_type"
+  - Type: "field", name: "request.request_position_title"
+  - Type: "field", name: "request_interview.status"
+  - Type: "field", name: "request_interview.staff_id"
+  - Type: "field", name: "request_interview.interview_note"
+  - Type: "field", name: "setting.code"
+  - Type: "field", name: "suggestion.suggestion_status"
+  - Type: "field", name: "transfer_candidate.bank_id"
+  - Type: "field", name: "transfer_candidate.bonus_commission"
+  - Type: "field", name: "transfer_file_entry.debit_narrative"
+  - Type: "field", name: "transfer_file_entry.credit_narrative"
