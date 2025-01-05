@@ -1,5 +1,5 @@
 import { CandidateWorkHistory } from "@/models/candidate-work-history";
-import { format } from "date-fns";
+import { dateTimeFormat } from "@/utils/common";
 import { useTranslation } from "react-i18next";
 
 export function AssignmentDetail({ history }: { history: CandidateWorkHistory }) {
@@ -53,7 +53,7 @@ export function AssignmentDetail({ history }: { history: CandidateWorkHistory })
                     {t('Start Date')}
                 </div>
                 <div className="self-stretch text-[#22223d] text-base font-semibold leading-normal">
-                    {format(history.start_date, 'MMM d, yyyy')} 
+                    {dateTimeFormat(history.start_date, 'MMM d, yyyy')} 
                 </div>
             </div>
         </div>

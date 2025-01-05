@@ -1,6 +1,5 @@
 "use client"
 import Pager from '@/components/common/pager';
-import Spinner from '@/components/common/spinner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 // app/(dash)/payments/PaymentsPage.jsx
@@ -11,12 +10,12 @@ import { listSalary, profile, profileWithBank } from '@/providers/logged-in/acco
 import { setUser } from '@/store/slices/userSlice';
 import { useAppSelector } from '@/store/store';
 import { useAppDispatch } from '@/store/store';
-import { format } from 'date-fns';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from './loading';
+import { dateTimeFormat } from '@/utils/common';
 
 const PaymentsPage = () => {
     
@@ -126,7 +125,7 @@ const PaymentsPage = () => {
                                     className={`cursor-pointer salary-card ${salary.status === 'Unpaid' ? 'border-l-4 border-yellow-400' : 'border-l-4 border-green-500'} shadow-md bg-white rounded-md my-4`}
                                 >
                                     <CardContent className="p-6">  
-                                        <span className="text-black text-sm">{format(new Date(salary.tc_created_at || ''), 'MMMM d, yyyy')}</span>
+                                        <span className="text-black text-sm">{dateTimeFormat(salary.tc_created_at || '', 'MMMM d, yyyy')}</span>
                                         <p className="text-black text-lg font-medium">
                                             {salary.hours > 0 && <span>{salary.hours} {t("hours")} </span>}
                                             {salary.minutes > 0 && <span>{salary.minutes} {t("minutes")} </span>}

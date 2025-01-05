@@ -1,7 +1,6 @@
 "use client"
 
 import { OnboardProgress } from "@/components/on-board/progress";
-import { NextPageContext } from 'next'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"

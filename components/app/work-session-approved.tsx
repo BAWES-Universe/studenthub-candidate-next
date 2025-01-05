@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const WorkSessionApproved = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
   const { t } = useTranslation();
@@ -15,14 +16,14 @@ const WorkSessionApproved = ({ candidateNotification, onClick }: { candidateNoti
       
       { candidateNotification.candidateWorkingHour && <p className="text-gray-600 text-sm leading-4 my-0">
         {t("txt_session_approved", {
-          start_time: format(candidateNotification.candidateWorkingHour.start_time, 'hh:mm a'),
-          end_time: format(candidateNotification.candidateWorkingHour.end_time, 'hh:mm a'),
-          date: format(candidateNotification.candidateWorkingHour.date, 'MMMM d, yyyy'),
+          start_time: dateTimeFormat(candidateNotification.candidateWorkingHour.start_time, 'hh:mm a'),
+          end_time: dateTimeFormat(candidateNotification.candidateWorkingHour.end_time, 'hh:mm a'),
+          date: dateTimeFormat(candidateNotification.candidateWorkingHour.date, 'MMMM d, yyyy'),
         })}
       </p> }
 
       <p className="text-gray-500 text-xs text-end my-0">
-        {format(candidateNotification.created_at || '', 'MMM d')}
+        {dateTimeFormat(candidateNotification.created_at || '', 'MMM d')}
       </p>
 
       {isNew && (

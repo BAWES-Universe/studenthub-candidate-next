@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const RequestListing = ({ request, interview }: { request: any, interview: any }) => {
     const { t } = useTranslation();
@@ -54,7 +54,7 @@ const RequestListing = ({ request, interview }: { request: any, interview: any }
                         {request.candidateApplication && (
                             <p className="txt-applied text-gray-600 mt-2">
                                 {t("txt_applied_at", {
-                                    value: format(request.candidateApplication.created_at, 'MMM d, yyyy')
+                                    value: dateTimeFormat(request.candidateApplication.created_at, 'MMM d, yyyy')
                                     //new Date(request.candidateApplication.created_at).toLocaleDateString(),
                                 })}
                             </p>
@@ -66,7 +66,7 @@ const RequestListing = ({ request, interview }: { request: any, interview: any }
                                     {interview.status === 0 && (
                                         <span>
                                             {t("txt_requested_at", {
-                                                value: format(interview.interview_at, 'MMM d, yyyy')
+                                                value: dateTimeFormat(interview.interview_at, 'MMM d, yyyy')
                                                 //new Date(interview.interview_at).toLocaleString(),
                                             })}
                                         </span>
@@ -74,7 +74,7 @@ const RequestListing = ({ request, interview }: { request: any, interview: any }
                                     {interview.status === 1 && (
                                         <span>
                                             {t("txt_schedule_at", {
-                                                value: format(interview.interview_at, 'MMM d, yyyy')
+                                                value: dateTimeFormat(interview.interview_at, 'MMM d, yyyy')
                                                 //new Date(interview.interview_at).toLocaleString(),
                                             })}
                                         </span>

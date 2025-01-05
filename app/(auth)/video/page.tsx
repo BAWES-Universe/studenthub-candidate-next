@@ -14,7 +14,7 @@ import SubmitButton from "@/components/ui/submit-button";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { deleteResume, deleteVideo, profile, updatePhoneDetail, updateResume, updateVideo } from "@/providers/logged-in/account.service";
+import { deleteResume, deleteVideo, profile, updateResume, updateVideo } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";

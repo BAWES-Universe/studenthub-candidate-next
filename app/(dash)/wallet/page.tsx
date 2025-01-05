@@ -1,14 +1,15 @@
 "use client"
+
 import Pager from '@/components/common/pager';
 // app/(dash)/wallet/WalletBalanceListPage.tsx
 
 import { page, track } from '@/providers/analytics.service';
 import { requestUpdated$ } from '@/providers/event.service';
 import { payableList } from '@/providers/logged-in/balance.service';
-import { format } from 'date-fns';
-import React, { useEffect, useState, useRef, Suspense } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from './loading';
+import { dateTimeFormat } from '@/utils/common';
 
 const WalletBalanceListPage = () => {
 
@@ -91,9 +92,9 @@ const WalletBalanceListPage = () => {
                         <p><strong>{t("Balance:")}</strong> {balance.balance.toLocaleString('en-US', { style: 'currency', currency: 'KWD' })}</p>
                         <p><strong>{t("Note:")}</strong> {balance.data}</p>
                         <p><strong>{t("Created At:")}</strong> 
-                            {format(balance.created_at || '', 'MMMM d, yyyy')}</p>
+                            {dateTimeFormat(balance.created_at || '', 'MMMM d, yyyy')}</p>
                         <p><strong>{t("Transaction time:")}</strong> 
-                            {format(balance.transaction_datetime || '', 'MMMM d, yyyy')}
+                            {dateTimeFormat(balance.transaction_datetime || '', 'MMMM d, yyyy')}
                         </p>
                     </div>
                 ))

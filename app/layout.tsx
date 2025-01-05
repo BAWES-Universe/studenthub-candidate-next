@@ -10,20 +10,20 @@ declare global {
 //import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from 'next/font/google';
-import { Provider, useDispatch } from "react-redux";
-import { store, useAppDispatch } from "@/store/store";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 import Script from 'next/script'; 
 
 const inter = Inter({ subsets: ['latin'] });
 import NextTopLoader from 'nextjs-toploader'
-import { setCampaignId, setCanGoForward, setOneSignalStatus, setPendingInvitations, setPushNotificationAvailable, setShowOneSignalPrompt, setTotalUnreadActity, setTotalUnreadMessages } from "@/store/slices/appSlice";
+import { setCampaignId, setCanGoForward, setOneSignalStatus, setPushNotificationAvailable, setShowOneSignalPrompt, setTotalUnreadActity, setTotalUnreadMessages } from "@/store/slices/appSlice";
 import { redirect, useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { publicRoutes } from "@/_middleware";
 import { identify, setMixpanel, track } from "@/providers/analytics.service";
 import i18n from "./18n";
 import { unreadCount } from "@/providers/logged-in/chat.service";
-import { alertCount$, alertUpdate$, error404$, error500$, internetOffline$, setOneSignal$, setOneSignalSubscription$, userLogin$, userLogout$ } from "@/providers/event.service";
+import { alertCount$, alertUpdate$, error404$, error500$, internetOffline$, setOneSignal$, userLogin$, userLogout$ } from "@/providers/event.service";
 import { logout } from "@/store/slices/authSlice";
 import { loginByKey } from "@/providers/auth.service";
 import { getJobSearchStatus, profile } from "@/providers/logged-in/account.service";
@@ -34,18 +34,14 @@ import { useAlertDialog } from "@/hooks/use-alert-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { t } from "i18next";
-import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import NoSSR from "@/components/common/NoSSR";
 
 /*export const metadata: Metadata = {
   title: 'StudentHub - Your Learning Journey Starts Here',

@@ -1,6 +1,6 @@
 import { Chat } from "@/models/chat";
 import { ChatMessage } from "@/models/chat-message";
-import { format } from "date-fns";
+import { dateTimeFormat } from "@/utils/common";
 
 export function ChatMessageComponent({ chat, message }: { chat: Chat, message: ChatMessage }) {
     return (
@@ -13,7 +13,7 @@ export function ChatMessageComponent({ chat, message }: { chat: Chat, message: C
                 <div className="py-2.5">
                     <p className="text-sm leading-tight tracking-tight">{message.message}</p>
                     <span className="text-xs tracking-tight mt-1 float-end">
-                        {format(message.created_at || '', 'hh:mm a')}
+                        {dateTimeFormat(message.created_at || '', 'hh:mm a')}
                     </span>
                 </div>
             </div> 

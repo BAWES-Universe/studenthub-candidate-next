@@ -15,7 +15,7 @@ export default function NotFound() {
         <h1 className="text-[7rem] font-bold leading-tight">404</h1>
         <span className="font-medium">{t("Oops! Page Not Found!")}</span>
         <p className="text-center text-muted-foreground">
-          {t("It seems like the page you&apos;re looking for")} <br />
+          {t("It seems like the page you are looking for")} <br />
           {t('does not exist or might have been removed.')}
         </p>
         <div className="mt-6 flex gap-4">

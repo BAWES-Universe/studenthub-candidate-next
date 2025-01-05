@@ -20,7 +20,7 @@ export function ChatComponent( { chat, onClick, onLogoError }: { chat: Chat, onC
                     <span className="font-semibold">{chat.contact?.contact_name || chat.staff?.staff_name}</span>
                     <p>{chat.recentMessage?.message}</p>
                     <span className="text-gray-500 text-sm">
-                        {/** format(chat.created_at, "h:mm a MMM d, yyyy " */}
+                        {/** dateTimeFormat(chat.created_at, "h:mm a MMM d, yyyy " */}
                         {timeAgo}</span>
 
                     {chat.candidateUnreadCount && chat.candidateUnreadCount > 0 && (

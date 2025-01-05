@@ -3,6 +3,7 @@ import { Candidate } from "@/models/candidate";
 import { Country } from "@/models/country";
 import { useAppSelector } from "@/store/store";
 import { calculateAge } from "@/utils/app";
+import { dateTimeFormat } from "@/utils/common";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -265,7 +266,7 @@ export function PersonalDdetail()   {
                                 {user.candidate_civil_id? user.candidate_civil_id: t('Civil ID (not set)')}
                             </span> }
                             { user.candidate_civil_expiry_date && <><br/><span className="text-[#68687a] text-sm font-normal leading-tight">
-                                {t('Expiring on')} {format(user.candidate_civil_expiry_date, 'MMM d, yyyy')} 
+                                {t('Expiring on')} {dateTimeFormat(user.candidate_civil_expiry_date, 'MMM d, yyyy')} 
                             </span></> }
                         </div>
                     </div>
@@ -294,7 +295,7 @@ export function PersonalDdetail()   {
                         </svg>
                     </div>
                     <div className="text-[#22223d] text-sm font-medium leading-tight">
-                        { user.candidate_birth_date? format(user.candidate_birth_date, 'MMM d, yyyy') + '(' + calculateAge(user.candidate_birth_date)+')'
+                        { user.candidate_birth_date? dateTimeFormat(user.candidate_birth_date, 'MMM d, yyyy') + '(' + calculateAge(user.candidate_birth_date)+')'
                             : t("How old are you?") }
                     </div>
                 </div>
@@ -320,9 +321,9 @@ export function PersonalDdetail()   {
                         </svg>
                     </div>
                     <div>
-                        <span className="text-[#22223d] text-sm font-medium leading-tight">{t('Created on')} { format(user.candidate_created_at, 'MMM d, yyyy') }</span>
+                        <span className="text-[#22223d] text-sm font-medium leading-tight">{t('Created on')} { dateTimeFormat(user.candidate_created_at, 'MMM d, yyyy') }</span>
                         { user.candidate_updated_at && <>
-                            <br/><span className="text-[#68687a] text-sm font-normal leading-tight">{t('Updated on')} { format(user.candidate_updated_at, 'MMM d, yyyy') }</span>
+                            <br/><span className="text-[#68687a] text-sm font-normal leading-tight">{t('Updated on')} { dateTimeFormat(user.candidate_updated_at, 'MMM d, yyyy') }</span>
                         </>}
                     </div>
                 </div> }

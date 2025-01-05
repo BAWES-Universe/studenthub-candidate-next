@@ -3,7 +3,6 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
-import { format } from 'date-fns'; // For date formatting
 import { useParams } from 'next/dist/client/components/navigation';
 import { getWorkingHourAppeal, listHours, markAppealUpdateRead } from '@/providers/logged-in/candidate-working-hour.service';
 import { page, track } from '@/providers/analytics.service';
@@ -15,6 +14,8 @@ import { listNotifications, markNotificationRead } from '@/providers/logged-in/c
 
 import { WorkHourAppealUpdate } from '@/components/app/work-hour-appeal-update';
 import { CandidateWorkingHourAppealUpdate } from '@/models/candidate-working-hour-appeal-updates';
+import { dateTimeFormat } from '@/utils/common';
+
 
 const AppealDetailPage = () => {
     const { id } = useParams() as { id: string }; // Get date from URL parameters
@@ -169,7 +170,7 @@ const AppealDetailPage = () => {
 
                     <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
                       {t("Appeal for")}&nbsp;{candidateWorkingHourAppeal && candidateWorkingHourAppeal.candidateWorkingDate && 
-                            format(candidateWorkingHourAppeal.candidateWorkingDate.date || '', 'MMMM d, yyyy')}
+                            dateTimeFormat(candidateWorkingHourAppeal.candidateWorkingDate.date || '', 'MMMM d, yyyy')}
                     </h5>
 
                 </div>
@@ -190,8 +191,8 @@ const AppealDetailPage = () => {
                                 </p>
 
                                 <p className=" text-[#22223d] text-xs font-normal leading-none mt-2.5">
-                                        {format(candidateWorkingHourAppeal.created_at, 'eee, d MMM')} &nbsp;| &nbsp;
-                                        {format(candidateWorkingHourAppeal.created_at, 'hh:mm a')}
+                                        {dateTimeFormat(candidateWorkingHourAppeal.created_at, 'eee, d MMM')} &nbsp;| &nbsp;
+                                        {dateTimeFormat(candidateWorkingHourAppeal.created_at, 'hh:mm a')}
                                 </p>
                         </div>}
 

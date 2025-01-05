@@ -1,14 +1,14 @@
 "use client"
 // app/(dash)/log-hour-list/page.tsx
 
-import { useEffect, useState, useRef, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { format, parseISO } from 'date-fns'; // For date formatting
 import { useParams } from 'next/dist/client/components/navigation';
 import { listHours, workingDateDetail } from '@/providers/logged-in/candidate-working-hour.service';
 import { page, track } from '@/providers/analytics.service';
 import WorkLog from '@/components/app/work-log';
-import { secondsToTime } from '@/utils/common';
+import { dateTimeFormat } from '@/utils/common';
 import Pager from '@/components/common/pager';
 import Loading from './loading';
 import { WorkLogDayStats } from '@/components/app/work-log-day-stats';
@@ -98,7 +98,7 @@ const LogHourListPage = () => {
           <div className="max-w-4xl mx-auto px-6 shadow-[0px_10px_20px_0px_rgba(0,0,0,0.05) xs:pt-0 sm:pt-6 pb-6">
 
               <h5 className='text-[color:var(--Neutral-95,#23233D)] text-2xl font-bold leading-8 capitalize'>
-              {format(date || '', 'MMMM d, yyyy')}
+              {dateTimeFormat(date || '', 'MMMM d, yyyy')}
               </h5>
 
           </div>    

@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/form"
 import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
-import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
-import { profile, updatePhoneDetail, updateProfilePhoto } from "@/providers/logged-in/account.service";
+import { profile, updateProfilePhoto } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";

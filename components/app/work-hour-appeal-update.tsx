@@ -1,5 +1,5 @@
 import { CandidateWorkingHourAppealUpdate } from "@/models/candidate-working-hour-appeal-updates";
-import { format } from "date-fns";
+import { dateTimeFormat } from "@/utils/common";
 import { useState } from "react";
 
 export function WorkHourAppealUpdate({ candidateWorkingHourAppealUpdate,onClick }: { onClick: any, candidateWorkingHourAppealUpdate: CandidateWorkingHourAppealUpdate}) {
@@ -19,7 +19,7 @@ export function WorkHourAppealUpdate({ candidateWorkingHourAppealUpdate,onClick 
             </div>
         
             <div className="grow shrink basis-0 text-[#22223d] text-xs font-normal leading-none mt-1">
-                { format(candidateWorkingHourAppealUpdate.created_at, 'EEE d MMM') }
+                { dateTimeFormat(candidateWorkingHourAppealUpdate.created_at, 'EEE d MMM') }
             </div> 
 
             {isNew && (

@@ -2,8 +2,8 @@
 // app/(dash)/chat/ChatViewPage.tsx
 
 import React, { Suspense, useEffect, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { alertCount$, alertUpdate$ } from '@/providers/event.service';
+import { useParams } from 'next/navigation';
+import { alertCount$ } from '@/providers/event.service';
 import { viewChat, getMessages, getNewMessages, postChatMessage, markRead } from '@/providers/logged-in/chat.service';
 import { Chat } from '@/models/chat';
 import { ChatMessage } from '@/models/chat-message';
@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button';
 import { ChatMessageComponent } from '@/components/app/chat-message';
 import { alertDialog } from '@/hooks/use-alert-dialog';
 import { errorMessage } from '@/utils/common';
-import { interval } from 'rxjs';
 import Loading from '../loading';
+
 
 const ChatViewPage = () => {
     const { id } = useParams() as { id: string };

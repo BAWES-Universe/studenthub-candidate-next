@@ -5,7 +5,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import { Geolocation } from '@capacitor/geolocation'; // Assuming you're using Capacitor for geolocation
 import {  ChevronLeft, ChevronRight } from 'lucide-react';
-import { secondsToTime } from '@/utils/common';
+import { dateTimeFormat, secondsToTime } from '@/utils/common';
 import { CandidateWorkingHour } from '@/models/candidate';
 import { checkWorkStatus, startWork, stopWork, discardSession } from '@/providers/logged-in/account.service';
 import { listHours } from '@/providers/logged-in/candidate-working-hour.service';
@@ -231,7 +231,7 @@ const TrackWorkPage = () => {
       <div className="w-full max-w-[400px] mx-auto h-11 justify-start items-start gap-[52px] flex mt-8">
         <div className="grow shrink basis-0 flex-col justify-center items-center inline-flex">
             <div className="self-stretch text-center text-black text-base font-medium leading-normal">
-            {stats?.checkIn ? format(stats.checkIn, "hh:mm a") : '00:00'}
+            {stats?.checkIn ? dateTimeFormat(stats.checkIn, "hh:mm a") : '00:00'}
             </div>
             <div className="self-stretch text-center text-[#68687a] text-sm font-normal leading-tight">
             {t("Check-in")}
@@ -239,7 +239,7 @@ const TrackWorkPage = () => {
         </div>
         <div className="grow shrink basis-0 flex-col justify-center items-center inline-flex">
             <div className="self-stretch text-center text-black text-base font-medium leading-normal">
-            {stats?.checkOut ? format(stats.checkOut, "hh:mm a") : '00:00'}
+            {stats?.checkOut ? dateTimeFormat(stats.checkOut, "hh:mm a") : '00:00'}
             </div>
             <div className="self-stretch text-center text-[#68687a] text-sm font-normal leading-tight">
             {t("Check-out")}
@@ -267,11 +267,11 @@ const TrackWorkPage = () => {
               { hour.total_time ? secondsToTime(hour.total_time): "On-Going" } 
             </b>
             <span className="text-neutral-600 text-sm font-normal leading-5" dir='ltr'>
-              { hour.start_time ? format(hour.start_time, "hh:mm a") : '00:00'} 
+              { hour.start_time ? dateTimeFormat(hour.start_time, "hh:mm a") : '00:00'} 
               { /**<ArrowRight className="inline text-gray-600 text-small" /> */}
                
                 &nbsp;<img src='/assets/icons/chevron-right.svg' className="inline relative top-[-2px]" />&nbsp;
-                { hour.end_time ? format(hour.end_time, "hh:mm a") : 'Now'}
+                { hour.end_time ? dateTimeFormat(hour.end_time, "hh:mm a") : 'Now'}
                 
             </span>
           </p>

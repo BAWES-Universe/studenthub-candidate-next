@@ -1,5 +1,5 @@
 import { CandidateWorkHistory } from "@/models/candidate-work-history";
-import { format } from "date-fns";
+import { dateTimeFormat } from "@/utils/common";
 import { useTranslation } from "react-i18next";
 
 export function WorkHistoryComponent({ history }: { history: CandidateWorkHistory }) {
@@ -16,7 +16,7 @@ export function WorkHistoryComponent({ history }: { history: CandidateWorkHistor
                         { history.store.store_name }
                     </div> }
                     <div className="grow shrink basis-0 text-end text-[#4b4b61] text-xs font-normal leading-none">
-                    {format(history.start_date || '', 'MMM. yyyy')} - { history.end_date? format(history.end_date, 'MMM. yyyy'): t('now')}
+                    {dateTimeFormat(history.start_date || '', 'MMM. yyyy')} - { history.end_date? dateTimeFormat(history.end_date, 'MMM. yyyy'): t('now')}
                     </div>
                 </div>
             </div>

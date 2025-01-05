@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isSameMonth, isSameYear } from 'date-fns';
+import { startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isSameMonth, isSameYear } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const DateDropdown = ({ min, max, placeholder, pickerFormat, position }: 
     { min: string, max: string, placeholder: string, pickerFormat: string, position: string }) => {
@@ -31,7 +32,7 @@ const DateDropdown = ({ min, max, placeholder, pickerFormat, position }:
         const daysArray: { day: string, isSelectable: boolean, isSelected: boolean }[] = eachDayOfInterval({ 
             start, end 
         }).map(date => ({
-            day: format(date, 'd'),
+            day: dateTimeFormat(date.toISOString(), 'd'),
             isSelectable: true,
             isSelected: value && isSameDay(date, new Date(value)) || false,
         }));

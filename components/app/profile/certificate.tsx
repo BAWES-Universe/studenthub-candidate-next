@@ -1,6 +1,6 @@
 import { Certificate } from "@/models/certificate";
 import { downloadCertificate } from "@/providers/logged-in/candidate.service";
-import { langContent } from "@/utils/common";
+import { dateTimeFormat, langContent } from "@/utils/common";
 import { format } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
@@ -70,8 +70,8 @@ export function CertificateComponent({ certificate }: { certificate: Certificate
 
                     <img src="/assets/icons/calendar.svg" className="w-6 h-6 inline me-1" />
 
-                    { format(certificate.start_date, "MMM d, yyyy") }&nbsp;-&nbsp; 
-                    {certificate.end_date ? format(certificate.end_date, "MMM d, yyyy"): t('now')} </p> }
+                    { dateTimeFormat(certificate.start_date, "MMM d, yyyy") }&nbsp;-&nbsp; 
+                    {certificate.end_date ? dateTimeFormat(certificate.end_date, "MMM d, yyyy"): t('now')} </p> }
                 
                 <button disabled={downloading} onClick={() => downloadClicked(certificate)} 
                     className="disabled:opacity-70 w-[133px] h-10 shrink-0 [background:var(--Blue-Tint-1,#F5F7FF)] rounded-lg 

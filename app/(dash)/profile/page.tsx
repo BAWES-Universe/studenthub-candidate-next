@@ -26,6 +26,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from './loading';
 
+
 const ProfilePage = () => { 
     const [loading, setLoading] = useState(false);
     const [segment, setSegment] = useState("work-details");

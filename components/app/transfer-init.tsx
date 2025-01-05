@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 import React from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 
@@ -15,7 +15,7 @@ const CompensationTransferNotification = ({ candidateNotification, onClick }: { 
         {t("Your compensation transfer has been initiated. It should be completed within 1-2 business days.")}
       </p>
       <p className="txt-time text-end text-gray-500 text-xs leading-4 m-0">
-        {format(candidateNotification.created_at, 'MMM d')}
+        {dateTimeFormat(candidateNotification.created_at, 'MMM d')}
         {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
       </p>
       {isNew && (

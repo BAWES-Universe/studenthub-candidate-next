@@ -5,7 +5,7 @@ import Pager from '@/components/common/pager';
 import { CandidateWorkingDate } from '@/models/candidate-working-date';
 import { page, track } from '@/providers/analytics.service';
 import { listWorkingDates } from '@/providers/logged-in/candidate-working-hour.service';
-import { useEffect, useState, useRef, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next'; // Assuming you have a translation hook
 import WorkLogDay from '@/components/app/work-log-day';
 import { groupBy } from '@/utils/app';
@@ -17,7 +17,7 @@ import {
     Form
   } from "@/components/ui/form"
 import { z } from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { addDays, format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';

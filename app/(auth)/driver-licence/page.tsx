@@ -6,7 +6,7 @@ import SubmitButton from "@/components/ui/submit-button";
 import OnboardFooter from "@/components/on-board/layout/footer";
 import React, { Suspense } from "react";
 import { useEffect, useState } from "react";
-import { profile, updateDrivingLicense, updatePhoneDetail } from "@/providers/logged-in/account.service";
+import { profile, updateDrivingLicense } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";

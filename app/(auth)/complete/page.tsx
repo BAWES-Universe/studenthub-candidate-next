@@ -3,7 +3,6 @@
 import OnboardFooter from "@/components/on-board/layout/footer";
 import { Button } from "@/components/ui/button";
 import { page, track } from "@/providers/analytics.service";
-import { t } from "i18next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";

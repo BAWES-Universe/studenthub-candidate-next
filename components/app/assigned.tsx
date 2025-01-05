@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'; // Assuming you're using react-i
 import PropTypes from 'prop-types';
 import { CandidateNotification } from '@/models/candidate-notification';
 import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const Assigned = ({ candidateNotification, onClick }: { candidateNotification: CandidateNotification, onClick: any }) => {
     const { t } = useTranslation(); // Translation hook
@@ -20,7 +21,7 @@ const Assigned = ({ candidateNotification, onClick }: { candidateNotification: C
                 )}
                 <p className="text-gray-600 text-sm leading-4">
                     {t("txt_assigned_on", { 
-                        on: format(candidateNotification.created_at, 'MMM d')
+                        on: dateTimeFormat(candidateNotification.created_at, 'MMM d')
                         //new Date(candidateNotification.created_at).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) 
                     })}
                 </p>
@@ -35,7 +36,7 @@ const Assigned = ({ candidateNotification, onClick }: { candidateNotification: C
                 </p> }
 
                 <p className="text-end">
-                    {format(candidateNotification.created_at, 'MMM d')}
+                    {dateTimeFormat(candidateNotification.created_at, 'MMM d')}
                     {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
                     <span className={`w-3.5 h-3.5 bg-blue-500 rounded-full absolute top-3 end-4 ${isNew ? 'block' : 'hidden'}`}></span>
                 </p>

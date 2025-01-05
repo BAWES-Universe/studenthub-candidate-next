@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const WorkHourRejected = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
@@ -16,7 +17,7 @@ const WorkHourRejected = ({ candidateNotification, onClick }: { candidateNotific
                 <p className="txt-meta text-gray-500 text-sm">
                     {t("txt_reject_by", {
                         by: candidateNotification.candidateWorkLogFeedback.createdBy.contact_name || "employer",
-                        on: format(candidateNotification.created_at, 'MMM d')
+                        on: dateTimeFormat(candidateNotification.created_at, 'MMM d')
                         //new Date(candidateNotification.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
                     })}
                 </p>
@@ -29,7 +30,7 @@ const WorkHourRejected = ({ candidateNotification, onClick }: { candidateNotific
                 )}
                 <p className="txt-detail text-gray-900 text-base">
                     {t("txt_hours_rejected_on", {
-                        day: format(candidateNotification.created_at, 'MMM d')
+                        day: dateTimeFormat(candidateNotification.created_at, 'MMM d')
                         //new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
                     })}
                 </p>

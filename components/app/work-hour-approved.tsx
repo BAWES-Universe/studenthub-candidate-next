@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
 import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const WorkHourApproved = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
@@ -26,7 +27,7 @@ const WorkHourApproved = ({ candidateNotification, onClick }: { candidateNotific
                 )}
                 <p className="txt-detail text-gray-900 text-base">
                     {t("txt_hours_approved_on", {
-                        on: format(candidateNotification.created_at || '', 'MMM d')
+                        on: dateTimeFormat(candidateNotification.created_at || '', 'MMM d')
                     })}
                 </p>
 

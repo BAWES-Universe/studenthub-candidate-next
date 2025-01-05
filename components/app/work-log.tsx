@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { secondsToTime } from '@/utils/common';
+import { dateTimeFormat, secondsToTime } from '@/utils/common';
 import { format } from 'date-fns';
 import i18n from '@/app/18n';
 import { Button } from '../ui/button';
@@ -42,13 +42,13 @@ const WorkLog = ({ hour, onAppealClose }: { hour: any, onAppealClose: any | unde
                 <div className="self-stretch justify-start items-center gap-1 inline-flex">
                     <div className="justify-end items-center gap-2 flex">
                         <div className="text-[#4b4b61] text-sm font-normal leading-tight">
-                        {format(hour.start_time || '', 'hh:mm a')} 
+                        {dateTimeFormat(hour.start_time || '', 'hh:mm a')} 
                         </div>
                         <span className={ i18n.language == 'ar'? "inline-block rotate-180 me-2": 'mx-2' }>→</span>
                         { /*<ArrowRight className='inline mx-2 w-6 h-6 relative'  /> */}
                         <div className="text-[#4b4b61] text-sm font-normal leading-tight">
                         {hour.end_time 
-                                ? format(hour.start_time || '', 'hh:mm a') 
+                                ? dateTimeFormat(hour.start_time || '', 'hh:mm a') 
                                 : t("Now")}
                         </div>
                     </div>
@@ -70,12 +70,12 @@ const WorkLog = ({ hour, onAppealClose }: { hour: any, onAppealClose: any | unde
                 
                 <div className=" text-[#7d7d8d] text-xs font-normal leading-none">
                     {t("txt_rejected_on", { 
-                        value:  format(hour.candidateWorkLogFeedback.created_at, 'eee, d MMM'),
+                        value:  dateTimeFormat(hour.candidateWorkLogFeedback.created_at, 'eee, d MMM'),
                     })}
                     &nbsp;|&nbsp; 
-                    {format(hour.start_time || '', 'hh:mm a')} 
+                    {dateTimeFormat(hour.start_time || '', 'hh:mm a')} 
                     &nbsp;{t("to")}&nbsp;
-                    {format(hour.end_time || '', 'hh:mm a') }
+                    {dateTimeFormat(hour.end_time || '', 'hh:mm a') }
                 </div>
 
                 { hour.candidateWorkLogFeedback.store && <div className=" text-[#7d7d8d] text-xs font-normal leading-none">

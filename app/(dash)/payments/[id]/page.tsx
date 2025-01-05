@@ -4,11 +4,11 @@
 import { Salary } from '@/models/salary';
 import { page, track } from '@/providers/analytics.service';
 import { viewSalary } from '@/providers/logged-in/account.service';
-import { format } from 'date-fns';
 import { useParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../loading';
+import { dateTimeFormat } from '@/utils/common';
 
 const PaymentDetailPage = () => {
     
@@ -106,7 +106,7 @@ const PaymentDetailPage = () => {
                             {t("Date")}
                             </span>
                             <span className='w-[271px] text-[color:var(--Neutral-100,#0F0F2C)] text-end float-end text-sm font-normal leading-5'>
-                            {format(salary.tc_created_at || '', 'MMMM d, yyyy')}
+                            {dateTimeFormat(salary.tc_created_at || '', 'MMMM d, yyyy')}
                             </span>
                         </div>
                     </div>

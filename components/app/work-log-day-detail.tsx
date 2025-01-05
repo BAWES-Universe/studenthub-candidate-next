@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { secondsToTime } from '@/utils/common';
+import { dateTimeFormat, secondsToTime } from '@/utils/common';
 import { format } from 'date-fns';
 import { CandidateWorkingDate } from '@/models/candidate-working-date';
 
@@ -37,7 +37,7 @@ const WorkLogDayDetail = ({ candidateWorkingDate }: { candidateWorkingDate: Cand
               <b className="text-gray-900 font-semibold mr-1">{t("Start Time:")}</b>
               <span>
                 {candidateWorkingDate.start_time ? 
-                  format(candidateWorkingDate.start_time || '', 'hh:mm a') : 
+                  dateTimeFormat(candidateWorkingDate.start_time || '', 'hh:mm a') : 
                   "00:00"}
               </span>
             </div>
@@ -46,7 +46,7 @@ const WorkLogDayDetail = ({ candidateWorkingDate }: { candidateWorkingDate: Cand
               <b className="text-gray-900 font-semibold mr-1">{t("End Time:")}</b>
               <span>
                 {candidateWorkingDate.end_time ? 
-                  format(candidateWorkingDate.end_time || '', 'hh:mm a')  : 
+                  dateTimeFormat(candidateWorkingDate.end_time || '', 'hh:mm a')  : 
                   "00:00"}
               </span>
             </div>

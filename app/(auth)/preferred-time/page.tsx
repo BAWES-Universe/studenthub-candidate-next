@@ -25,7 +25,6 @@ import { useTranslation } from "react-i18next";
 import Loading from "./loading";
 
 
-
 export default function PreferredTime() {
 
   const [loading, setLoading] = useState(false);

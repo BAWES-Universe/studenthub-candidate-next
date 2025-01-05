@@ -1,4 +1,5 @@
 "use client"
+
 import { Suspense, useState, useEffect } from "react";
 import Loading from "./loading";
 import { Button } from "@/components/ui/button";
@@ -7,10 +8,8 @@ import Apply from "@/components/modals/apply/page";
 import { viewJob } from "@/providers/logged-in/job.service";
 import { useParams } from "next/navigation";
 import { Job } from "@/models/job";
-import { langContent } from "@/utils/common";
-import { useTimeAgo } from "@/utils/app";
+import { dateTimeFormat, langContent } from "@/utils/common";
 import { useTranslation } from "react-i18next";
-import { format } from "date-fns";
 import JobSkills from "@/models/job-skills";
 import { TimeAgo } from "@/components/common/timeAgo";
 
@@ -191,20 +190,20 @@ export default function JobDetailPage() {
 
                                 {!job.available_from && job.available_to && <div className="text-[#4b4b61] text-sm font-medium leading-tight">
                                     {t("txt_available_to", {
-                                        value: format(job.available_to, 'dd MMMM')
+                                        value: dateTimeFormat(job.available_to, 'dd MMMM')
                                     })}
                                 </div>}
 
                                 {job.available_from && !job.available_to && <div className="text-[#4b4b61] text-sm font-medium leading-tight">
                                     {t("txt_available_from", {
-                                        value: format(job.available_from, 'dd MMMM')
+                                        value: dateTimeFormat(job.available_from, 'dd MMMM')
                                     })}
                                 </div>}
 
                                 {job.available_from && job.available_to && <div className="text-[#4b4b61] text-sm font-medium leading-tight">
                                     {t("txt_available_from_to", {
-                                        from: format(job.available_from, 'dd MMMM'),
-                                        to: format(job.available_to, 'dd MMMM')
+                                        from: dateTimeFormat(job.available_from, 'dd MMMM'),
+                                        to: dateTimeFormat(job.available_to, 'dd MMMM')
                                     })}
                                 </div>
                                 }

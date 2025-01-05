@@ -3,8 +3,7 @@
 
 import { page, track } from '@/providers/analytics.service';
 import { downloadCertificate, listWorkHistory } from '@/providers/logged-in/candidate.service';
-import { toDate } from '@/utils/common';
-import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from './loading';
@@ -78,9 +77,9 @@ const WorkHistoryPage = () => {
                                 </h2>
                                 <h5>{historyItem.store?.store_name}</h5>
                                 <p>
-                                    {format(historyItem.start_date || '', 'MMMM d, yyyy')} 
+                                    {dateTimeFormat(historyItem.start_date || '', 'MMMM d, yyyy')} 
                                     {historyItem.end_date ? 
-                                        ` ${t("to")} ${format(historyItem.end_date || '', 'MMMM d, yyyy')}` : 
+                                        ` ${t("to")} ${dateTimeFormat(historyItem.end_date || '', 'MMMM d, yyyy')}` : 
                                         !isFutureDate(historyItem.start_date) ? ` ${t("to")} ${t("now")}` : ''}
                                 </p>
                             </div>

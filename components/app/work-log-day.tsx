@@ -1,6 +1,6 @@
 import i18n from "@/app/18n";
 import { CandidateWorkingDate } from "@/models/candidate-working-date";
-import { secondsToTime } from "@/utils/common";
+import { dateTimeFormat, secondsToTime } from "@/utils/common";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -21,7 +21,7 @@ export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingD
             <div className="self-stretch h-[60px] flex-col justify-start items-start gap-2 flex">
                 <div className="self-stretch justify-start items-start gap-2 inline-flex">
                     <div className="grow shrink basis-0 text-[#0f0f2c] text-lg font-medium leading-7">
-                    {format(candidateWorkingDate.date || '', 'eee, d MMM')}
+                    {dateTimeFormat(candidateWorkingDate.date || '', 'eee, d MMM')}
                     </div>
 
                     { candidateWorkingDate.end_time && <div className="h-6 px-1.5 py-0.5 bg-[#f5f5f7] rounded-md justify-start items-center gap-2.5 inline-flex">
@@ -63,12 +63,12 @@ export default function WorkLogDay({ candidateWorkingDate }: { candidateWorkingD
                                 secondsToTime(candidateWorkingDate.total_time || 0) : t("On-Going")}
                     </div>
                     <div className="justify-end items-center gap-2 flex">
-                        <div className="text-[#4b4b61] text-sm font-normal leading-tight">{format(candidateWorkingDate.start_time || '', 'hh:mm a')}</div>
+                        <div className="text-[#4b4b61] text-sm font-normal leading-tight">{dateTimeFormat(candidateWorkingDate.start_time || '', 'hh:mm a')}</div>
                         <div className="w-6 h-6 relative">
                             <span className={ i18n.language == 'ar'? "inline-block rotate-180 me-2": 'mx-2' }>→</span>
                         </div>
                         <div className="text-[#4b4b61] text-sm font-normal leading-tight">
-                            {candidateWorkingDate.end_time ? format(candidateWorkingDate.end_time, 'hh:mm a') : t("Now")}
+                            {candidateWorkingDate.end_time ? dateTimeFormat(candidateWorkingDate.end_time, 'hh:mm a') : t("Now")}
                         </div>
                     </div>
                 </div>

@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'; // Assuming you're using react-i18next for translations
-import { format } from 'date-fns';
+import { dateTimeFormat } from '@/utils/common';
 
 const TransferReverted = ({ candidateNotification, onClick }: { candidateNotification: any, onClick: any }) => {
     const { t } = useTranslation();
@@ -16,7 +16,7 @@ const TransferReverted = ({ candidateNotification, onClick }: { candidateNotific
                 {t("Your compensation transfer has been reverted due to some issues. A ticket has been created and support will be in touch.")}
             </p>
             <p className="txt-time text-end text-gray-500 text-xs">
-                {format(candidateNotification.created_at, 'MMM d')}
+                {dateTimeFormat(candidateNotification.created_at, 'MMM d')}
 
                 {/*new Date(candidateNotification.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })*/}
             </p>

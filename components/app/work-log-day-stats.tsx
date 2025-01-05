@@ -1,5 +1,5 @@
 import { CandidateWorkingDate } from "@/models/candidate-working-date";
-import { secondsToTime } from "@/utils/common";
+import { dateTimeFormat, secondsToTime } from "@/utils/common";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 
@@ -27,7 +27,7 @@ export function WorkLogDayStats({ candidateWorkingDate}: { candidateWorkingDate:
                       {t("Start Time")}:</div>
                     <div className="text-[#4b4b61] text-sm font-normal  leading-tight">
                     {candidateWorkingDate.start_time
-                          ? format(candidateWorkingDate.start_time || '', 'hh:mm a') 
+                          ? dateTimeFormat(candidateWorkingDate.start_time || '', 'hh:mm a') 
                           : '-'}
                     </div>
                 </div>
@@ -36,7 +36,7 @@ export function WorkLogDayStats({ candidateWorkingDate}: { candidateWorkingDate:
                       {t("End Time")}:</div>
                     <div className="text-[#4b4b61] text-sm font-normal  leading-tight">
                     {candidateWorkingDate.end_time
-                          ? format(candidateWorkingDate.end_time || '', 'hh:mm a') 
+                          ? dateTimeFormat(candidateWorkingDate.end_time || '', 'hh:mm a') 
                           : t("Now")}
                     </div>
                 </div>

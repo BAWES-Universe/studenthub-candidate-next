@@ -82,7 +82,7 @@ const LogTimeManuallyPage = ({ onClose }: {onClose: any}) => {
 
     const params = {
       ...values, 
-      date : values.date.toISOString()// format(values.date, "yyyy-m-d")
+      date : values.date.toISOString()// dateTimeFormat(values.date, "yyyy-m-d")
     }
  
     const response = await addWorkingHour(params);

@@ -4,20 +4,10 @@
 import React, { Suspense, useEffect, useState } from 'react';
  
 import { useTranslation } from 'react-i18next'; // For translations
-import WorkHourApproved from '@/components/app/work-hour-approved';
-import WorkHourRejected from '@/components/app/work-hour-rejected';
-import Assigned from '@/components/app/assigned';
-import Unassigned from '@/components/app/unassigned';
-import TransferUnpaid from '@/components/app/transfer-unpaid';
-import TransferPaid from '@/components/app/transfer-paid';
-import WorkSessionRejected from '@/components/app/work-session-rejected';
-import WorkSessionApproved from '@/components/app/work-session-approved';
-import InvitationNotification from '@/components/app/invitation-notification';
-import TransferInit from '@/components/app/transfer-init';
 import { CandidateNotification } from '@/models/candidate-notification';
 import { page, track } from '@/providers/analytics.service';
 import Pager from '@/components/common/pager';
-import { listNotifications, markNotificationRead, markReadAllNotifications } from '@/providers/logged-in/candidate-notification.service';
+import { listNotifications, markNotificationRead } from '@/providers/logged-in/candidate-notification.service';
 import { alertCount$ } from '@/providers/event.service';
 import NoItems from '@/components/common/no-items';
 import { Button } from '@/components/ui/button';

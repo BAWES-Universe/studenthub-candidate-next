@@ -12,15 +12,15 @@ import { listWorkHistory } from '@/providers/logged-in/candidate.service';
 import { page, track } from '@/providers/analytics.service';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { setUser } from '@/store/slices/userSlice';
 import { setOneSignal$ } from '@/providers/event.service';
 import Link from 'next/link';
 import Loading from './loading';
+import { dateTimeFormat } from '@/utils/common';
 
 
-const DashboardPage = () => {
+const HomePage = () => {
     
     const [loadingProfile, setLoadingProfile] = useState(false);
     const [workHistory, setWorkHistory] = useState([]);
@@ -253,8 +253,8 @@ const DashboardPage = () => {
                                     
                                     <CardContent>
                                         <p className="mb-0 text-[#68687a] text-sm font-normal leading-tight">{
-                                            `${format(new Date(history.start_date || ""), 'MMMM d, yyyy')} ${t('to')} 
-                                            ${ history.end_date ? format(new Date(history.end_date), 'MMMM d, yyyy') : t('now')}`
+                                            `${dateTimeFormat(history.start_date || "", 'MMMM d, yyyy')} ${t('to')} 
+                                            ${ history.end_date ? dateTimeFormat(history.end_date, 'MMMM d, yyyy') : t('now')}`
                                             }</p>
                                     </CardContent>
                                 </Card>
@@ -273,4 +273,4 @@ const DashboardPage = () => {
     );
 };
 
-export default DashboardPage;
+export default HomePage;

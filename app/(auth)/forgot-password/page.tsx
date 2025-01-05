@@ -1,7 +1,5 @@
 "use client"
-
-import { OnboardProgress } from "@/components/on-board/progress";
-
+ 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -14,11 +12,9 @@ import OnboardFooter from "@/components/on-board/layout/footer";
 import SubmitButton from "@/components/ui/submit-button";
 
 import { Suspense, useEffect, useState } from "react";
-import { profile, updatePhoneDetail, updatePreferredTime, updateProfileUrl } from "@/providers/logged-in/account.service";
 import { errorMessage } from "@/utils/common";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setUser } from "@/store/slices/userSlice";
+import { useAppDispatch } from "@/store/store";
 import { resetPasswordRequest } from "@/providers/auth.service";
 import { page, track } from "@/providers/analytics.service";
 import { alertDialog } from "@/hooks/use-alert-dialog";
