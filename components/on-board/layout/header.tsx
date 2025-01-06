@@ -30,7 +30,7 @@ export default function OnboardHeader() {
                 </Link>
  
                 <button className="float-end" onClick={changeLanguage}>
-                { i18n.language == "en"? "العربية": "English" } <img alt="" className="float-end ms-[4px]" src="/assets/icons/globe.svg" />
+                { i18n.language == "en"? "العربية": "English" } <img alt="" className={ `float-end ms-[4px] relative ${i18n.language == "en"?'': 'top-[3px]'}` } src="/assets/icons/globe.svg" />
                 </button>
 
                 <div className="clearfix"></div>

@@ -28,8 +28,11 @@ axios.interceptors.request.use((config) => {
     const { isAuthenticated, token } = state.auth; // Access auth state
     const { language, mixpanel_distinct_id } = state.app; // Access app state
 
-    if(isAuthenticated)
+    if(isAuthenticated) {
         config.headers['Authorization'] = 'Bearer ' + token;
+    } else {
+        console.log("no authorization token");
+    }
 
     config.headers['Language'] = language;
     config.headers['Mixpanel-Distinct-ID'] = mixpanel_distinct_id;

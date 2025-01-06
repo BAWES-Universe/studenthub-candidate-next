@@ -77,6 +77,7 @@ export default function Email() {
       //language_pref
 
       router.push('/home');
+      
     }).catch(err => {
      // alert("err:" + err);
     }).finally(() => {

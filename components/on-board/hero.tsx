@@ -125,7 +125,7 @@ export function Hero() {
       
       <h1 className="font-bold tracking-tighter xs:text-[20px] sm:text-[40px]">
         {t('Ready for a whole new adventure?')} <br />
-        {t('Let&apos;s get you working!')}
+        {t("Let's get you working!")}
       </h1>
       
       <Button variant="outline" size="lg" disabled={googleLoginLoading} onClick={() => loginByGoogle()} 
@@ -140,7 +140,7 @@ export function Hero() {
         
         <Link href="/name">
           <Button size="lg" className=" sm:w-[300px] h-[56px]">
-            {t("Let&apos;s do it!")}
+            {t("Let's do it!")}
           </Button>
         </Link>
                 

@@ -3,7 +3,6 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
-
 /*
 Sentry.init({
   dsn: "https://1c996b75b785482aae7c345ce717b5dd@o70039.ingest.us.sentry.io/5339282",
@@ -12,7 +11,6 @@ Sentry.init({
   tracesSampleRate: 1,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
- 
+  debug: true,
 });
 */

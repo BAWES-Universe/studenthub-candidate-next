@@ -1,9 +1,8 @@
-"use client";
-
 import { NextRequest, NextResponse } from 'next/server'
-import { RootState, store, useAppSelector } from '@/store/store';
-import { cookies } from 'next/headers';
- 
+//import { RootState, store, useAppSelector } from '@/store/store';
+//import { cookies } from 'next/headers';
+import Cookies from 'js-cookie';
+
 // 1. Specify protected and public routes
 export const protectedRoutes = ['/activity', '/assignment/[id]', '/bank', 
   "/change-password", "/chat", "/chat/[id]", "/company", "/discount", "/discount/[id]",
@@ -13,17 +12,20 @@ export const protectedRoutes = ['/activity', '/assignment/[id]', '/bank',
   "/work-log/track-work", "/about-yourself", "/civil-id", "/complete", "/dob", "/driver-licence", 
   "/education-complete", "/educations", "/experience", "/gender", "/objective", "/nationality", 
   "/personal-photo", "/personal-info-complete", "/phone-number", "/preferred-time", "/profile-url", 
-  "/skills", "/video"]
+  "/skills", "/video", "jobs", "/job/[id]"];
 
-export const publicRoutes = ['/login', '/', "/verify-email/[email]", 
+export const publicRoutes = ["/landing", '/login', '/', "/verify-email/[email]", 
   "/forgot-password", "/reset-password", "/name", "/email"]
  
 export default async function middleware(req: NextRequest) {
 
-  const state = store.getState(); // Get the state directly from the store
+  /*const state = store.getState(); // Get the state directly from the store
 
-  const { isAuthenticated } = state.auth;  
+  const { isAuthenticated } = state.auth;  */
   
+  //const cookieStore = await cookies()
+  const isAuthenticated = Cookies.get('isAuthenticated')
+
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
@@ -31,7 +33,7 @@ export default async function middleware(req: NextRequest) {
   console.log(path, isProtectedRoute, isPublicRoute, isAuthenticated);
 
   if (isProtectedRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
+    return NextResponse.redirect(new URL('/landing', req.nextUrl))
   }
   
   if (

@@ -1,28 +1,22 @@
 "use client"
 
-import { Hero } from "@/components/on-board/hero";
-import { store } from "@/store/store";
-import HomePage from "./(dash)/home/page";
-import { useEffect } from "react";
+import { useAppSelector } from "@/store/store";
+//import { useEffect } from "react";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DefaultPage() {
-
-  const state = store.getState(); // Get the state directly from the store
-
-  const { isAuthenticated } = state.auth;  
+ 
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
+ 
     if (isAuthenticated)
     {
       redirect("/home");
-      return;
-    }
+    } else {
+      redirect("/landing");
+    }  
+    
   }, []);
-
-  return (
-    <>
-      { isAuthenticated? <HomePage />: <Hero /> }
-    </>
-  );
 }

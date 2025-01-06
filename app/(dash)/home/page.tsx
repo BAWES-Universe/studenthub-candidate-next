@@ -18,6 +18,7 @@ import { setOneSignal$ } from '@/providers/event.service';
 import Link from 'next/link';
 import Loading from './loading';
 import { dateTimeFormat } from '@/utils/common';
+import LoadingHomePage from './loading';
 
 
 const HomePage = () => {
@@ -36,7 +37,7 @@ const HomePage = () => {
 
     useEffect(() => {
         if (!user)
-        loadProfile();
+            loadProfile();
 
         loadWorkHistoryData();
         //setInvitationSubscription();
@@ -88,7 +89,8 @@ const HomePage = () => {
         <Suspense fallback={<Loading />}>
         <div className="max-w-4xl mx-auto p-6">
              
-            {loadingProfile && <div className="progress-bar">{t("Loading...")}</div>}
+            {loadingProfile && <LoadingHomePage />}
+
             {user && (
                 <div>
                     {/* Student Account Status */}
@@ -113,7 +115,7 @@ const HomePage = () => {
                     )}
 
                     {/* Scheduled Interviews Card */}
-                    {user?.totalInterviewScheduled && user?.totalInterviewScheduled > 0 && (
+                    {user?.totalInterviewScheduled != undefined && user?.totalInterviewScheduled > 0 && (
                         <Card className="p-0 mb-4">
                              <CardHeader>
                             <CardTitle className='font-bold'>{t("Scheduled interviews")}</CardTitle>

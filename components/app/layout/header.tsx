@@ -32,6 +32,7 @@ export default function Header() {
     return (
         <>
             <div className="max-w-4xl mx-auto relative">
+                
                 <div className="py-7 xs:hidden sm:block">
                     <img src="/assets/icons/logo.svg" className="w-[167px] mx-auto " />
                 </div>

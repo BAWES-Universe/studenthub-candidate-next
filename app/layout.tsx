@@ -187,7 +187,8 @@ export default function RootLayout({
 
       _updateAlert();
 
-    //  alertSubscribe();
+     //  alertSubscribe();
+     // router.push('/home');
     });
 
     setOneSignal$.subscribe(() => {
@@ -235,6 +236,8 @@ export default function RootLayout({
       if (logoutReason) {
         console.log(logoutReason);
       }
+
+      router.push('/');
     });
 
     /**

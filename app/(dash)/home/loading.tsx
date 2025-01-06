@@ -1,7 +1,7 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default function Loading() {
+export default function LoadingHomePage() {
     return (
         <>
             <div className=' bg-white'>
