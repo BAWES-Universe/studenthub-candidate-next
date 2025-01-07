@@ -89,7 +89,7 @@ export default function Apply({ job, seen_at, onClose }: IApply) {
 
                         <FormTextarea
                             name="reason"
-                            label="Speak your mind"
+                            label="E.g: Talk about your skills and what you can offer..."
                             form={form as any}
                         />
 
