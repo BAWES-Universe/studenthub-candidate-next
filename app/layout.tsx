@@ -72,13 +72,13 @@ export default function RootLayout({
   const { oneSignalStatus } = state.app;
 
   //useEffect(() => {
-  if (typeof window !== 'undefined') {  
+  /*if (typeof window !== 'undefined') {  
     if (!isAuthenticated && !publicRoutes.includes(window?.location.pathname)) {
       return redirect('/login');
     } else if (isAuthenticated && ["/", ""].includes(window?.location.pathname)) {
       return redirect('/home');
     }
-  }
+  }*/
 
   //}, [isAuthenticated, router]);
 
@@ -198,6 +198,8 @@ export default function RootLayout({
     // On Logout Event, set root to Login Page
     userLogout$.subscribe((logoutReason) => {
 
+      store.dispatch(logout());
+
       if (alertSubscription) {
         clearInterval(alertSubscription);
         alertSubscription = null;
@@ -274,10 +276,12 @@ export default function RootLayout({
           position: 'top',
           cssClass: 'error_toast_' + this.translateService.direction()
         });
-        await toast.present();*/
+        await toast.present();
 
         store.dispatch(logout());
-        router.push("/");    
+        router.push("/");   */
+        
+        userLogout$.next({});
       } 
       else 
       {

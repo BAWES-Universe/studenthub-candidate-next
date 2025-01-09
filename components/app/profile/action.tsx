@@ -10,6 +10,7 @@ import { useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
 import { setUser } from "@/store/slices/userSlice";
 import { alertDialog } from "@/hooks/use-alert-dialog";
+import { userLogout$ } from "@/providers/event.service";
 
 export function CandidateAction() {
     const router = useRouter()
@@ -25,8 +26,9 @@ export function CandidateAction() {
     }, []);
 
     const logoutClicked = () => {   
-        dispatch(logout());
-        router.push("/");    
+       /* dispatch(logout());
+        router.push("/");    */
+        userLogout$.next({});
     }
 
     const changeLanguageClicked = () => {
