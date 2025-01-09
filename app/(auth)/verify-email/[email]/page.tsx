@@ -46,7 +46,10 @@ export default function VerifyEmailPage() {
   const sparams = useSearchParams();
 
   const email: string = decodeURIComponent(params?.email as string); // Access the dynamic parameter
- 
+  const code: string = decodeURIComponent(params?.code as string);
+
+  console.log("code", code);
+  
   // 1. Define your form.
 
   const formSchema = z.object({
@@ -67,10 +70,10 @@ export default function VerifyEmailPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      c1: "",
-      c2: "",
-      c3: "",
-      c4: "",
+      c1: code[0] || "",
+      c2: code[1] || "",  
+      c3: code[2] || "",
+      c4: code[3] || "",
     },
   })
 
