@@ -62,7 +62,7 @@ export default function Video() {
   const [shouldStop, setShouldStop] = useState(true);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [stream, setStream] = useState<any>(null);
-  const [videoBlobUrl, setVideoBlobUrl] = useState<string>("");
+  const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
   const [countDown, setCountDown] = useState(0);
   const [timer, setTimer] = useState(0);
   //const [interval, setInterval] = useState();
@@ -379,17 +379,17 @@ export default function Video() {
   }
 
   useEffect(() => {
- 
+  
+      const blob = new Blob(recordedChunks, { 
+        //duration: (maxDuration - timer) + '',
+        type: 'video/' + format 
+      });
+      const url = URL.createObjectURL(blob);
+
+      setVideoBlobUrl(url);
+
       if(player && player.current) {
 
-        const blob = new Blob(recordedChunks, { 
-          //duration: (maxDuration - timer) + '',
-          type: 'video/' + format 
-        });
-        const url = URL.createObjectURL(blob);
-
-        setVideoBlobUrl(url);
- 
         /*const videoElement = document.getElementById('video');
         videoElement.src = url;
         videoElement.play();*/
@@ -398,12 +398,12 @@ export default function Video() {
         ele.muted = false;
         ele.volume = 1;
         ele.src = url
+        ele.srcObject = null;
         //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
-        ele.pause();//
- 
+        ele.pause();
       }
 
-  }, [recordedChunks, format]);
+  }, [recordedChunks]);
 
   useEffect(() => {
 
@@ -419,6 +419,16 @@ export default function Video() {
         
         setRecordedChunks(newData);//(chunks: any) => chunks.push(e.data));
        // setFormat(e.data.type)
+
+        if(player && player.current && recordedChunks.length > 0) {
+          const ele = player.current as HTMLVideoElement;
+          ele.muted = false;
+          ele.volume = 1;
+          ele.srcObject = null;
+          ele.src = URL.createObjectURL(new Blob(recordedChunks, { type: 'video/' + format }));
+          //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
+          //ele.play();
+        }
       }
     });
 
@@ -430,29 +440,28 @@ export default function Video() {
       //const blob = new Blob([recordedChunks], { type: 'video/' . this.format });
 
       //not triggering 
-      if(player && player.current && recordedChunks.length > 0) {
+      /*if(player && player.current && recordedChunks.length > 0) {
         const ele = player.current as HTMLVideoElement;
         ele.muted = false;
         ele.volume = 1;
+        ele.srcObject = null;
         ele.src = URL.createObjectURL(new Blob(recordedChunks, { type: 'video/' + format }));
         //new Blob(recordedChunks, { type: "video/mp4;codecs=avc1,opus"}));
         //ele.play();
- 
-      }
+      }*/
 
       setRecording(false);
 
-      if (recordedChunks.length == 0) {
-        return false;
-      }
-
       // no need to cancel recording on hardware back
 
-     // window.history.back();
+      // window.history.back();
 
-     //saving recorded video without preview as it's showing blank video 
-      saveRecording();
-
+      //saving recorded video without preview as it's showing blank video 
+      //saveRecording();
+      
+      if (recordedChunks.length == 0) {
+        return false;
+      } 
     });
   }, [mediaRecorder]);
 
@@ -479,6 +488,7 @@ export default function Video() {
       if (!recording) {
         ele.muted = false;
         ele.volume = 1;
+        ele.srcObject = null;
         ele.src = URL.createObjectURL(new Blob(recordedChunks));
         ele.pause();
       }
@@ -655,6 +665,7 @@ export default function Video() {
       ele.muted = true;
       ele.volume = 0;
       ele.src = '';
+      ele.srcObject = null;
       ele.pause();
     }
 
@@ -685,6 +696,7 @@ export default function Video() {
         ele.muted = true;
         ele.volume = 0;
         ele.src = '';
+        ele.srcObject = null;
         ele.pause();
       }
 
@@ -694,6 +706,7 @@ export default function Video() {
 
     // stop camera
     if (stream) {
+      setStream(null);
       stream.getTracks().forEach((track: any) => {
         track.stop();
       });
@@ -768,21 +781,19 @@ export default function Video() {
 
               { (!shouldStop || recordedChunks.length > 0) && <>
 
-                <video
+                { videoBlobUrl && <video
                   controls={true}
                   ref={player}
                   src={videoBlobUrl}
                   id="player"
                   //volume="0"
                   onEnded={() => onRecordingPlayerEnded()}
-                  onClick={togglePlayer}
+                  onClick={() => togglePlayer()}
                   className="h-auto w-full"
-                  
                   autoPlay loop muted 
                 >
                   <source src={videoBlobUrl} type={ "video/" + format } />
-      
-                </video>
+                </video> }
 
                 {/* Play button if video recorded */}
                 {!playingRecording && countDown === 0 && recordedChunks.length > 0 && (
