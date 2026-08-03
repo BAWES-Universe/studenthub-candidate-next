@@ -154,21 +154,20 @@ export default function PersonalPhoto() {
             </div> }
 
           { !form.getValues().candidate_personal_photo && 
-            <div className="w-40 h-40 m-auto border-[color:var(--Neutral-30,#EEEEF0)] 
-                [background:var(--Neutral-10,#FAFAFA)] rounded-[80px] border-[1.333px] border-dashed">
-                <img src="/assets/icons/camera.svg" className="w-10 h-10 m-auto mt-[48px]" />
-                <a onClick={() => document.getElementById('photoUpload')?.click()} 
-                className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center 
-                 text-xs font-medium leading-4 block cursor-pointer">
+            <label htmlFor="photoUpload" className="w-40 h-40 m-auto border-[color:var(--Neutral-30,#EEEEF0)] 
+                [background:var(--Neutral-10,#FAFAFA)] rounded-[80px] border-[1.333px] border-dashed flex flex-col items-center justify-center cursor-pointer">
+                <img src="/assets/icons/camera.svg" className="w-10 h-10" />
+                <span className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center 
+                 text-xs font-medium leading-4 mt-2">
                    { uploading ? t("Uploading...") : t("Upload picture") }    
-                </a>
-            </div> }
+                </span>
+            </label> }
             
             { form.getValues().candidate_personal_photo && 
-                <a onClick={() => document.getElementById('photoUpload')?.click()} className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center 
+                <label htmlFor="photoUpload" className="text-[color:var(--Blue-Tint-Main,#4C70F2)] text-center 
                   m-auto block text-xs font-medium leading-4 mt-[8px] cursor-pointer">
                     { uploading ? t("Uploading...") : t("Upload picture") }    
-                </a> }
+                </label> }
  
                 <input
                     type="file"
