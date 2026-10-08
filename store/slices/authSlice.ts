@@ -1,6 +1,6 @@
 import { userLogin$ } from '@/providers/event.service';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { AppDispatch } from '@/store/store';
+import type { Dispatch } from 'redux';
 //import { cookies } from 'next/headers';
 import Cookies from 'js-cookie';
 
@@ -57,7 +57,7 @@ export { logout, setUnVerifiedToken };
  */
 export const setCredentials =
   (payload: { token: string }) =>
-  (dispatch: AppDispatch) => {
+  (dispatch: Dispatch) => {
     dispatch(_setCredentials(payload));
     userLogin$.next({});
   };
