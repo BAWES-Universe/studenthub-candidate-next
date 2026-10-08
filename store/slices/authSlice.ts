@@ -1,5 +1,6 @@
 import { userLogin$ } from '@/providers/event.service';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { Dispatch } from 'redux';
 //import { cookies } from 'next/headers';
 import Cookies from 'js-cookie';
 
@@ -21,7 +22,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ token: string }>) =>  {
+    _setCredentials: (state, action: PayloadAction<{ token: string }>) =>  {
       state.token = action.payload.token;
       state.isAuthenticated = true;
       /*cookies().then(cookieStore => {
@@ -29,8 +30,6 @@ const authSlice = createSlice({
       });*/
 
       Cookies.set('isAuthenticated', "1");
-      
-      userLogin$.next({});
     },
     logout: (state) => {
       state.token = null;
@@ -47,5 +46,20 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout, setUnVerifiedToken } = authSlice.actions;
+const { _setCredentials, logout, setUnVerifiedToken } = authSlice.actions;
+export { logout, setUnVerifiedToken };
+
+/**
+ * Thunk that updates auth state first (via pure reducer), then emits the
+ * userLogin$ event. This avoids the Redux Error #9 "Reducers may not dispatch
+ * actions" that occurred when userLogin$.next() was called inside the reducer
+ * body and its subscriber synchronously dispatched another action.
+ */
+export const setCredentials =
+  (payload: { token: string }) =>
+  (dispatch: Dispatch) => {
+    dispatch(_setCredentials(payload));
+    userLogin$.next({});
+  };
+
 export default authSlice.reducer;
